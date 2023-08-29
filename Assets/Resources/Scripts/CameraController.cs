@@ -33,6 +33,11 @@ public class CameraController : MonoBehaviour
         UpdateVerticalMovements();
         UpdateCameraScroll();
     }
+
+    void FixedUpdate()
+    {
+        FixedUpdateTestCameraObstruction();
+    }
     
     private void UpdateHorizontalMovements()
     {
@@ -101,5 +106,31 @@ public class CameraController : MonoBehaviour
     private float GetDistBetweenTwoVects(Vector3 firstVector, Vector3 secondVector)
     {
         return Vector3.Distance(firstVector, secondVector);
+    }
+
+    private void FixedUpdateTestCameraObstruction()
+    {
+        // Bit shift the index of the layer (8) to get a bit mask
+        int layerMask = 1 << 8;
+
+        // This would cast rays only against colliders in layer 8.
+        // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
+        //layerMask = ~layerMask;
+
+        RaycastHit hit;
+
+        // Does the ray intersect any objects excluding the player layer
+        var vecteurDiff = transform.position - m_objectToLookAt.position;
+        var distance = vecteurDiff.magnitude;
+
+        if (Physics.Raycast(m_objectToLookAt.position, vecteurDiff, out hit, distance, layerMask))
+        {
+            Debug.DrawRay(m_objectToLookAt.position, vecteurDiff.normalized * hit.distance, Color.red);
+            transform.SetPositionAndRotation(hit.point, transform.rotation);
+        }
+        else
+        {
+            Debug.DrawRay(m_objectToLookAt.position, vecteurDiff, Color.green);
+        }       
     }
 }
