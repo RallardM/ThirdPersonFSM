@@ -102,7 +102,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Optimized Leaf Material
-  m_Shader: {fileID: 10605, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 10607, guid: 0000000000000000f000000000000000, type: 0}
   m_ValidKeywords: []
   m_InvalidKeywords:
   - BACKFACE_NORMAL_MODE_FLIP
@@ -458,7 +458,7 @@ MonoBehaviour:
   m_Name: Tree Data
   m_EditorClassIdentifier: 
   _uniqueID: 176
-  materialHash: 6dab16c82dd4015f51dbc0190b430570215482368
+  materialHash: 47cf4481750c627fa4c6d39ad1c4628c215482368
   root:
     _uniqueID: 1
     seed: 2300
@@ -560,17 +560,17 @@ MonoBehaviour:
     rootSpread: 1.23
     groundOffset: 0
     rootMatrix:
-      e00: 1
+      e00: 0.5634829
       e01: 0
-      e02: 0
+      e02: -0.82612777
       e03: 0
-      e10: 0
+      e10: -0
       e11: 1
       e12: 0
       e13: 0
-      e20: 0
+      e20: 0.82612777
       e21: 0
-      e22: 1
+      e22: 0.5634829
       e23: 0
       e30: 0
       e31: 0
@@ -1172,17 +1172,17 @@ MonoBehaviour:
     pitch: -0
     rotation: {x: 0, y: 0, z: 0, w: 1}
     matrix:
-      e00: 1
+      e00: 0.5634829
       e01: 0
-      e02: 0
+      e02: -0.82612777
       e03: 0
-      e10: 0
+      e10: -0
       e11: 1
       e12: 0
       e13: 0
-      e20: 0
+      e20: 0.82612777
       e21: 0
-      e22: 1
+      e22: 0.5634829
       e23: 0
       e30: 0
       e31: 0
