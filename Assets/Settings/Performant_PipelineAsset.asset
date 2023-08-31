@@ -26,15 +26,15 @@ MonoBehaviour:
   m_StoreActionsOptimization: 0
   m_SupportsHDR: 1
   m_MSAA: 1
-  m_RenderScale: 1
+  m_RenderScale: 2
   m_UpscalingFilter: 0
   m_FsrOverrideSharpness: 0
   m_FsrSharpness: 0.92
-  m_MainLightRenderingMode: 0
-  m_MainLightShadowsSupported: 0
-  m_MainLightShadowmapResolution: 1024
+  m_MainLightRenderingMode: 1
+  m_MainLightShadowsSupported: 1
+  m_MainLightShadowmapResolution: 4096
   m_AdditionalLightsRenderingMode: 2
-  m_AdditionalLightsPerObjectLimit: 4
+  m_AdditionalLightsPerObjectLimit: 8
   m_AdditionalLightShadowsSupported: 0
   m_AdditionalLightsShadowmapResolution: 1024
   m_AdditionalLightsShadowResolutionTierLow: 256
