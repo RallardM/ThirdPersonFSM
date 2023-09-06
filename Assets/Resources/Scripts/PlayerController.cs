@@ -26,6 +26,18 @@ public class PlayerController : MonoBehaviour
         {
             m_rb.AddForce(vectorOnFloor * m_accelerationValue, ForceMode.Acceleration);
         }
+        if (Input.GetKey(KeyCode.S))
+        {
+            m_rb.AddForce(-vectorOnFloor * m_accelerationValue, ForceMode.Acceleration);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            m_rb.AddForce(-m_camera.transform.right * m_accelerationValue, ForceMode.Acceleration);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            m_rb.AddForce(m_camera.transform.right * m_accelerationValue, ForceMode.Acceleration);
+        }
         if (m_rb.velocity.magnitude > m_maxVelocity)
         {
             m_rb.velocity = m_rb.velocity.normalized;
@@ -33,7 +45,7 @@ public class PlayerController : MonoBehaviour
         }
 
         // TODO: Appliquer les deplacements relatifs a la camera dans les 3 autres directions
-        // avoir des vitesses de deplacements maximales differentes cersles cotes et vers l'arriere
+        // avoir des vitesses de deplacements maximales differentes vers les cotes et vers l'arriere
         // lorsque aucune input est mis, decelerer le personnage rapidement
     }
 }

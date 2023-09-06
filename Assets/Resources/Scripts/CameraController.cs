@@ -1,6 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.Rendering.HighDefinition;
 
 public class CameraController : MonoBehaviour
 {
@@ -10,25 +10,25 @@ public class CameraController : MonoBehaviour
     private float m_rotationSpeed = 1.0f;
     [SerializeField]
     private Vector2 m_clampingXRotationValues = Vector2.zero;
+    [SerializeField]
+    private float m_smoothCameraFollow = 0.125f;
 
-    private Vector3 m_farthestCamDist = new(0, 74, 300);
-    private Vector3 m_farthestCamRotation = new(10, 0, 0);
+    private float m_cameraDesiredOffset = 2.0f;
 
-    private Vector3 m_closestCamDist = new(0, 1, 13);
-    private Vector3 m_closestCamRotation = new(0, 0, 0);
+    private float m_closestCamDist = 1.1f;
+    private float m_farthestCamDist = 1.2f;
 
     private float m_scrollSpeed = 2.0f;
 
-    float m_farthestCamDistFOV = 3.5f;
-    float m_closestCamDistFOV = 24f;
+    private float m_farthestCamDistFOV = 10.0f;
+    private float m_closestCamDistFOV = 60.0f;
 
-    private void Awake()
-    {
-    }
+    private float m_previousPlayerToOffsetDotP = 0f;
 
     // Update is called once per frame
     void Update()
     {
+        UpdateFollowPosition();
         UpdateHorizontalMovements();
         UpdateVerticalMovements();
         UpdateCameraScroll();
@@ -38,7 +38,18 @@ public class CameraController : MonoBehaviour
     {
         FixedUpdateTestCameraObstruction();
     }
-    
+
+    private void UpdateFollowPosition()
+    {
+        Vector3 targetPosition = m_objectToLookAt.position - transform.forward * m_cameraDesiredOffset;
+
+        // Smoothly interpolate the camera position towards the target position
+        transform.position = Vector3.Lerp(transform.position, targetPosition, m_smoothCameraFollow * Time.deltaTime);
+
+        // Look at the target
+        transform.LookAt(m_objectToLookAt);
+    }
+
     private void UpdateHorizontalMovements()
     {
         float currentAngleX = Input.GetAxis("Mouse X") * m_rotationSpeed;
@@ -59,39 +70,41 @@ public class CameraController : MonoBehaviour
         {
             return;
         }
+
         transform.RotateAround(m_objectToLookAt.position, transform.right, currentAngleY);
     }
 
     private void UpdateCameraScroll()
     {
-        if (Input.mouseScrollDelta.y == 0)
+        float scrollDelta = Input.mouseScrollDelta.y;
+
+        if (Mathf.Approximately(scrollDelta, 0f))
         {
             return;
         }
 
-        //TODO: Faire une vérification selon la distance la plus proche ou la plus éloignée
-        //Que je souhaite entre ma caméra et mon objet
+        // Calculate the desired camera offset based on the scroll input
+        Vector3 camTranslation = transform.forward * scrollDelta * m_scrollSpeed;
 
-        Vector3 camTranslation = new(0, 0, 0);
+        // Calculate the new camera position
+        Vector3 newPosition = transform.position + camTranslation;
 
-        float currentCamDist = GetDistBetweenTwoVects(transform.position, m_objectToLookAt.position);
-        float farthestCamDist = GetDistBetweenTwoVects(transform.position + m_farthestCamDist, m_objectToLookAt.position);
-        float closestCamDist = GetDistBetweenTwoVects(transform.position + m_closestCamDist, m_objectToLookAt.position);
-
-        if (currentCamDist > farthestCamDist || currentCamDist < closestCamDist)
+        // Return if the new position is within the desired range
+        if (IsWithinScrollRange(newPosition) == false)
         {
             return;
         }
-        else
-        {
-            camTranslation = Vector3.forward;
-        }
 
-        //TODO: Lerp plutôt que d'effectuer immédiatement la translation
-        //Vector3 scrollPosLerp = Vector3.Lerp(transform.position, transform.position + camTranslation, Time.deltaTime);
+        // Else apply the camera offset
+        transform.Translate(camTranslation, Space.World);
+        m_cameraDesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+    }
 
-        transform.Translate(camTranslation * Input.mouseScrollDelta.y * m_scrollSpeed, Space.Self);
-        //transform.Translate(scrollPosLerp, Space.Self);
+    private bool IsWithinScrollRange(Vector3 position)
+    {
+        // Check if the new position is within the desired scroll range
+        float distance = Vector3.Distance(position, m_objectToLookAt.position);
+        return distance >= m_closestCamDist && distance <= m_farthestCamDist;
     }
 
     private float ClampAngle(float angle)
@@ -101,11 +114,6 @@ public class CameraController : MonoBehaviour
             angle -= 360;
         }
         return angle;
-    }
-
-    private float GetDistBetweenTwoVects(Vector3 firstVector, Vector3 secondVector)
-    {
-        return Vector3.Distance(firstVector, secondVector);
     }
 
     private void FixedUpdateTestCameraObstruction()
