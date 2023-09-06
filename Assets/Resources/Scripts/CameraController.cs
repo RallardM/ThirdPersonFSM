@@ -28,7 +28,6 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateFollowPosition();
         UpdateHorizontalMovements();
         UpdateVerticalMovements();
         UpdateCameraScroll();
@@ -39,7 +38,7 @@ public class CameraController : MonoBehaviour
         FixedUpdateTestCameraObstruction();
     }
 
-    private void UpdateFollowPosition()
+    private void LateUpdate()
     {
         Vector3 targetPosition = m_objectToLookAt.position - transform.forward * m_cameraDesiredOffset;
 
