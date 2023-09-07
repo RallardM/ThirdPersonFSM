@@ -11,13 +11,17 @@ public class CharacterControllerStateMachine : MonoBehaviour
     public float AccelerationValue { get; private set; }
     [field: SerializeField]
     public float MaxVelocity { get; private set; }
+    //[field: SerializeField]
+    //public float MaxJumpVelocity { get; private set; }
     [field: SerializeField]
     public float JumpIntensity { get; private set; } = 1000.0f;
 
-    public const float SLOWN_DEPLACEMENT = 0.5f;
-
+    [field: SerializeField]
+    private CharacterFloorTrigger m_floorTrigger;
     private CharacterState m_currentState;
     private List<CharacterState> m_possibleStates;
+
+    public const float SLOWN_DEPLACEMENT = 0.5f;
 
     private void Awake()
     {
@@ -42,6 +46,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     private void Update()
     {
+        m_currentState.OnUpdate();
         TryStateTransition();
     }
 
@@ -53,7 +58,6 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     private void TryStateTransition()
     {
-        m_currentState.OnUpdate();
         if (!m_currentState.CanExit())
         {
             return;
@@ -76,5 +80,10 @@ public class CharacterControllerStateMachine : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public bool IsInContactWithFloor()
+    {
+        return m_floorTrigger.IsOnFloor;
     }
 }

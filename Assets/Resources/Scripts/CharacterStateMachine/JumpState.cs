@@ -4,24 +4,28 @@ using UnityEngine;
 
 public class JumpState : CharacterState
 {
+    private const float STATE_EXIT_TIMER = 0.2f;
+    private float m_currentStateTimer = 0.0f;
     public override void OnEnter()
     {
         Debug.Log("Enter State: Jump State");
 
         m_stateMachine.RB.AddForce(Vector3.up * m_stateMachine.JumpIntensity, ForceMode.Acceleration);
+        m_currentStateTimer = STATE_EXIT_TIMER;
     }
 
-    public override void OnUpdate()
+    public override void OnExit()
     {
+        Debug.Log("Exit state: Jump state");
     }
 
     public override void OnFixedUpdate()
     {
     }
 
-    public override void OnExit()
+    public override void OnUpdate()
     {
-        Debug.Log("Exit state: Jump state");
+        m_currentStateTimer -= Time.deltaTime;
     }
 
     public override bool CanEnter()
@@ -32,6 +36,6 @@ public class JumpState : CharacterState
 
     public override bool CanExit()
     {
-        return true;
+        return m_currentStateTimer <= 0.0f;
     }
 }

@@ -13,6 +13,10 @@ public class CharacterState : IState
     {
     }
 
+    public virtual void OnExit()
+    {
+    }
+
     public virtual void OnFixedUpdate()
     {
     }
@@ -21,17 +25,13 @@ public class CharacterState : IState
     {
     }
 
-    public virtual void OnExit()
-    {
-    }
-
     public virtual bool CanEnter()
     {
-        return false;
+        throw new System.NotImplementedException();
     }
 
     public virtual bool CanExit()
     {
-        return false;
+        throw new System.NotImplementedException();
     }
 }

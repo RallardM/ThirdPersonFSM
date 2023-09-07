@@ -4,6 +4,7 @@ public class FreeState : CharacterState
 {
     public override void OnEnter()
     {
+        Debug.Log("Enter state: Free State");
     }
 
     public override void OnUpdate()
@@ -12,27 +13,30 @@ public class FreeState : CharacterState
 
     public override void OnFixedUpdate()
     {
-        var vectorOnFloor = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
-        vectorOnFloor.Normalize();
+        var vectorOnFloorFront = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
+        var vectorOnFloorSide = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
+
+        vectorOnFloorFront.Normalize();
+        vectorOnFloorSide.Normalize();
 
         if (Input.GetKey(KeyCode.W))
         {
-            m_stateMachine.RB.AddForce(vectorOnFloor * m_stateMachine.AccelerationValue, ForceMode.Acceleration);
+            m_stateMachine.RB.AddForce(vectorOnFloorFront * m_stateMachine.AccelerationValue, ForceMode.Acceleration);
         }
         if (Input.GetKey(KeyCode.S))
         {
             float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
-            m_stateMachine.RB.AddForce(-vectorOnFloor * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
+            m_stateMachine.RB.AddForce(-vectorOnFloorFront * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
         }
         if (Input.GetKey(KeyCode.A))
         {
             float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
-            m_stateMachine.RB.AddForce(-m_stateMachine.Camera.transform.right * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
+            m_stateMachine.RB.AddForce(-vectorOnFloorSide * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
         }
         if (Input.GetKey(KeyCode.D))
         {
             float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
-            m_stateMachine.RB.AddForce(m_stateMachine.Camera.transform.right * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
+            m_stateMachine.RB.AddForce(vectorOnFloorSide * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
         }
         if (!Input.anyKey)
         {
@@ -53,7 +57,7 @@ public class FreeState : CharacterState
     public override bool CanEnter()
     {
         // I can only enter the free state only if I touch the ground
-        return true;
+        return m_stateMachine.IsInContactWithFloor();
     }
 
     public override bool CanExit()

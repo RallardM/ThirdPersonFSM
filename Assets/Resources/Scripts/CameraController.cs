@@ -11,16 +11,17 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private Vector2 m_clampingXRotationValues = Vector2.zero;
     [SerializeField]
-
-    private const float SCROLL_POS_SAFE_THRESHOLD = 0.01f;
     private float m_smoothCameraFollow = 0.125f;
-
-    private float m_cameraDesiredOffset = 2.0f;
-
+    [SerializeField]
+    private float m_scrollSpeed = 2.0f;
+    [SerializeField]
     private float m_closestCamDist = 1.0f;
+    [SerializeField]
     private float m_farthestCamDist = 2.0f;
 
-    private float m_scrollSpeed = 2.0f;
+    private const float SCROLL_POS_SAFE_THRESHOLD = 0.01f;
+    
+    private float m_cameraDesiredOffset = 2.0f;
 
     //private float m_farthestCamDistFOV = 10.0f; // TODO
     //private float m_closestCamDistFOV = 60.0f; // TODO
