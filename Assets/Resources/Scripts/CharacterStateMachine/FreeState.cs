@@ -43,11 +43,21 @@ public class FreeState : CharacterState
             m_stateMachine.RB.velocity = m_stateMachine.RB.velocity.normalized;
             m_stateMachine.RB.velocity *= m_stateMachine.MaxVelocity;
         }
-
-        Debug.Log(m_stateMachine.RB.velocity.magnitude);
     }
 
     public override void OnExit()
     {
+        Debug.Log("Exit state: Free state");
+    }
+
+    public override bool CanEnter()
+    {
+        // I can only enter the free state only if I touch the ground
+        return true;
+    }
+
+    public override bool CanExit()
+    {
+        return true;
     }
 }
