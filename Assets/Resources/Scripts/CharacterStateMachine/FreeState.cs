@@ -13,31 +13,45 @@ public class FreeState : CharacterState
 
     public override void OnFixedUpdate()
     {
-        var vectorOnFloorFront = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
-        var vectorOnFloorSide = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
+        Vector3 newDirection = Vector3.zero;
+        //var vectorOnFloorFront = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
+        //var vectorOnFloorSide = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
 
-        vectorOnFloorFront.Normalize();
-        vectorOnFloorSide.Normalize();
+        //vectorOnFloorFront.Normalize();
+        //vectorOnFloorSide.Normalize();
 
         if (Input.GetKey(KeyCode.W))
         {
-            m_stateMachine.RB.AddForce(vectorOnFloorFront * m_stateMachine.AccelerationValue, ForceMode.Acceleration);
+            Debug.Log("W Forward Pressed");
+            Vector3 vectorOnFloorFront = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
+            newDirection += vectorOnFloorFront * m_stateMachine.AccelerationValue;
+            //m_stateMachine.RB.AddForce(vectorOnFloorFront * m_stateMachine.AccelerationValue, ForceMode.Acceleration);
         }
         if (Input.GetKey(KeyCode.S))
         {
+            Vector3 vectorOnFloorFront = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
             float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
-            m_stateMachine.RB.AddForce(-vectorOnFloorFront * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
+            newDirection -= vectorOnFloorFront * m_stateMachine.AccelerationValue * slownValue;
+            //m_stateMachine.RB.AddForce(-vectorOnFloorFront * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
         }
         if (Input.GetKey(KeyCode.A))
         {
             float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
-            m_stateMachine.RB.AddForce(-vectorOnFloorSide * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
+            Vector3 vectorOnFloorSide = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
+            newDirection -= vectorOnFloorSide * m_stateMachine.AccelerationValue * slownValue;
+            //m_stateMachine.RB.AddForce(-vectorOnFloorSide * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
         }
         if (Input.GetKey(KeyCode.D))
         {
             float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
-            m_stateMachine.RB.AddForce(vectorOnFloorSide * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
+            Vector3 vectorOnFloorSide = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
+            newDirection += vectorOnFloorSide * m_stateMachine.AccelerationValue * slownValue;
+            //m_stateMachine.RB.AddForce(vectorOnFloorSide * m_stateMachine.AccelerationValue * slownValue, ForceMode.Acceleration);
         }
+
+        newDirection.Normalize();
+        m_stateMachine.RB.AddForce(newDirection * Time.fixedDeltaTime, ForceMode.Acceleration);
+
         if (!Input.anyKey)
         {
             m_stateMachine.RB.velocity = Vector3.zero;
