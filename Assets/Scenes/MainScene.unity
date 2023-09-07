@@ -431,7 +431,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_objectToLookAt: {fileID: 221396323}
   m_rotationSpeed: 5
-  m_clampingXRotationValues: {x: 5, y: 60}
+  m_clampingXRotationValues: {x: -60, y: 60}
   m_smoothCameraFollow: 1
 --- !u!54 &330585549
 Rigidbody:

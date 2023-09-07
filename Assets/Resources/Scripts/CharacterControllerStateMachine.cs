@@ -11,6 +11,8 @@ public class CharacterControllerStateMachine : MonoBehaviour
     [field: SerializeField]
     public float MaxVelocity { get; private set; }
 
+    public const float SLOWN_DEPLACEMENT = 0.5f;
+
     private CharacterState m_currentState;
     private List<CharacterState> m_possibleStates;
 
