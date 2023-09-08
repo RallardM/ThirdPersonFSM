@@ -102,15 +102,11 @@ public class CameraController : MonoBehaviour
         // Calculate the new camera position
         Vector3 newPosition = transform.position + desiredCamTranslation;
 
-        Debug.Log("Is not scrolling not within range");
-
         // Return if the new position is not within the desired range
         if (IsPosWithinScrollRange(newPosition) == false)
         {
             return;
         }
-
-        Debug.Log("Is scrolling within range");
 
         // Else apply the camera offset
         // https://docs.unity3d.com/ScriptReference/Vector3.SmoothDamp.html
