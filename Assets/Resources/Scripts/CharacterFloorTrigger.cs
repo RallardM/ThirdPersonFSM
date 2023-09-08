@@ -8,7 +8,7 @@ public class CharacterFloorTrigger : MonoBehaviour
     {
         if (!IsOnFloor)
         {
-            Debug.Log("Touched the ground");
+            //Debug.Log("Touched the ground");
         }
         
         IsOnFloor = true;
@@ -16,7 +16,7 @@ public class CharacterFloorTrigger : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Left the ground");
+        //Debug.Log("Left the ground");
         IsOnFloor = false; 
     }
 }

@@ -11,7 +11,7 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private Vector2 m_clampingXRotationValues = Vector2.zero;
     [SerializeField]
-    private float m_smoothCameraFollow = 0.125f;
+    private float m_smoothCameraFollow = 2.0f;
     [SerializeField]
     private float m_scrollSpeed = 2.0f;
     [SerializeField]
@@ -21,20 +21,26 @@ public class CameraController : MonoBehaviour
 
     private const float SCROLL_POS_SAFE_THRESHOLD = 0.01f;
     
-    private float m_cameraDesiredOffset = 2.0f;
+    private float m_cameraDesiredOffset;
 
     //private float m_farthestCamDistFOV = 10.0f; // TODO
     //private float m_closestCamDistFOV = 60.0f; // TODO
 
     //private float m_previousPlayerToOffsetDotP = 0f; // TODO
 
+    private void Awake()
+    {
+        m_cameraDesiredOffset = m_farthestCamDist;
+    }
+
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("CameraController::Update, m_cameraDesiredOffset : " + m_cameraDesiredOffset);
         UpdateHorizontalMovements();
         UpdateVerticalMovements();
         UpdateCameraScroll();
-        CheckIfCameraIsInRange();
+        //CheckIfCameraIsInRange();
     }
 
     void FixedUpdate()
@@ -95,7 +101,7 @@ public class CameraController : MonoBehaviour
         Debug.Log("Is not scrolling not within range");
 
         // Return if the new position is not within the desired range
-        if (IsWithinScrollRange(newPosition) == false)
+        if (IsPosWithinScrollRange(newPosition) == false)
         {
             return;
         }
@@ -105,31 +111,6 @@ public class CameraController : MonoBehaviour
         // Else apply the camera offset
         transform.Translate(camTranslation, Space.World);
         m_cameraDesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
-    }
-
-    private bool IsWithinScrollRange(Vector3 position)
-    {
-        // Check if the new position is within the desired scroll range
-        float distance = Vector3.Distance(position, m_objectToLookAt.position);
-        
-        return distance >= m_closestCamDist && distance <= m_farthestCamDist;
-    }
-
-    // Source : https://stackoverflow.com/questions/8781990/efficient-way-to-reduce-a-vectors-magnitude-by-a-specific-length
-    private Vector3 GetPositionWithinRange(Vector3 position)
-    {
-        Vector3 newPosition = position;
-        float distance = Vector3.Distance(position, m_objectToLookAt.position);
-        if (distance < m_closestCamDist)
-        {
-            newPosition *= (1 - m_closestCamDist + SCROLL_POS_SAFE_THRESHOLD / position.magnitude);
-        }
-        else if (distance > m_farthestCamDist)
-        {
-            newPosition *= (1 - m_farthestCamDist - SCROLL_POS_SAFE_THRESHOLD / position.magnitude);
-        }
-
-        return newPosition;
     }
 
     private float ClampAngle(float angle)
@@ -167,9 +148,34 @@ public class CameraController : MonoBehaviour
         }       
     }
 
+    private bool IsPosWithinScrollRange(Vector3 position)
+    {
+        // Check if the new position is within the desired scroll range
+        float distance = Vector3.Distance(position, m_objectToLookAt.position);
+
+        return distance >= m_closestCamDist && distance <= m_farthestCamDist;
+    }
+
+    // Source : https://stackoverflow.com/questions/8781990/efficient-way-to-reduce-a-vectors-magnitude-by-a-specific-length
+    private Vector3 GetPositionWithinRange(Vector3 position)
+    {
+        Vector3 newPosition = position;
+        float distance = Vector3.Distance(position, m_objectToLookAt.position);
+        if (distance < m_closestCamDist)
+        {
+            newPosition *= (1 - m_closestCamDist + SCROLL_POS_SAFE_THRESHOLD / position.magnitude);
+        }
+        else if (distance > m_farthestCamDist)
+        {
+            newPosition *= (1 - m_farthestCamDist - SCROLL_POS_SAFE_THRESHOLD / position.magnitude);
+        }
+
+        return newPosition;
+    }
+
     private void CheckIfCameraIsInRange()
     {
-        if (IsWithinScrollRange(transform.position))
+        if (IsPosWithinScrollRange(transform.position))
         {
             return;
         }

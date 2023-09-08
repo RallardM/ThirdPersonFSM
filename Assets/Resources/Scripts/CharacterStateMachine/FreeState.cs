@@ -4,7 +4,7 @@ public class FreeState : CharacterState
 {
     public override void OnEnter()
     {
-        Debug.Log("Enter state: Free State");
+        //Debug.Log("Enter state: Free State");
     }
 
     public override void OnUpdate()
@@ -21,7 +21,6 @@ public class FreeState : CharacterState
         }
         if (Input.GetKey(KeyCode.W))
         {
-            Debug.Log("W Forward Pressed");
             Vector3 vectOnFloorDollyDir = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
             vectOnFloorDollyDir.Normalize();
             newDirection += vectOnFloorDollyDir * m_stateMachine.AccelerationValue;
@@ -59,7 +58,7 @@ public class FreeState : CharacterState
 
     public override void OnExit()
     {
-        Debug.Log("Exit state: Free state");
+        //Debug.Log("Exit state: Free state");
     }
 
     public override bool CanEnter()
