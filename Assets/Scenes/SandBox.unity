@@ -1125,6 +1125,11 @@ PrefabInstance:
       propertyPath: m_farthestCamDist
       value: 16
       objectReference: {fileID: 0}
+    - target: {fileID: 5841150887074833070, guid: dc9ba2af680d1744f996ce30bd0f8e23,
+        type: 3}
+      propertyPath: m_scrollSmoothTime
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 5841150887074833071, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
       propertyPath: m_IsKinematic

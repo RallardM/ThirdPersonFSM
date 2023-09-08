@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float m_farthestCamDist = 2.0f;
     [SerializeField]
-    private float m_scrollSmoothTime = 0.3f;
+    private float m_scrollSmoothDampTime = 0.7f;
 
     Vector3 m_cameraVelocity = Vector3.zero;
 
@@ -113,7 +113,8 @@ public class CameraController : MonoBehaviour
         Debug.Log("Is scrolling within range");
 
         // Else apply the camera offset
-        transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothTime, Mathf.Infinity, Time.deltaTime);
+        // https://docs.unity3d.com/ScriptReference/Vector3.SmoothDamp.html
+        transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
 
         //transform.Translate(desiredCamTranslation, Space.World);
         m_cameraDesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
