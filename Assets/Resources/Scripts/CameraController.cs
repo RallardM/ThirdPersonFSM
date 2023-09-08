@@ -18,6 +18,10 @@ public class CameraController : MonoBehaviour
     private float m_closestCamDist = 1.0f;
     [SerializeField]
     private float m_farthestCamDist = 2.0f;
+    [SerializeField]
+    private float m_scrollSmoothTime = 0.3f;
+
+    Vector3 m_cameraVelocity = Vector3.zero;
 
     private const float SCROLL_POS_SAFE_THRESHOLD = 0.01f;
     
@@ -93,10 +97,10 @@ public class CameraController : MonoBehaviour
         }
 
         // Calculate the desired camera offset based on the scroll input
-        Vector3 camTranslation = transform.forward * scrollDelta * m_scrollSpeed;
+        Vector3 desiredCamTranslation = transform.forward * scrollDelta * m_scrollSpeed;
 
         // Calculate the new camera position
-        Vector3 newPosition = transform.position + camTranslation;
+        Vector3 newPosition = transform.position + desiredCamTranslation;
 
         Debug.Log("Is not scrolling not within range");
 
@@ -109,7 +113,9 @@ public class CameraController : MonoBehaviour
         Debug.Log("Is scrolling within range");
 
         // Else apply the camera offset
-        transform.Translate(camTranslation, Space.World);
+        transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothTime, Mathf.Infinity, Time.deltaTime);
+
+        //transform.Translate(desiredCamTranslation, Space.World);
         m_cameraDesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
     }
 

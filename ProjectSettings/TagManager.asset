@@ -13,9 +13,9 @@ TagManager:
   - UI
   - MainCharacter
   - Floor
-  - GamePlayObject
+  - StaticObject
   - Camera
-  - 
+  - DynamicObject
   - 
   - 
   - 
