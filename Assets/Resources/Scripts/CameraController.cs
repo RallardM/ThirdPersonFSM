@@ -116,8 +116,6 @@ public class CameraController : MonoBehaviour
         // https://docs.unity3d.com/ScriptReference/Vector3.SmoothDamp.html
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
 
-        //transform.Translate(desiredCamTranslation, Space.World);
-        //m_cameraDesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
         m_cameraDesiredOffset = Vector3.Distance(newPosition, m_objectToLookAt.position);
     }
 
