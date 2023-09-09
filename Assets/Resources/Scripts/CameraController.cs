@@ -94,8 +94,6 @@ public class CameraController : MonoBehaviour
     {
         float scrollDelta = Input.mouseScrollDelta.y;
 
-        //Debug.Log("scrollDelta before " + scrollDelta);
-
         if (Mathf.Approximately(scrollDelta, 0f))
         {
             return;
@@ -107,8 +105,6 @@ public class CameraController : MonoBehaviour
             m_previousScrollDelta = scrollDelta;
             return;
         }
-
-        Debug.Log("scrollDelta after " + scrollDelta);
 
         // Calculate the desired camera offset based on the scroll input
         Vector3 desiredCamTranslation = transform.forward * scrollDelta * m_scrollSpeed;
