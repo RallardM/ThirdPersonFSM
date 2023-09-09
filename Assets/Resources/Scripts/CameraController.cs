@@ -43,10 +43,9 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateFollowPlayer();
         UpdateHorizontalRotations();
         UpdateVerticalRotations();
-        UpdateCameraScroll();
-        UpdateFOV();
     }
 
     void FixedUpdate()
@@ -56,11 +55,17 @@ public class CameraController : MonoBehaviour
 
     private void LateUpdate()
     {
+        UpdateCameraScroll();
+        UpdateFOV();
+    }
+
+    private void UpdateFollowPlayer()
+    {
         Vector3 targetPosition = m_objectToLookAt.position - transform.forward * m_cameraDesiredOffset;
         Vector3 smoothLerpedToTarget = Vector3.Lerp(transform.position, targetPosition, m_smoothCameraFollow * Time.deltaTime);
 
-        // Keep the Y raw so that the camera jumps with the player
-        smoothLerpedToTarget.y = targetPosition.y;
+        // Keep the Y raw so that the camera stays on the same level as the player move and jumps with the player
+        smoothLerpedToTarget.y = transform.position.y;
 
         // Smoothly interpolate the camera position towards the target position
         transform.position = smoothLerpedToTarget;
