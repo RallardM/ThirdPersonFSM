@@ -31,8 +31,9 @@ public class CameraController : MonoBehaviour
 
     Vector3 m_cameraVelocity = Vector3.zero;
 
-    private const float SCROLL_POS_SAFE_THRESHOLD = 0.01f;
+    private const float SCROLL_POS_SAFE_THRESHOLD = 2.5f;
     private float m_cameraDesiredOffset;
+    private float m_previousScrollDelta = 0.0f;
 
     private void Awake()
     {
@@ -93,10 +94,21 @@ public class CameraController : MonoBehaviour
     {
         float scrollDelta = Input.mouseScrollDelta.y;
 
+        //Debug.Log("scrollDelta before " + scrollDelta);
+
         if (Mathf.Approximately(scrollDelta, 0f))
         {
             return;
         }
+
+        // Prevent a glitch with some mouse (mine) of inputting a negative scroll on a positive one 
+        if (Mathf.Sign(m_previousScrollDelta) != Mathf.Sign(scrollDelta))
+        {
+            m_previousScrollDelta = scrollDelta;
+            return;
+        }
+
+        Debug.Log("scrollDelta after " + scrollDelta);
 
         // Calculate the desired camera offset based on the scroll input
         Vector3 desiredCamTranslation = transform.forward * scrollDelta * m_scrollSpeed;
@@ -115,6 +127,7 @@ public class CameraController : MonoBehaviour
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
 
         m_cameraDesiredOffset = Vector3.Distance(newPosition, m_objectToLookAt.position);
+        m_previousScrollDelta = scrollDelta;
     }
 
     private float ClampAngle(float angle)
@@ -157,35 +170,14 @@ public class CameraController : MonoBehaviour
         // Check if the new position is within the desired scroll range
         float distance = Vector3.Distance(position, m_objectToLookAt.position);
 
-        return distance >= m_closestCamDist && distance <= m_farthestCamDist;
-    }
+        // Round to two decimal places
+        distance = Mathf.Round(distance * 100f) / 100f;
 
-    // Source : https://stackoverflow.com/questions/8781990/efficient-way-to-reduce-a-vectors-magnitude-by-a-specific-length
-    private Vector3 GetPositionWithinRange(Vector3 position)
-    {
-        Vector3 newPosition = position;
-        float distance = Vector3.Distance(position, m_objectToLookAt.position);
-        if (distance < m_closestCamDist)
-        {
-            newPosition *= (1 - m_closestCamDist + SCROLL_POS_SAFE_THRESHOLD / position.magnitude);
-        }
-        else if (distance > m_farthestCamDist)
-        {
-            newPosition *= (1 - m_farthestCamDist - SCROLL_POS_SAFE_THRESHOLD / position.magnitude);
-        }
-
-        return newPosition;
-    }
-
-    private void CheckIfCameraIsInRange()
-    {
-        if (IsPosWithinScrollRange(transform.position))
-        {
-            return;
-        }
-
-        //transform.position = GetPositionWithinRange(transform.position);
-        //transform.position = Vector3.Lerp(transform.position, GetPositionWithinRange(transform.position), m_smoothCameraFollow * Time.deltaTime);
+        bool isWithinClosestRange = distance >= m_closestCamDist + SCROLL_POS_SAFE_THRESHOLD;
+        bool isWithinFarthestRange = distance <= m_farthestCamDist - SCROLL_POS_SAFE_THRESHOLD;
+        bool isWithinRange = isWithinClosestRange && isWithinFarthestRange;
+        
+        return isWithinRange;
     }
 
     private void UpdateFOV()
@@ -196,42 +188,4 @@ public class CameraController : MonoBehaviour
         float newFOV = Mathf.Lerp(m_closestCamDistFOV, m_farthestCamDistFOV, distancePercent);
         transform.GetComponent<Camera>().fieldOfView = newFOV;
     }
-
-    //private void UpdateFOV()
-    //{
-    //    float currentOffsetPercent = (m_cameraDesiredOffset * 100.0f) / m_farthestCamDist;
-    //    float offestPercentRest = 100.0f - currentOffsetPercent;
-
-    //    //float closestOffsetPercent = (m_closestCamDist * 100.0f) / m_farthestCamDist;
-
-    //    //if (currentOffsetPercent < closestOffsetPercent)
-    //    //{
-    //    //    return;
-    //    //}
-
-    //    //float relativeToFOVRange = (currentOffsetPercent * m_closestCamDistFOV) / 100.0f;
-    //    float relativeToFOVRange = (offestPercentRest * m_closestCamDistFOV) / 100.0f;
-
-    //    //float relativeToFOVRange = (currentOffsetPercent * 100.0f) / ((m_closestCamDistFOV * 100.0f) / m_farthestCamDistFOV);
-    //    //float relativeToFOVRange2 = (currentOffsetPercent * ((100.0f * m_farthestCamDistFOV) / m_closestCamDistFOV) / 100.0f);
-    //    //Debug.Log("relativeToFOVRange: " + relativeToFOVRange + " relativeToFOVRange2: " + relativeToFOVRange2);
-    //    //Debug.Log("result : " + (m_closestCamDistFOV - relativeToClosestFOVRange));
-
-    //    //float relativeToClosestFOVRangeRest = (offestPercentRest * m_closestCamDistFOV) / 100.0f;
-    //    //Debug.Log("FOVRange : " + relativeToClosestFOVRange + " RangeRest : " + relativeToClosestFOVRangeRest);
-    //    //float relativeToFarthestFOVRange = (currentOffsetPercent * m_farthestCamDist) / 100.0f;
-    //    //float percentRestFOVRange = 100.0f - relativeToClosestFOVRange;
-    //    //Debug.Log("ClosestFOVRange: " + relativeToClosestFOVRange + " FarthestFOVRange: " + relativeToFarthestFOVRange);
-    //    //Debug.Log("percentRestFOVRange: " + percentRestFOVRange + " relativeToFOVRange: " + relativeToClosestFOVRange);
-    //    //Debug.Log("FOVRange : " + relativeToFOVRange + " = OffsetPercent : " + currentOffsetPercent + " * m_closestCamDistFOV : " + m_closestCamDistFOV + "/ 100.0f");
-    //    //float smallestFOVPercent = (m_farthestCamDistFOV * 100.0f) / m_closestCamDistFOV;
-
-    //    //if (smallestFOVPercent < relativeToFOVRange)
-    //    //{
-    //    //    return;
-    //    //}
-
-    //    //transform.GetComponent<Camera>().fieldOfView = percentRestFOVRange;
-    //    transform.GetComponent<Camera>().fieldOfView = relativeToFOVRange;
-    //}
 }
