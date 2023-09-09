@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class CameraController : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class CameraController : MonoBehaviour
     private Vector2 m_clampingXRotationValues = Vector2.zero;
     [SerializeField]
     private float m_smoothCameraFollow = 2.0f;
+
+
+    [Header("Scrolling Settings")]
     [SerializeField]
     private float m_scrollSpeed = 2.0f;
     [SerializeField]
@@ -19,14 +23,16 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float m_farthestCamDist = 16.0f;
     [SerializeField]
+    private float m_farthestCamDistFOV = 10.0f;
+    [SerializeField]
+    private float m_closestCamDistFOV = 60.0f;
+    [SerializeField]
     private float m_scrollSmoothDampTime = 0.7f;
 
     Vector3 m_cameraVelocity = Vector3.zero;
 
     private const float SCROLL_POS_SAFE_THRESHOLD = 0.01f;
     private float m_cameraDesiredOffset;
-    private float m_farthestCamDistFOV = 10.0f;
-    private float m_closestCamDistFOV = 60.0f;
 
     private void Awake()
     {
@@ -184,39 +190,48 @@ public class CameraController : MonoBehaviour
 
     private void UpdateFOV()
     {
-        float currentOffsetPercent = (m_cameraDesiredOffset * 100.0f) / m_farthestCamDist;
-        float offestPercentRest = 100.0f - currentOffsetPercent;
+        float currentDistance = Vector3.Distance(transform.position, m_objectToLookAt.position);
+        float distancePercent = currentDistance / m_farthestCamDist;
 
-        //float closestOffsetPercent = (m_closestCamDist * 100.0f) / m_farthestCamDist;
-
-        //if (currentOffsetPercent < closestOffsetPercent)
-        //{
-        //    return;
-        //}
-
-        //float relativeToFOVRange = (currentOffsetPercent * m_closestCamDistFOV) / 100.0f;
-        float relativeToFOVRange = (offestPercentRest * m_closestCamDistFOV) / 100.0f;
-
-        //float relativeToFOVRange = (currentOffsetPercent * 100.0f) / ((m_closestCamDistFOV * 100.0f) / m_farthestCamDistFOV);
-        //float relativeToFOVRange2 = (currentOffsetPercent * ((100.0f * m_farthestCamDistFOV) / m_closestCamDistFOV) / 100.0f);
-        //Debug.Log("relativeToFOVRange: " + relativeToFOVRange + " relativeToFOVRange2: " + relativeToFOVRange2);
-        //Debug.Log("result : " + (m_closestCamDistFOV - relativeToClosestFOVRange));
-
-        //float relativeToClosestFOVRangeRest = (offestPercentRest * m_closestCamDistFOV) / 100.0f;
-        //Debug.Log("FOVRange : " + relativeToClosestFOVRange + " RangeRest : " + relativeToClosestFOVRangeRest);
-        //float relativeToFarthestFOVRange = (currentOffsetPercent * m_farthestCamDist) / 100.0f;
-        //float percentRestFOVRange = 100.0f - relativeToClosestFOVRange;
-        //Debug.Log("ClosestFOVRange: " + relativeToClosestFOVRange + " FarthestFOVRange: " + relativeToFarthestFOVRange);
-        //Debug.Log("percentRestFOVRange: " + percentRestFOVRange + " relativeToFOVRange: " + relativeToClosestFOVRange);
-        //Debug.Log("FOVRange : " + relativeToFOVRange + " = OffsetPercent : " + currentOffsetPercent + " * m_closestCamDistFOV : " + m_closestCamDistFOV + "/ 100.0f");
-        //float smallestFOVPercent = (m_farthestCamDistFOV * 100.0f) / m_closestCamDistFOV;
-
-        //if (smallestFOVPercent < relativeToFOVRange)
-        //{
-        //    return;
-        //}
-
-        //transform.GetComponent<Camera>().fieldOfView = percentRestFOVRange;
-        transform.GetComponent<Camera>().fieldOfView = relativeToFOVRange;
+        float newFOV = Mathf.Lerp(m_closestCamDistFOV, m_farthestCamDistFOV, distancePercent);
+        transform.GetComponent<Camera>().fieldOfView = newFOV;
     }
+
+    //private void UpdateFOV()
+    //{
+    //    float currentOffsetPercent = (m_cameraDesiredOffset * 100.0f) / m_farthestCamDist;
+    //    float offestPercentRest = 100.0f - currentOffsetPercent;
+
+    //    //float closestOffsetPercent = (m_closestCamDist * 100.0f) / m_farthestCamDist;
+
+    //    //if (currentOffsetPercent < closestOffsetPercent)
+    //    //{
+    //    //    return;
+    //    //}
+
+    //    //float relativeToFOVRange = (currentOffsetPercent * m_closestCamDistFOV) / 100.0f;
+    //    float relativeToFOVRange = (offestPercentRest * m_closestCamDistFOV) / 100.0f;
+
+    //    //float relativeToFOVRange = (currentOffsetPercent * 100.0f) / ((m_closestCamDistFOV * 100.0f) / m_farthestCamDistFOV);
+    //    //float relativeToFOVRange2 = (currentOffsetPercent * ((100.0f * m_farthestCamDistFOV) / m_closestCamDistFOV) / 100.0f);
+    //    //Debug.Log("relativeToFOVRange: " + relativeToFOVRange + " relativeToFOVRange2: " + relativeToFOVRange2);
+    //    //Debug.Log("result : " + (m_closestCamDistFOV - relativeToClosestFOVRange));
+
+    //    //float relativeToClosestFOVRangeRest = (offestPercentRest * m_closestCamDistFOV) / 100.0f;
+    //    //Debug.Log("FOVRange : " + relativeToClosestFOVRange + " RangeRest : " + relativeToClosestFOVRangeRest);
+    //    //float relativeToFarthestFOVRange = (currentOffsetPercent * m_farthestCamDist) / 100.0f;
+    //    //float percentRestFOVRange = 100.0f - relativeToClosestFOVRange;
+    //    //Debug.Log("ClosestFOVRange: " + relativeToClosestFOVRange + " FarthestFOVRange: " + relativeToFarthestFOVRange);
+    //    //Debug.Log("percentRestFOVRange: " + percentRestFOVRange + " relativeToFOVRange: " + relativeToClosestFOVRange);
+    //    //Debug.Log("FOVRange : " + relativeToFOVRange + " = OffsetPercent : " + currentOffsetPercent + " * m_closestCamDistFOV : " + m_closestCamDistFOV + "/ 100.0f");
+    //    //float smallestFOVPercent = (m_farthestCamDistFOV * 100.0f) / m_closestCamDistFOV;
+
+    //    //if (smallestFOVPercent < relativeToFOVRange)
+    //    //{
+    //    //    return;
+    //    //}
+
+    //    //transform.GetComponent<Camera>().fieldOfView = percentRestFOVRange;
+    //    transform.GetComponent<Camera>().fieldOfView = relativeToFOVRange;
+    //}
 }

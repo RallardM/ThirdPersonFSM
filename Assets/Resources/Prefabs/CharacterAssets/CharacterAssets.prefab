@@ -440,7 +440,7 @@ GameObject:
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -574,7 +574,7 @@ GameObject:
   m_Layer: 6
   m_Name: FloorTrigger
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -717,7 +717,7 @@ GameObject:
   m_Layer: 9
   m_Name: Main Camera
   m_TagString: MainCamera
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -838,8 +838,10 @@ MonoBehaviour:
   m_smoothCameraFollow: 2
   m_scrollSpeed: 2
   m_closestCamDist: 2
-  m_farthestCamDist: 16
+  m_farthestCamDist: 32
   m_scrollSmoothDampTime: 0.7
+  m_farthestCamDistFOV: 10
+  m_closestCamDistFOV: 60
 --- !u!135 &5841150887074833068
 SphereCollider:
   m_ObjectHideFlags: 0
