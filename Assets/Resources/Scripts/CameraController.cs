@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private Transform m_objectToLookAt;
     [SerializeField]
-    private float m_rotationSpeed = 1.0f;
+    private float m_rotationSpeed = 5.0f;
     [SerializeField]
     private Vector2 m_clampingXRotationValues = Vector2.zero;
     [SerializeField]
@@ -15,22 +15,18 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float m_scrollSpeed = 2.0f;
     [SerializeField]
-    private float m_closestCamDist = 1.0f;
+    private float m_closestCamDist = 2.0f;
     [SerializeField]
-    private float m_farthestCamDist = 2.0f;
+    private float m_farthestCamDist = 16.0f;
     [SerializeField]
     private float m_scrollSmoothDampTime = 0.7f;
 
     Vector3 m_cameraVelocity = Vector3.zero;
 
     private const float SCROLL_POS_SAFE_THRESHOLD = 0.01f;
-    
     private float m_cameraDesiredOffset;
-
-    //private float m_farthestCamDistFOV = 10.0f; // TODO
-    //private float m_closestCamDistFOV = 60.0f; // TODO
-
-    //private float m_previousPlayerToOffsetDotP = 0f; // TODO
+    private float m_farthestCamDistFOV = 10.0f;
+    private float m_closestCamDistFOV = 60.0f;
 
     private void Awake()
     {
@@ -40,10 +36,10 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("CameraController::Update, m_cameraDesiredOffset : " + m_cameraDesiredOffset);
         UpdateHorizontalMovements();
         UpdateVerticalMovements();
         UpdateCameraScroll();
+        UpdateFOV();
         //CheckIfCameraIsInRange();
     }
 
@@ -184,5 +180,43 @@ public class CameraController : MonoBehaviour
 
         //transform.position = GetPositionWithinRange(transform.position);
         //transform.position = Vector3.Lerp(transform.position, GetPositionWithinRange(transform.position), m_smoothCameraFollow * Time.deltaTime);
+    }
+
+    private void UpdateFOV()
+    {
+        float currentOffsetPercent = (m_cameraDesiredOffset * 100.0f) / m_farthestCamDist;
+        float offestPercentRest = 100.0f - currentOffsetPercent;
+
+        //float closestOffsetPercent = (m_closestCamDist * 100.0f) / m_farthestCamDist;
+
+        //if (currentOffsetPercent < closestOffsetPercent)
+        //{
+        //    return;
+        //}
+
+        //float relativeToFOVRange = (currentOffsetPercent * m_closestCamDistFOV) / 100.0f;
+        float relativeToFOVRange = (offestPercentRest * m_closestCamDistFOV) / 100.0f;
+
+        //float relativeToFOVRange = (currentOffsetPercent * 100.0f) / ((m_closestCamDistFOV * 100.0f) / m_farthestCamDistFOV);
+        //float relativeToFOVRange2 = (currentOffsetPercent * ((100.0f * m_farthestCamDistFOV) / m_closestCamDistFOV) / 100.0f);
+        //Debug.Log("relativeToFOVRange: " + relativeToFOVRange + " relativeToFOVRange2: " + relativeToFOVRange2);
+        //Debug.Log("result : " + (m_closestCamDistFOV - relativeToClosestFOVRange));
+
+        //float relativeToClosestFOVRangeRest = (offestPercentRest * m_closestCamDistFOV) / 100.0f;
+        //Debug.Log("FOVRange : " + relativeToClosestFOVRange + " RangeRest : " + relativeToClosestFOVRangeRest);
+        //float relativeToFarthestFOVRange = (currentOffsetPercent * m_farthestCamDist) / 100.0f;
+        //float percentRestFOVRange = 100.0f - relativeToClosestFOVRange;
+        //Debug.Log("ClosestFOVRange: " + relativeToClosestFOVRange + " FarthestFOVRange: " + relativeToFarthestFOVRange);
+        //Debug.Log("percentRestFOVRange: " + percentRestFOVRange + " relativeToFOVRange: " + relativeToClosestFOVRange);
+        //Debug.Log("FOVRange : " + relativeToFOVRange + " = OffsetPercent : " + currentOffsetPercent + " * m_closestCamDistFOV : " + m_closestCamDistFOV + "/ 100.0f");
+        //float smallestFOVPercent = (m_farthestCamDistFOV * 100.0f) / m_closestCamDistFOV;
+
+        //if (smallestFOVPercent < relativeToFOVRange)
+        //{
+        //    return;
+        //}
+
+        //transform.GetComponent<Camera>().fieldOfView = percentRestFOVRange;
+        transform.GetComponent<Camera>().fieldOfView = relativeToFOVRange;
     }
 }

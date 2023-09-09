@@ -1110,31 +1110,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: CharacterAssets
       objectReference: {fileID: 0}
-    - target: {fileID: 5841150887074833068, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_Radius
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5841150887074833070, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_closestCamDist
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 5841150887074833070, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_farthestCamDist
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 5841150887074833070, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_scrollSmoothTime
-      value: 0.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 5841150887074833071, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_IsKinematic
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc9ba2af680d1744f996ce30bd0f8e23, type: 3}
 --- !u!1 &1445169019
@@ -1278,7 +1253,7 @@ ReflectionProbe:
   m_Enabled: 1
   serializedVersion: 2
   m_Type: 0
-  m_Mode: 0
+  m_Mode: 1
   m_RefreshMode: 0
   m_TimeSlicingMode: 0
   m_Resolution: 128
