@@ -43,11 +43,10 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateHorizontalMovements();
-        UpdateVerticalMovements();
+        UpdateHorizontalRotations();
+        UpdateVerticalRotations();
         UpdateCameraScroll();
         UpdateFOV();
-        //CheckIfCameraIsInRange();
     }
 
     void FixedUpdate()
@@ -58,21 +57,25 @@ public class CameraController : MonoBehaviour
     private void LateUpdate()
     {
         Vector3 targetPosition = m_objectToLookAt.position - transform.forward * m_cameraDesiredOffset;
+        Vector3 smoothLerpedToTarget = Vector3.Lerp(transform.position, targetPosition, m_smoothCameraFollow * Time.deltaTime);
+
+        // Keep the Y raw so that the camera jumps with the player
+        smoothLerpedToTarget.y = targetPosition.y;
 
         // Smoothly interpolate the camera position towards the target position
-        transform.position = Vector3.Lerp(transform.position, targetPosition, m_smoothCameraFollow * Time.deltaTime);
+        transform.position = smoothLerpedToTarget;
 
         // Look at the target
         transform.LookAt(m_objectToLookAt);
     }
 
-    private void UpdateHorizontalMovements()
+    private void UpdateHorizontalRotations()
     {
         float currentAngleX = Input.GetAxis("Mouse X") * m_rotationSpeed;
         transform.RotateAround(m_objectToLookAt.position, m_objectToLookAt.up, currentAngleX);
     }
 
-    private void UpdateVerticalMovements()
+    private void UpdateVerticalRotations()
     {
         float currentAngleY = Input.GetAxis("Mouse Y") * m_rotationSpeed;
         float eulersAngleX = transform.rotation.eulerAngles.x;
