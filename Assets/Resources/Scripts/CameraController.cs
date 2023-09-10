@@ -209,14 +209,14 @@ public class CameraController : MonoBehaviour
         vecteurDiff.y -= m_floorObstructionRaycastHeight;
         float distance = Vector3.Distance(transform.position, vecteurDiff);
 
-        if (Physics.Raycast(transform.position, vecteurDiff, out hit, distance, layerMask))
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, m_floorObstructionRaycastHeight, layerMask))
         {
             Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.red);
 
             return;
         }
 
-        Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.blue);
+        Debug.DrawRay(transform.position, Vector3.down, Color.blue);
     }
 
     private bool IsPosWithinScrollRange(Vector3 position)
