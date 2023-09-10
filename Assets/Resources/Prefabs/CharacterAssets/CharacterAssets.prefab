@@ -836,12 +836,13 @@ MonoBehaviour:
   m_rotationSpeed: 5
   m_clampingXRotationValues: {x: -60, y: 60}
   m_smoothCameraFollow: 2
-  m_scrollSpeed: 2
+  m_scrollSpeed: 4
   m_closestCamDist: 2
-  m_farthestCamDist: 32
+  m_farthestCamDist: 40
+  m_farthestCamDistFOV: 20
+  m_closestCamDistFOV: 70
   m_scrollSmoothDampTime: 0.7
-  m_farthestCamDistFOV: 10
-  m_closestCamDistFOV: 60
+  m_lerpInfrontObstructionSpeed: 16
 --- !u!135 &5841150887074833068
 SphereCollider:
   m_ObjectHideFlags: 0

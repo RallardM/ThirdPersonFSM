@@ -29,15 +29,24 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float m_scrollSmoothDampTime = 0.7f;
 
+    [Header("Camera Obstruction")]
+    [SerializeField]
+    private float m_lerpInfrontObstructionSpeed = 16.0f;
+
     Vector3 m_cameraVelocity = Vector3.zero;
 
     private const float SCROLL_POS_SAFE_THRESHOLD = 2.5f;
-    private float m_cameraDesiredOffset;
+    private float TemporaryOffset { get; set; }
+    private float DesiredOffset { get;  set; }
     private float m_previousScrollDelta = 0.0f;
+    
+
+    private bool m_cameraIsObstructed = false;
 
     private void Awake()
     {
-        m_cameraDesiredOffset = m_farthestCamDist;
+        DesiredOffset = m_farthestCamDist;
+        TemporaryOffset = m_farthestCamDist;
     }
 
     // Update is called once per frame
@@ -61,7 +70,7 @@ public class CameraController : MonoBehaviour
 
     private void UpdateFollowPlayer()
     {
-        Vector3 targetPosition = m_objectToLookAt.position - transform.forward * m_cameraDesiredOffset;
+        Vector3 targetPosition = m_objectToLookAt.position - transform.forward * TemporaryOffset;
         Vector3 smoothLerpedToTarget = Vector3.Lerp(transform.position, targetPosition, m_smoothCameraFollow * Time.deltaTime);
 
         // Keep the Y raw so that the camera stays on the same level as the player move and jumps with the player
@@ -130,7 +139,7 @@ public class CameraController : MonoBehaviour
         // https://docs.unity3d.com/ScriptReference/Vector3.SmoothDamp.html
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
 
-        m_cameraDesiredOffset = Vector3.Distance(newPosition, m_objectToLookAt.position);
+        TemporaryOffset = Vector3.Distance(newPosition, m_objectToLookAt.position);
         m_previousScrollDelta = scrollDelta;
     }
 
@@ -146,7 +155,11 @@ public class CameraController : MonoBehaviour
     private void FixedUpdateTestCameraObstruction()
     {
         // Bit shift the index of the layer (8) to get a bit mask
+        // Add static object layer 8
         int layerMask = 1 << 8;
+        // Add floor layer 7
+        // Source : https://docs.unity3d.com/Manual/layermask-add.html
+        layerMask |= 1 << 7;
 
         // This would cast rays only against colliders in layer 8.
         // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
@@ -155,18 +168,33 @@ public class CameraController : MonoBehaviour
         RaycastHit hit;
 
         // Does the ray intersect any objects excluding the player layer
-        var vecteurDiff = transform.position - m_objectToLookAt.position;
-        var distance = vecteurDiff.magnitude;
+        Vector3 vecteurDiff = transform.position - m_objectToLookAt.position;
+        float distance = vecteurDiff.magnitude;
 
         if (Physics.Raycast(m_objectToLookAt.position, vecteurDiff, out hit, distance, layerMask))
         {
+            if (m_cameraIsObstructed == false)
+            {
+                m_cameraIsObstructed = true;
+                DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+            }
+
             Debug.DrawRay(m_objectToLookAt.position, vecteurDiff.normalized * hit.distance, Color.red);
-            transform.SetPositionAndRotation(hit.point, transform.rotation);
+            Vector3 lerpedHitPoin = Vector3.Lerp(transform.position, hit.point, Time.deltaTime * m_lerpInfrontObstructionSpeed);
+            transform.SetPositionAndRotation(lerpedHitPoin, transform.rotation);
+            TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+            return;
         }
-        else
+
+        Debug.DrawRay(m_objectToLookAt.position, vecteurDiff, Color.green);
+
+        if (m_cameraIsObstructed == false)
         {
-            Debug.DrawRay(m_objectToLookAt.position, vecteurDiff, Color.green);
-        }       
+            return;
+        }
+
+        TemporaryOffset = DesiredOffset;
+        m_cameraIsObstructed = false;
     }
 
     private bool IsPosWithinScrollRange(Vector3 position)

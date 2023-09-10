@@ -1110,26 +1110,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: CharacterAssets
       objectReference: {fileID: 0}
-    - target: {fileID: 5841150887074833070, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_scrollSpeed
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 5841150887074833070, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_farthestCamDist
-      value: 40
-      objectReference: {fileID: 0}
-    - target: {fileID: 5841150887074833070, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_closestCamDistFOV
-      value: 70
-      objectReference: {fileID: 0}
-    - target: {fileID: 5841150887074833070, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_farthestCamDistFOV
-      value: 20
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc9ba2af680d1744f996ce30bd0f8e23, type: 3}
 --- !u!1 &1445169019
