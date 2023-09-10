@@ -32,6 +32,8 @@ public class CameraController : MonoBehaviour
     [Header("Camera Obstruction")]
     [SerializeField]
     private float m_lerpInfrontObstructionSpeed = 16.0f;
+    [SerializeField]
+    private float m_floorObstructionRaycastHeight = 1.0f;
 
     Vector3 m_cameraVelocity = Vector3.zero;
 
@@ -59,7 +61,8 @@ public class CameraController : MonoBehaviour
 
     void FixedUpdate()
     {
-        FixedUpdateTestCameraObstruction();
+        FixedUpdateObjectObstruction();
+        FixedUpdateFloorObstruction();
     }
 
     private void LateUpdate()
@@ -152,14 +155,11 @@ public class CameraController : MonoBehaviour
         return angle;
     }
 
-    private void FixedUpdateTestCameraObstruction()
+    private void FixedUpdateObjectObstruction()
     {
         // Bit shift the index of the layer (8) to get a bit mask
-        // Add static object layer 8
+        // Add static object layer 8 (static objects)
         int layerMask = 1 << 8;
-        // Add floor layer 7
-        // Source : https://docs.unity3d.com/Manual/layermask-add.html
-        layerMask |= 1 << 7;
 
         // This would cast rays only against colliders in layer 8.
         // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
@@ -195,6 +195,28 @@ public class CameraController : MonoBehaviour
 
         TemporaryOffset = DesiredOffset;
         m_cameraIsObstructed = false;
+    }
+
+    private void FixedUpdateFloorObstruction()
+    {
+        // Bit shift the index of the layer (8) to get a bit mask
+        // Add static object layer 7 (floor)
+        int layerMask = 1 << 7;
+
+        RaycastHit hit;
+
+        Vector3 vecteurDiff = transform.position;
+        vecteurDiff.y -= m_floorObstructionRaycastHeight;
+        float distance = Vector3.Distance(transform.position, vecteurDiff);
+
+        if (Physics.Raycast(transform.position, vecteurDiff, out hit, distance, layerMask))
+        {
+            Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.red);
+
+            return;
+        }
+
+        Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.blue);
     }
 
     private bool IsPosWithinScrollRange(Vector3 position)
