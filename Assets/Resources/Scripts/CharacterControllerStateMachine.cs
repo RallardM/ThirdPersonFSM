@@ -7,6 +7,8 @@ public class CharacterControllerStateMachine : MonoBehaviour
     public Camera Camera { get; private set; }
     public Rigidbody RB { get; private set; }
 
+    public Transform PlayerTransform { get; private set; }
+
     [field: SerializeField]
     public float AccelerationValue { get; private set; }
     [field: SerializeField]
@@ -33,6 +35,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
     {
         Camera = Camera.main;
         RB = GetComponent<Rigidbody>();
+        PlayerTransform = transform;
 
         foreach (CharacterState state in m_possibleStates)
         {

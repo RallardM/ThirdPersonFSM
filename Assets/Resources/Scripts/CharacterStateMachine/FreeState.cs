@@ -46,7 +46,16 @@ public class FreeState : CharacterState
             vectOnFloorTruckDir.Normalize();
             newDirection += vectOnFloorTruckDir * m_stateMachine.AccelerationValue * slownValue;
         }
-        
+
+        // Rotate the player's mesh toward the new input direction
+        if (newDirection != Vector3.zero)
+        {
+            Quaternion meshRotation = Quaternion.LookRotation(newDirection, Vector3.up);
+            float interpolationSpeed = 2.0f;
+            // Source : https://forum.unity.com/threads/what-is-the-difference-of-quaternion-slerp-and-lerp.101179/
+            m_stateMachine.PlayerTransform.rotation = Quaternion.Slerp(m_stateMachine.PlayerTransform.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
+        }
+
         m_stateMachine.RB.AddForce(newDirection, ForceMode.Acceleration);
 
         if (m_stateMachine.RB.velocity.magnitude > m_stateMachine.MaxVelocity)
