@@ -35,13 +35,12 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float m_floorObstructionRaycastHeight = 1.0f;
 
-    Vector3 m_cameraVelocity = Vector3.zero;
+    private Vector3 m_cameraVelocity = Vector3.zero;
 
     private const float SCROLL_POS_SAFE_THRESHOLD = 2.5f;
     private float TemporaryOffset { get; set; }
     private float DesiredOffset { get;  set; }
     private float m_previousScrollDelta = 0.0f;
-    
 
     private bool m_cameraIsObstructed = false;
 
@@ -62,7 +61,6 @@ public class CameraController : MonoBehaviour
     void FixedUpdate()
     {
         FixedUpdateObjectObstruction();
-        FixedUpdateFloorObstruction();
     }
 
     private void LateUpdate()
@@ -161,6 +159,9 @@ public class CameraController : MonoBehaviour
         // Add static object layer 8 (static objects)
         int layerMask = 1 << 8;
 
+        // Add floor layer 7 (floor) Source : https://forum.unity.com/threads/layermasks-how-to-use-em.1804/
+        layerMask |= 1 << 7;
+
         // This would cast rays only against colliders in layer 8.
         // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
         //layerMask = ~layerMask;
@@ -168,10 +169,10 @@ public class CameraController : MonoBehaviour
         RaycastHit hit;
 
         // Does the ray intersect any objects excluding the player layer
-        Vector3 vecteurDiff = transform.position - m_objectToLookAt.position;
-        float distance = vecteurDiff.magnitude;
+        Vector3 playerToCamVect = transform.position - m_objectToLookAt.position;
+        float distance = playerToCamVect.magnitude;
 
-        if (Physics.Raycast(m_objectToLookAt.position, vecteurDiff, out hit, distance, layerMask))
+        if (Physics.Raycast(m_objectToLookAt.position, playerToCamVect, out hit, distance, layerMask)) // Static object obstruction
         {
             if (m_cameraIsObstructed == false)
             {
@@ -179,14 +180,34 @@ public class CameraController : MonoBehaviour
                 DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
             }
 
-            Debug.DrawRay(m_objectToLookAt.position, vecteurDiff.normalized * hit.distance, Color.red);
-            Vector3 lerpedHitPoin = Vector3.Lerp(transform.position, hit.point, Time.deltaTime * m_lerpInfrontObstructionSpeed);
-            transform.SetPositionAndRotation(lerpedHitPoin, transform.rotation);
+            Debug.DrawRay(m_objectToLookAt.position, playerToCamVect.normalized * hit.distance, Color.red); // Static object obstruction ray
+            
+            Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hit.point, Time.deltaTime * m_lerpInfrontObstructionSpeed);
+
+            transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
+            TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+            return;
+        }
+        else if (Physics.Raycast(transform.position, Vector3.down, out hit, m_floorObstructionRaycastHeight, layerMask)) // Floor obstruction
+        {
+            if (m_cameraIsObstructed == false)
+            {
+                m_cameraIsObstructed = true;
+                DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+            }
+
+            Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.red); // Floor obstruction ray
+            Vector3 hitPoint = hit.point;
+            hitPoint.y += m_floorObstructionRaycastHeight;
+            Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
+
+            transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
             TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
             return;
         }
 
-        Debug.DrawRay(m_objectToLookAt.position, vecteurDiff, Color.green);
+        Debug.DrawRay(m_objectToLookAt.position, playerToCamVect, Color.green); // Static object obstruction ray
+        Debug.DrawRay(transform.position, Vector3.down, Color.blue); // Floor obstruction ray
 
         if (m_cameraIsObstructed == false)
         {
@@ -195,28 +216,6 @@ public class CameraController : MonoBehaviour
 
         TemporaryOffset = DesiredOffset;
         m_cameraIsObstructed = false;
-    }
-
-    private void FixedUpdateFloorObstruction()
-    {
-        // Bit shift the index of the layer (8) to get a bit mask
-        // Add static object layer 7 (floor)
-        int layerMask = 1 << 7;
-
-        RaycastHit hit;
-
-        Vector3 vecteurDiff = transform.position;
-        vecteurDiff.y -= m_floorObstructionRaycastHeight;
-        float distance = Vector3.Distance(transform.position, vecteurDiff);
-
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, m_floorObstructionRaycastHeight, layerMask))
-        {
-            Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.red);
-
-            return;
-        }
-
-        Debug.DrawRay(transform.position, Vector3.down, Color.blue);
     }
 
     private bool IsPosWithinScrollRange(Vector3 position)
