@@ -38,6 +38,8 @@ public class CameraController : MonoBehaviour
     private Vector3 m_cameraVelocity = Vector3.zero;
 
     private const float SCROLL_POS_SAFE_THRESHOLD = 2.5f;
+    private const float SCROLL_FOV_SLOW_TRANSITION = 55.0f;
+
     private float TemporaryOffset { get; set; }
     private float DesiredOffset { get;  set; }
     private float m_previousScrollDelta = 0.0f;
@@ -108,6 +110,15 @@ public class CameraController : MonoBehaviour
         transform.RotateAround(m_objectToLookAt.position, transform.right, currentAngleY);
     }
 
+    private float ClampAngle(float angle)
+    {
+        if (angle > 180)
+        {
+            angle -= 360;
+        }
+        return angle;
+    }
+
     private void UpdateCameraScroll()
     {
         float scrollDelta = Input.mouseScrollDelta.y;
@@ -124,8 +135,15 @@ public class CameraController : MonoBehaviour
             return;
         }
 
+        // Scroll faster at smaller FOV to avoid the impression of slowness the change of FOV gives
+        float smallFOVSpeed = 1.0f;
+        if (transform.GetComponent<Camera>().fieldOfView < SCROLL_FOV_SLOW_TRANSITION)
+        {
+            smallFOVSpeed = 2.0f;
+        }
+
         // Calculate the desired camera offset based on the scroll input
-        Vector3 desiredCamTranslation = transform.forward * scrollDelta * m_scrollSpeed;
+        Vector3 desiredCamTranslation = transform.forward * scrollDelta * smallFOVSpeed * m_scrollSpeed;
 
         // Calculate the new camera position
         Vector3 newPosition = transform.position + desiredCamTranslation;
@@ -144,13 +162,13 @@ public class CameraController : MonoBehaviour
         m_previousScrollDelta = scrollDelta;
     }
 
-    private float ClampAngle(float angle)
+    private void UpdateFOV()
     {
-        if (angle > 180)
-        {
-            angle -= 360;
-        }
-        return angle;
+        float currentDistance = Vector3.Distance(transform.position, m_objectToLookAt.position);
+        float distancePercent = currentDistance / m_farthestCamDist;
+
+        float newFOV = Mathf.Lerp(m_closestCamDistFOV, m_farthestCamDistFOV, distancePercent);
+        transform.GetComponent<Camera>().fieldOfView = newFOV;
     }
 
     private void FixedUpdateObjectObstruction()
@@ -231,14 +249,5 @@ public class CameraController : MonoBehaviour
         bool isWithinRange = isWithinClosestRange && isWithinFarthestRange;
         
         return isWithinRange;
-    }
-
-    private void UpdateFOV()
-    {
-        float currentDistance = Vector3.Distance(transform.position, m_objectToLookAt.position);
-        float distancePercent = currentDistance / m_farthestCamDist;
-
-        float newFOV = Mathf.Lerp(m_closestCamDistFOV, m_farthestCamDistFOV, distancePercent);
-        transform.GetComponent<Camera>().fieldOfView = newFOV;
     }
 }
