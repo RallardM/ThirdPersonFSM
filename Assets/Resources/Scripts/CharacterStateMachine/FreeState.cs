@@ -56,13 +56,15 @@ public class FreeState : CharacterState
             m_stateMachine.PlayerTransform.rotation = Quaternion.Slerp(m_stateMachine.PlayerTransform.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
         }
 
-        m_stateMachine.RB.AddForce(newDirection, ForceMode.Acceleration);
-
+        // Limit the velocity of the player
         if (m_stateMachine.RB.velocity.magnitude > m_stateMachine.MaxVelocity)
         {
             m_stateMachine.RB.velocity = m_stateMachine.RB.velocity.normalized;
             m_stateMachine.RB.velocity *= m_stateMachine.MaxVelocity;
         }
+
+        // Apply the new direction to the rigidbody
+        m_stateMachine.RB.AddForce(newDirection, ForceMode.Acceleration);
     }
 
     public override void OnExit()
