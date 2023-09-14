@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterControllerStateMachine : MonoBehaviour
 {
     public Camera Camera { get; private set; }
+    [field: SerializeField]
     public Rigidbody RB { get; private set; }
 
     public Transform PlayerTransform { get; private set; }
@@ -34,7 +35,6 @@ public class CharacterControllerStateMachine : MonoBehaviour
     void Start()
     {
         Camera = Camera.main;
-        RB = GetComponent<Rigidbody>();
         PlayerTransform = transform;
 
         foreach (CharacterState state in m_possibleStates)
