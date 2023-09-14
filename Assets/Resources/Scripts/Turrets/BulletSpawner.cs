@@ -3,11 +3,11 @@ using UnityEngine;
 
 public class BulletSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject projectilePrefab;
-    [SerializeField] private float timeToReturnToPool = 10f;
-    [SerializeField] private int maxPoolSize = 100;
+    //[SerializeField] private GameObject projectilePrefab;
+    //[SerializeField] private float timeToReturnToPool = 10f;
+    //[SerializeField] private int maxPoolSize = 100;
 
-    private ObjectPool<GameObject> objectPool;
+    //private ObjectPool<GameObject> objectPool;
 
     //void Awake() => objectPool = new ObjectPool<GameObject>(CreateProjectile, OnGetProjectile, OnReleaseProjectile, null, true, maxPoolSize);
 
@@ -28,22 +28,22 @@ public class BulletSpawner : MonoBehaviour
     //    );
     //}
 
-    private void Update()
-    {
-        GameObject projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
-        projectile.transform.position = transform.position;
-        projectile.GetComponent<Rigidbody>().AddForce(transform.forward * 1000f);
-    }
+    //private void Update()
+    //{
+    //    GameObject projectile = Instantiate(projectilePrefab, transform.position, transform.rotation);
+    //    projectile.transform.position = transform.position;
+    //    projectile.GetComponent<Rigidbody>().AddForce(transform.forward * 1000f);
+    //}
 
-    public GameObject GetProjectile()
-    {
-        GameObject projectile = objectPool.Get();
-        Invoke(nameof(ReturnToPool), timeToReturnToPool);
-        return projectile;
-    }
+    //public GameObject GetProjectile()
+    //{
+    //    GameObject projectile = objectPool.Get();
+    //    Invoke(nameof(ReturnToPool), timeToReturnToPool);
+    //    return projectile;
+    //}
 
-    private void ReturnToPool(GameObject projectile)
-    {
-        objectPool.Release(projectile);
-    }
+    //private void ReturnToPool(GameObject projectile)
+    //{
+    //    objectPool.Release(projectile);
+    //}
 }
