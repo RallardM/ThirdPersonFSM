@@ -31,24 +31,21 @@ public class JumpState : CharacterState
         }
         if (Input.GetKey(KeyCode.S))
         {
-            float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
             Vector3 vectOnFloorDollyDir = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
             vectOnFloorDollyDir.Normalize();
-            newDirection -= vectOnFloorDollyDir * m_stateMachine.AccelerationValue * slownValue;
+            newDirection -= vectOnFloorDollyDir * m_stateMachine.AccelerationValue;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
             Vector3 vectOnFloorTruckDir = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
             vectOnFloorTruckDir.Normalize();
-            newDirection -= vectOnFloorTruckDir * m_stateMachine.AccelerationValue * slownValue;
+            newDirection -= vectOnFloorTruckDir * m_stateMachine.AccelerationValue;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
             Vector3 vectOnFloorTruckDir = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
             vectOnFloorTruckDir.Normalize();
-            newDirection += vectOnFloorTruckDir * m_stateMachine.AccelerationValue * slownValue;
+            newDirection += vectOnFloorTruckDir * m_stateMachine.AccelerationValue;
         }
 
         // Rotate the player's mesh toward the new input direction

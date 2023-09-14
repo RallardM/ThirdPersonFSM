@@ -27,40 +27,50 @@ public class FreeState : CharacterState
         }
         if (Input.GetKey(KeyCode.S))
         {
-            float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
             Vector3 vectOnFloorDollyDir = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
             vectOnFloorDollyDir.Normalize();
-            newDirection -= vectOnFloorDollyDir * m_stateMachine.AccelerationValue * slownValue;
+            newDirection -= vectOnFloorDollyDir * m_stateMachine.AccelerationValue;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
             Vector3 vectOnFloorTruckDir = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
             vectOnFloorTruckDir.Normalize();
-            newDirection -= vectOnFloorTruckDir * m_stateMachine.AccelerationValue * slownValue;
+            newDirection -= vectOnFloorTruckDir * m_stateMachine.AccelerationValue;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            float slownValue = CharacterControllerStateMachine.SLOWN_DEPLACEMENT;
             Vector3 vectOnFloorTruckDir = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
             vectOnFloorTruckDir.Normalize();
-            newDirection += vectOnFloorTruckDir * m_stateMachine.AccelerationValue * slownValue;
+            newDirection += vectOnFloorTruckDir * m_stateMachine.AccelerationValue;
         }
 
         // Rotate the player's mesh toward the new input direction
-        if (newDirection != Vector3.zero)
-        {
-            Quaternion meshRotation = Quaternion.LookRotation(newDirection, Vector3.up);
-            float interpolationSpeed = 2.0f;
-            // Source : https://forum.unity.com/threads/what-is-the-difference-of-quaternion-slerp-and-lerp.101179/
-            m_stateMachine.PlayerTransform.rotation = Quaternion.Slerp(m_stateMachine.PlayerTransform.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
-        }
+        //if (newDirection != Vector3.zero)
+        //{
+        //    Quaternion meshRotation = Quaternion.LookRotation(newDirection, Vector3.up);
+        //    float interpolationSpeed = 2.0f;
+        //    // Source : https://forum.unity.com/threads/what-is-the-difference-of-quaternion-slerp-and-lerp.101179/
+        //    m_stateMachine.PlayerTransform.rotation = Quaternion.Slerp(m_stateMachine.PlayerTransform.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
+        //}
+
+        /*
+         *  Par exemple, si vous allez à un angle nord-nord-ouest (3/4 du déplacement 	
+         *  vers l'avant, 1/4 vers la gauche), et que votre vitesse maximale de 	
+         *  déplacement avant est 20 et vers les côtés 5, votre vitesse maximale calculée 	
+         *  à ce moment devrait être de ((3/4) * 20 + (1/4) * 5) == 15 + 1.25 == 16.25
+         */
 
         // Limit the velocity of the player
         if (m_stateMachine.RB.velocity.magnitude > m_stateMachine.MaxVelocity)
         {
-            m_stateMachine.RB.velocity = m_stateMachine.RB.velocity.normalized;
-            m_stateMachine.RB.velocity *= m_stateMachine.MaxVelocity;
+            //m_stateMachine.RB.velocity = m_stateMachine.RB.velocity.normalized;
+            //m_stateMachine.RB.velocity *= m_stateMachine.MaxVelocity;
+            Vector3 currentDirectionNorm = m_stateMachine.RB.transform.forward.normalized;
+            Vector3 newDirectionNorm = newDirection.normalized;
+            float dotProduct = Vector3.Dot(currentDirectionNorm, newDirectionNorm);
+            Debug.Log("Dot product : " + dotProduct);
+            //m_stateMachine.RB.velocity = (dotProduct;
+
         }
 
         // Apply the new direction to the rigidbody

@@ -14,14 +14,14 @@ public class CharacterControllerStateMachine : MonoBehaviour
     [field: SerializeField]
     public float MaxVelocity { get; private set; }
     [field: SerializeField]
+    public float SideVelocity { get; private set; }
+    [field: SerializeField]
     public float JumpIntensity { get; private set; } = 1000.0f;
     [field: SerializeField]
     private CharacterFloorTrigger m_floorTrigger;
 
     private CharacterState m_currentState;
     private List<CharacterState> m_possibleStates;
-
-    public const float SLOWN_DEPLACEMENT = 0.5f;
 
     private void Awake()
     {
