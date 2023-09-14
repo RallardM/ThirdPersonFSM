@@ -7,6 +7,8 @@ public class CharacterControllerStateMachine : MonoBehaviour
     public Camera Camera { get; private set; }
     [field: SerializeField]
     public Rigidbody RB { get; private set; }
+    [field: SerializeField]
+    private Animator Animator { get; set; }
 
     public Transform PlayerTransform { get; private set; }
 
@@ -86,5 +88,12 @@ public class CharacterControllerStateMachine : MonoBehaviour
     public bool IsInContactWithFloor()
     {
         return m_floorTrigger.IsOnFloor;
+    }
+
+    public void UpdateAnimatorValues(Vector3 movementValue)
+    {
+        movementValue = new Vector3 (movementValue.x, movementValue.y, movementValue.z);
+        Animator.SetFloat("MoveX", movementValue.x);
+        Animator.SetFloat("MoveY", movementValue.y);
     }
 }

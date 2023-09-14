@@ -45,13 +45,13 @@ public class FreeState : CharacterState
         }
 
         // Rotate the player's mesh toward the new input direction
-        //if (newDirection != Vector3.zero)
-        //{
-        //    Quaternion meshRotation = Quaternion.LookRotation(newDirection, Vector3.up);
-        //    float interpolationSpeed = 2.0f;
-        //    // Source : https://forum.unity.com/threads/what-is-the-difference-of-quaternion-slerp-and-lerp.101179/
-        //    m_stateMachine.PlayerTransform.rotation = Quaternion.Slerp(m_stateMachine.PlayerTransform.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
-        //}
+        if (newDirection != Vector3.zero)
+        {
+            Quaternion meshRotation = Quaternion.LookRotation(newDirection, Vector3.up);
+            float interpolationSpeed = 2.0f;
+            // Source : https://forum.unity.com/threads/what-is-the-difference-of-quaternion-slerp-and-lerp.101179/
+            m_stateMachine.PlayerTransform.rotation = Quaternion.Slerp(m_stateMachine.PlayerTransform.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
+        }
 
         /*
          *  Par exemple, si vous allez à un angle nord-nord-ouest (3/4 du déplacement 	
@@ -63,15 +63,17 @@ public class FreeState : CharacterState
         // Limit the velocity of the player
         if (m_stateMachine.RB.velocity.magnitude > m_stateMachine.MaxVelocity)
         {
-            //m_stateMachine.RB.velocity = m_stateMachine.RB.velocity.normalized;
-            //m_stateMachine.RB.velocity *= m_stateMachine.MaxVelocity;
-            Vector3 currentDirectionNorm = m_stateMachine.RB.transform.forward.normalized;
-            Vector3 newDirectionNorm = newDirection.normalized;
-            float dotProduct = Vector3.Dot(currentDirectionNorm, newDirectionNorm);
-            Debug.Log("Dot product : " + dotProduct);
+            m_stateMachine.RB.velocity = m_stateMachine.RB.velocity.normalized;
+            m_stateMachine.RB.velocity *= m_stateMachine.MaxVelocity;
+            //Vector3 currentDirectionNorm = m_stateMachine.RB.transform.forward.normalized;
+            //Vector3 newDirectionNorm = newDirection.normalized;
+            //float dotProduct = Vector3.Dot(currentDirectionNorm, newDirectionNorm);
+            //Debug.Log("Dot product : " + dotProduct);
             //m_stateMachine.RB.velocity = (dotProduct;
 
         }
+
+        m_stateMachine.UpdateAnimatorValues(newDirection);
 
         // Apply the new direction to the rigidbody
         m_stateMachine.RB.AddForce(newDirection, ForceMode.Acceleration);
