@@ -86,9 +86,10 @@ public class CharacterControllerStateMachine : MonoBehaviour
         return m_floorTrigger.IsOnFloor;
     }
 
-    public void UpdateAnimatorValues(Vector3 movementValue)
+    public void UpdateAnimatorMovements(Vector3 movementValue)
     {
         // Convert the movement vector to local space relative to the character's transform
+        // Source : https://stackoverflow.com/questions/71580880/unintended-player-movement-from-transform-inversetransformdirection
         movementValue = RB.transform.InverseTransformDirection(movementValue);
 
         // Project the movement vector onto the horizontal plane and normalize it
@@ -101,5 +102,10 @@ public class CharacterControllerStateMachine : MonoBehaviour
         // Set the animator values
         Animator.SetFloat("MoveX", movementValue.x);
         Animator.SetFloat("MoveY", movementValue.z);
+    }
+
+    public void UpdateAnimatorJump()
+    {
+        Animator.SetTrigger("Jump");
     }
 }

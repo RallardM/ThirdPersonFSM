@@ -71,6 +71,7 @@ public class JumpState : CharacterState
     public override void OnUpdate()
     {
         m_currentStateTimer -= Time.deltaTime;
+        m_stateMachine.UpdateAnimatorJump();
     }
 
     public override bool CanEnter()

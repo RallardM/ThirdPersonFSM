@@ -62,7 +62,7 @@ public class FreeState : CharacterState
 
         // Update the character animation
         Vector3 movementValue = newDirection.normalized;
-        m_stateMachine.UpdateAnimatorValues(movementValue);
+        m_stateMachine.UpdateAnimatorMovements(movementValue);
 
         // Rotate the player's mesh
         vectOnFloor = RotatePlayerMesh(vectOnFloor, cameraRight, movementValue);
