@@ -218,7 +218,7 @@ MonoBehaviour:
   m_objectToLookAt: {fileID: 6474726478688372190}
   m_CameraPivot: {fileID: 6703638989594729788}
   m_rotationSpeed: 5
-  m_clampingXRotationValues: {x: -60, y: 80}
+  m_clampingXRotationValues: {x: -60, y: 75}
   m_smoothCameraFollow: 2
   m_scrollSpeed: 4
   m_closestCamDist: 2

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -90,6 +91,25 @@ public class CharacterControllerStateMachine : MonoBehaviour
         return m_floorTrigger.IsOnFloor;
     }
 
+    public void TakeDamage(int damage)
+    {
+        Health -= damage;
+        if (Health <= 0)
+        {
+            Die();
+        }
+    }
+
+    public void UpdateHeatlh()
+    {
+        PreviousHealth = Health;
+    }
+
+    private void Die()
+    { 
+        // TODO: Implement death animation
+    }
+
     public void UpdateAnimatorMovements(Vector3 movementValue)
     {
         // Convert the movement vector to local space relative to the character's transform
@@ -116,5 +136,10 @@ public class CharacterControllerStateMachine : MonoBehaviour
         }
 
         Animator.SetBool("TouchGround", !isJumping);
+    }
+
+    public void UpdateHitAnimation()
+    {
+        Animator.SetTrigger("GettingHit");
     }
 }
