@@ -9,8 +9,6 @@ public class CharacterControllerStateMachine : MonoBehaviour
     [field: SerializeField]
     private Animator Animator { get; set; }
 
-    //public Transform PlayerTransform { get; private set; }
-
     [field: SerializeField]
     public float AccelerationValue { get; private set; }
     [field: SerializeField]
@@ -36,7 +34,6 @@ public class CharacterControllerStateMachine : MonoBehaviour
     void Start()
     {
         Camera = Camera.main;
-        //PlayerTransform = transform;
 
         foreach (CharacterState state in m_possibleStates)
         {
@@ -91,14 +88,17 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     public void UpdateAnimatorValues(Vector3 movementValue)
     {
-        //Vector3 vectOnFloor = Vector3.ProjectOnPlane(Camera.transform.forward, Vector3.up);
-        //vectOnFloor.Normalize();
-        //Debug.Log("vectOnFloor : " + vectOnFloor);
-        //Debug.Log("movementValue : " + movementValue);
-        //movementValue.Normalize();
-        //movementValue += vectOnFloor;
-        movementValue = Camera.transform.InverseTransformDirection(movementValue);
-        movementValue = new Vector3 (movementValue.x, movementValue.y, movementValue.z);
+        // Convert the movement vector to local space relative to the character's transform
+        movementValue = RB.transform.InverseTransformDirection(movementValue);
+
+        // Project the movement vector onto the horizontal plane and normalize it
+        Vector3 vectOnFloor = Vector3.ProjectOnPlane(movementValue, Vector3.up);
+        vectOnFloor.Normalize();
+
+        // Set the y component to zero to ignore vertical movement
+        movementValue = new Vector3(vectOnFloor.x, 0, vectOnFloor.z);
+
+        // Set the animator values
         Animator.SetFloat("MoveX", movementValue.x);
         Animator.SetFloat("MoveY", movementValue.z);
     }

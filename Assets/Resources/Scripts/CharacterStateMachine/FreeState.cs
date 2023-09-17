@@ -16,33 +16,29 @@ public class FreeState : CharacterState
         Vector3 newDirection = Vector3.zero;
         Vector3 vectOnFloor = Vector3.zero;
 
+        // Calculate the camera's forward and right vectors projected on the horizontal plane
+        Vector3 cameraForward = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up).normalized;
+        Vector3 cameraRight = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up).normalized;
+
         if (!Input.anyKey)
         {
             m_stateMachine.RB.velocity = Vector3.zero;
         }
         if (Input.GetKey(KeyCode.W))
         {
-            vectOnFloor = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
-            vectOnFloor.Normalize();
-            newDirection += vectOnFloor * m_stateMachine.AccelerationValue;
+            newDirection += cameraForward * m_stateMachine.AccelerationValue;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            vectOnFloor = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
-            vectOnFloor.Normalize();
-            newDirection -= vectOnFloor * m_stateMachine.AccelerationValue;
+            newDirection -= cameraForward * m_stateMachine.AccelerationValue;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            vectOnFloor = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
-            vectOnFloor.Normalize();
-            newDirection -= vectOnFloor * m_stateMachine.AccelerationValue;
+            newDirection -= cameraRight * m_stateMachine.AccelerationValue;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            vectOnFloor = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
-            vectOnFloor.Normalize();
-            newDirection += vectOnFloor * m_stateMachine.AccelerationValue;
+            newDirection += cameraRight * m_stateMachine.AccelerationValue;
         }
 
         /*
@@ -64,21 +60,54 @@ public class FreeState : CharacterState
             //m_stateMachine.RB.velocity = (dotProduct;
         }
 
-        // Rotate the player's mesh
-        if (newDirection != Vector3.zero)
-        {
-            Debug.Log("vectOnFloor : " + vectOnFloor);
-            Quaternion meshRotation = Quaternion.LookRotation(vectOnFloor, Vector3.up);
-            float interpolationSpeed = 4.0f;
-            // Source : https://forum.unity.com/threads/what-is-the-difference-of-quaternion-slerp-and-lerp.101179/
-            m_stateMachine.RB.rotation = Quaternion.Slerp(m_stateMachine.RB.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
-        }
-
         // Update the character animation
-        m_stateMachine.UpdateAnimatorValues(vectOnFloor);
+        Vector3 movementValue = newDirection.normalized;
+        m_stateMachine.UpdateAnimatorValues(movementValue);
+
+        // Rotate the player's mesh
+        vectOnFloor = RotatePlayerMesh(vectOnFloor, cameraRight, movementValue);
 
         // Apply the new direction to the rigidbody
         m_stateMachine.RB.AddForce(newDirection, ForceMode.Acceleration);
+    }
+
+    private Vector3 RotatePlayerMesh(Vector3 vectOnFloor, Vector3 cameraRight, Vector3 movementValue)
+    {
+        if (movementValue == Vector3.zero)
+        {
+            return vectOnFloor;
+        }
+
+        // Rotate the mesh on itself if pressed forward
+        if (Input.GetKey(KeyCode.W))
+        {
+            vectOnFloor = Vector3.ProjectOnPlane(movementValue, Vector3.up).normalized;
+            Quaternion meshRotation = Quaternion.LookRotation(vectOnFloor, Vector3.up);
+            float interpolationSpeed = 4.0f;
+            m_stateMachine.RB.rotation = Quaternion.Slerp(m_stateMachine.RB.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
+        }
+
+        // Rotate the mesh in reference to the camera if pressed left
+        if (Input.GetKey(KeyCode.D))
+        {
+            // Calculate the mesh rotation based on the camera's right vector
+            vectOnFloor = Vector3.ProjectOnPlane(cameraRight, Vector3.up).normalized;
+            Quaternion meshRotation = Quaternion.LookRotation(vectOnFloor, Vector3.up);
+            float interpolationSpeed = 1.0f;
+            m_stateMachine.RB.rotation = Quaternion.Slerp(m_stateMachine.RB.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
+        }
+
+        // Rotate the mesh in reference to the camera if pressed right
+        if (Input.GetKey(KeyCode.A))
+        {
+            // Calculate the mesh rotation based on the camera's right vector
+            vectOnFloor = Vector3.ProjectOnPlane(-cameraRight, Vector3.up).normalized;
+            Quaternion meshRotation = Quaternion.LookRotation(vectOnFloor, Vector3.up);
+            float interpolationSpeed = 1.0f;
+            m_stateMachine.RB.rotation = Quaternion.Slerp(m_stateMachine.RB.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
+        }
+
+        return vectOnFloor;
     }
 
     public override void OnExit()
