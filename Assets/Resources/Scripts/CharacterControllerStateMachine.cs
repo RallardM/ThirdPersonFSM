@@ -23,11 +23,15 @@ public class CharacterControllerStateMachine : MonoBehaviour
     private CharacterState m_currentState;
     private List<CharacterState> m_possibleStates;
 
+    public int Health { get; private set; } = 100;
+    public int PreviousHealth { get; private set; } = 100;
+
     private void Awake()
     {
         m_possibleStates = new List<CharacterState>();
         m_possibleStates.Add(new FreeState());
         m_possibleStates.Add(new JumpState());
+        m_possibleStates.Add(new GettingHitState());
     }
 
     // Start is called before the first frame update
