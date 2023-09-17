@@ -117,7 +117,7 @@ public class FreeState : CharacterState
 
     public override bool CanEnter()
     {
-        // Can only enter the free state only if I touch the ground
+        // Can only enter the free state if the player touches the ground
         return m_stateMachine.IsInContactWithFloor();
     }
 

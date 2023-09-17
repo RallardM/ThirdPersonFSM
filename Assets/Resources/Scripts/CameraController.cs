@@ -138,7 +138,7 @@ public class CameraController : MonoBehaviour
         float smallFOVSpeed = 1.0f;
         if (transform.GetComponent<Camera>().fieldOfView < SCROLL_FOV_SLOW_TRANSITION)
         {
-            smallFOVSpeed = 2.0f;
+            smallFOVSpeed = 4.0f;
         }
 
         // Calculate the desired camera offset based on the scroll input

@@ -104,8 +104,13 @@ public class CharacterControllerStateMachine : MonoBehaviour
         Animator.SetFloat("MoveY", movementValue.z);
     }
 
-    public void UpdateAnimatorJump()
+    public void SetJumpAnimation(bool isJumping)
     {
-        Animator.SetTrigger("Jump");
+        if (isJumping)
+        {
+            Animator.SetTrigger("Jump");
+        }
+
+        Animator.SetBool("TouchGround", !isJumping);
     }
 }
