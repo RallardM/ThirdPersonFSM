@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class JumpState : CharacterState
@@ -54,7 +52,7 @@ public class JumpState : CharacterState
             Quaternion meshRotation = Quaternion.LookRotation(newDirection, Vector3.up);
             float interpolationSpeed = 2.0f;
             // Source : https://forum.unity.com/threads/what-is-the-difference-of-quaternion-slerp-and-lerp.101179/
-            m_stateMachine.PlayerTransform.rotation = Quaternion.Slerp(m_stateMachine.PlayerTransform.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
+            m_stateMachine.RB.rotation = Quaternion.Slerp(m_stateMachine.RB.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
         }
 
         // Limit the velocity of the player while jumping leaving the 'y' to the jump force

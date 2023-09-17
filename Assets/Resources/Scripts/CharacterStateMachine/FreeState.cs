@@ -14,6 +14,7 @@ public class FreeState : CharacterState
     public override void OnFixedUpdate()
     {
         Vector3 newDirection = Vector3.zero;
+        Vector3 vectOnFloor = Vector3.zero;
 
         if (!Input.anyKey)
         {
@@ -21,36 +22,27 @@ public class FreeState : CharacterState
         }
         if (Input.GetKey(KeyCode.W))
         {
-            Vector3 vectOnFloorDollyDir = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
-            vectOnFloorDollyDir.Normalize();
-            newDirection += vectOnFloorDollyDir * m_stateMachine.AccelerationValue;
+            vectOnFloor = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
+            vectOnFloor.Normalize();
+            newDirection += vectOnFloor * m_stateMachine.AccelerationValue;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            Vector3 vectOnFloorDollyDir = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
-            vectOnFloorDollyDir.Normalize();
-            newDirection -= vectOnFloorDollyDir * m_stateMachine.AccelerationValue;
+            vectOnFloor = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
+            vectOnFloor.Normalize();
+            newDirection -= vectOnFloor * m_stateMachine.AccelerationValue;
         }
         if (Input.GetKey(KeyCode.A))
         {
-            Vector3 vectOnFloorTruckDir = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
-            vectOnFloorTruckDir.Normalize();
-            newDirection -= vectOnFloorTruckDir * m_stateMachine.AccelerationValue;
+            vectOnFloor = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
+            vectOnFloor.Normalize();
+            newDirection -= vectOnFloor * m_stateMachine.AccelerationValue;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            Vector3 vectOnFloorTruckDir = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
-            vectOnFloorTruckDir.Normalize();
-            newDirection += vectOnFloorTruckDir * m_stateMachine.AccelerationValue;
-        }
-
-        // Rotate the player's mesh toward the new input direction
-        if (newDirection != Vector3.zero)
-        {
-            Quaternion meshRotation = Quaternion.LookRotation(newDirection, Vector3.up);
-            float interpolationSpeed = 2.0f;
-            // Source : https://forum.unity.com/threads/what-is-the-difference-of-quaternion-slerp-and-lerp.101179/
-            m_stateMachine.PlayerTransform.rotation = Quaternion.Slerp(m_stateMachine.PlayerTransform.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
+            vectOnFloor = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up);
+            vectOnFloor.Normalize();
+            newDirection += vectOnFloor * m_stateMachine.AccelerationValue;
         }
 
         /*
@@ -70,10 +62,20 @@ public class FreeState : CharacterState
             //float dotProduct = Vector3.Dot(currentDirectionNorm, newDirectionNorm);
             //Debug.Log("Dot product : " + dotProduct);
             //m_stateMachine.RB.velocity = (dotProduct;
-
         }
 
-        m_stateMachine.UpdateAnimatorValues(newDirection);
+        // Rotate the player's mesh
+        if (newDirection != Vector3.zero)
+        {
+            Debug.Log("vectOnFloor : " + vectOnFloor);
+            Quaternion meshRotation = Quaternion.LookRotation(vectOnFloor, Vector3.up);
+            float interpolationSpeed = 4.0f;
+            // Source : https://forum.unity.com/threads/what-is-the-difference-of-quaternion-slerp-and-lerp.101179/
+            m_stateMachine.RB.rotation = Quaternion.Slerp(m_stateMachine.RB.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
+        }
+
+        // Update the character animation
+        m_stateMachine.UpdateAnimatorValues(vectOnFloor);
 
         // Apply the new direction to the rigidbody
         m_stateMachine.RB.AddForce(newDirection, ForceMode.Acceleration);

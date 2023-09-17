@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
     [field: SerializeField]
     private Animator Animator { get; set; }
 
-    public Transform PlayerTransform { get; private set; }
+    //public Transform PlayerTransform { get; private set; }
 
     [field: SerializeField]
     public float AccelerationValue { get; private set; }
@@ -37,7 +36,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
     void Start()
     {
         Camera = Camera.main;
-        PlayerTransform = transform;
+        //PlayerTransform = transform;
 
         foreach (CharacterState state in m_possibleStates)
         {
@@ -92,8 +91,15 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     public void UpdateAnimatorValues(Vector3 movementValue)
     {
+        //Vector3 vectOnFloor = Vector3.ProjectOnPlane(Camera.transform.forward, Vector3.up);
+        //vectOnFloor.Normalize();
+        //Debug.Log("vectOnFloor : " + vectOnFloor);
+        //Debug.Log("movementValue : " + movementValue);
+        //movementValue.Normalize();
+        //movementValue += vectOnFloor;
+        movementValue = Camera.transform.InverseTransformDirection(movementValue);
         movementValue = new Vector3 (movementValue.x, movementValue.y, movementValue.z);
         Animator.SetFloat("MoveX", movementValue.x);
-        Animator.SetFloat("MoveY", movementValue.y);
+        Animator.SetFloat("MoveY", movementValue.z);
     }
 }

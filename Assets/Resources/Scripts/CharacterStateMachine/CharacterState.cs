@@ -1,5 +1,3 @@
-using System.Diagnostics;
-
 public class CharacterState : IState
 {
     protected CharacterControllerStateMachine m_stateMachine;

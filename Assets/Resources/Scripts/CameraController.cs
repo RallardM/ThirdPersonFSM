@@ -136,7 +136,7 @@ public class CameraController : MonoBehaviour
 
         // Scroll faster at smaller FOV to avoid the impression of slowness the change of FOV gives
         float smallFOVSpeed = 1.0f;
-        if (m_CameraPivot.GetComponent<Camera>().fieldOfView < SCROLL_FOV_SLOW_TRANSITION)
+        if (transform.GetComponent<Camera>().fieldOfView < SCROLL_FOV_SLOW_TRANSITION)
         {
             smallFOVSpeed = 2.0f;
         }
@@ -155,7 +155,7 @@ public class CameraController : MonoBehaviour
 
         // Else apply the camera offset
         // https://docs.unity3d.com/ScriptReference/Vector3.SmoothDamp.html
-        m_CameraPivot.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
+        transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
 
         TemporaryOffset = Vector3.Distance(newPosition, m_objectToLookAt.position);
         m_previousScrollDelta = scrollDelta;
