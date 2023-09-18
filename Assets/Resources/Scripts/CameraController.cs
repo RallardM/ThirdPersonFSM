@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -40,7 +41,8 @@ public class CameraController : MonoBehaviour
     private float DesiredOffset { get;  set; }
     private float m_previousScrollDelta = 0.0f;
 
-    private bool m_cameraIsObstructed = false;
+    private bool m_cameraIsObstructedByObject = false;
+    private bool m_cameraIsObstructedByFloor = false;
 
     private void Awake()
     {
@@ -59,6 +61,7 @@ public class CameraController : MonoBehaviour
     void FixedUpdate()
     {
         FixedUpdateObjectObstruction();
+        FixedUpdateFloorObstruction();
     }
 
     private void LateUpdate()
@@ -174,76 +177,105 @@ public class CameraController : MonoBehaviour
         // Add static object layer 8 (static objects)
         int layerMask = 1 << 8;
 
-        // Add floor layer 7 (floor) Source : https://forum.unity.com/threads/layermasks-how-to-use-em.1804/
-        layerMask |= 1 << 7;
-
-        // This would cast rays only against colliders in layer 8.
-        // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
-        //layerMask = ~layerMask;
-
         RaycastHit hit;
 
         // Does the ray intersect any objects excluding the player layer
         Vector3 playerToCamVect = transform.position - m_objectToLookAt.position;
         float distance = playerToCamVect.magnitude;
 
-        if (Physics.Raycast(m_objectToLookAt.position, playerToCamVect, out hit, distance, layerMask) || Physics.Raycast(transform.position, Vector3.down, out hit, m_floorObstructionRaycastHeight, layerMask)) // Static object obstruction
+        if (Physics.Raycast(m_objectToLookAt.position, playerToCamVect, out hit, distance, layerMask))
         {
-            if (m_cameraIsObstructed == false)
+            if (m_cameraIsObstructedByObject == false)
             {
-                m_cameraIsObstructed = true;
+                m_cameraIsObstructedByObject = true;
                 DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
             }
 
             Vector3 hitPoint = hit.point;
 
-            // Draw crosshair at hit point position
-            float crosshairSize = 0.1f; // Adjust this value to control the size of the crosshair
-            Color crosshairColor = Color.yellow; // Change this value to set the color of the crosshair
-            // Draw horizontal line
-            Debug.DrawLine(hitPoint - Vector3.right * crosshairSize, hitPoint + Vector3.right * crosshairSize, crosshairColor);
-            // Draw vertical line
-            Debug.DrawLine(hitPoint - Vector3.up * crosshairSize, hitPoint + Vector3.up * crosshairSize, crosshairColor);
+            DrawCrosshair(hitPoint);
 
-            // If hitPoint is on the vector of the player to camera
-            if (Vector3.Dot(playerToCamVect, hitPoint) > Vector3.Dot(playerToCamVect, m_objectToLookAt.position))
-            {
-                Debug.DrawRay(m_objectToLookAt.position, playerToCamVect.normalized * hit.distance, Color.red); // Static object obstruction ray
-            }
-            else
-            {
-                Debug.DrawRay(m_objectToLookAt.position, playerToCamVect, Color.green); // Static object obstruction ray
-            }
+            Debug.DrawRay(m_objectToLookAt.position, playerToCamVect.normalized * hit.distance, Color.red);
 
-            // If hitPoint is on the vector of the camera-down
-            if (Vector3.Dot(Vector3.down, hitPoint) > Vector3.Dot(Vector3.down, transform.position))
-            {
-                Debug.DrawRay(transform.position, Vector3.down * m_floorObstructionRaycastHeight, Color.red); // Floor obstruction ray
-                hitPoint.y += m_floorObstructionRaycastHeight;
-            }
-            else
-            {
-                Debug.DrawRay(transform.position, Vector3.down * m_floorObstructionRaycastHeight, Color.blue); // Floor obstruction ray
-            }
-
-            Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
-
-            transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
-            TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+            LerpToPoint(hitPoint);
             return;
         }
 
         // Draw non-collided rays in green
-        Debug.DrawRay(m_objectToLookAt.position, playerToCamVect, Color.green); // Static object obstruction ray
-        Debug.DrawRay(transform.position, Vector3.down * m_floorObstructionRaycastHeight, Color.blue); // Floor obstruction ray
+        Debug.DrawRay(m_objectToLookAt.position, playerToCamVect, Color.green);
 
-        if (m_cameraIsObstructed == false)
+        if (m_cameraIsObstructedByObject == false)
         {
             return;
         }
 
         TemporaryOffset = DesiredOffset;
-        m_cameraIsObstructed = false;
+        m_cameraIsObstructedByObject = false;
+    }
+
+    private void FixedUpdateFloorObstruction()
+    {
+        // Bit shift the index of the layer (7) to get a bit mask
+        // Add static object layer 7 (floor objects)
+        int layerMask = 1 << 7;
+
+        RaycastHit hit;
+
+        // Does the ray intersect the floor and the camera
+        Vector3 cameraDownVector = transform.position;
+        cameraDownVector.y += m_floorObstructionRaycastHeight;
+        Vector3 downVectToCam = transform.position - cameraDownVector;
+        float distance = downVectToCam.magnitude;
+
+        if (Physics.Raycast(transform.position, Vector3.down, out hit, m_floorObstructionRaycastHeight, layerMask))
+        {
+            if (m_cameraIsObstructedByFloor == false)
+            {
+                m_cameraIsObstructedByFloor = true;
+                DesiredOffset = Vector3.Distance(transform.position, cameraDownVector);
+            }
+
+            Vector3 hitPoint = hit.point;
+
+            DrawCrosshair(hitPoint);
+
+            Debug.DrawRay(transform.position, downVectToCam.normalized * hit.distance, Color.red);
+
+            hitPoint.y += m_floorObstructionRaycastHeight;
+            //DrawCrosshair(hitPoint);
+
+            LerpToPoint(hitPoint);
+            return;
+        }
+
+        // Draw non-collided rays in green
+        Debug.DrawRay(transform.position, downVectToCam, Color.blue);
+
+        if (m_cameraIsObstructedByFloor == false)
+        {
+            return;
+        }
+
+        TemporaryOffset = DesiredOffset;
+        m_cameraIsObstructedByFloor = false;
+    }
+
+    private static void DrawCrosshair(Vector3 hitPoint)
+    {
+        // Draw crosshair at hit point position
+        float crosshairSize = 0.1f; // Adjust this value to control the size of the crosshair
+        Color crosshairColor = Color.yellow; // Change this value to set the color of the crosshair
+                                             // Draw horizontal line
+        Debug.DrawLine(hitPoint - Vector3.right * crosshairSize, hitPoint + Vector3.right * crosshairSize, crosshairColor);
+        // Draw vertical line
+        Debug.DrawLine(hitPoint - Vector3.up * crosshairSize, hitPoint + Vector3.up * crosshairSize, crosshairColor);
+    }
+
+    private void LerpToPoint(Vector3 hitPoint)
+    {
+        Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
+        transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
+        TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
     }
 
     private bool IsPosWithinScrollRange(Vector3 position)
