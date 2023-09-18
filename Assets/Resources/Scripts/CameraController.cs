@@ -198,11 +198,11 @@ public class CameraController : MonoBehaviour
             Debug.DrawRay(m_objectToLookAt.position, playerToCamVect.normalized * hit.distance, Color.red); // Static object obstruction ray
             Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hit.point, Time.deltaTime * m_lerpInfrontObstructionSpeed);
 
-            // Return if the new position is not within the desired range
-            if (IsPosWithinScrollRange(lerpedHitPoint) == false)
-            {
-                return;
-            }
+            //// Return if the new position is not within the desired range
+            //if (IsPosWithinScrollRange(lerpedHitPoint) == false)
+            //{
+            //    return;
+            //}
 
             transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
             TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
@@ -218,15 +218,25 @@ public class CameraController : MonoBehaviour
 
             Debug.DrawRay(transform.position, Vector3.down * m_floorObstructionRaycastHeight, Color.red); // Floor obstruction ray
             Vector3 hitPoint = hit.point;
-            hitPoint.y += m_floorObstructionRaycastHeight * 0.9f;
+            //hitPoint.y += m_floorObstructionRaycastHeight;
+
+            // Draw crosshair at hit point position
+            float crosshairSize = 0.1f; // Adjust this value to control the size of the crosshair
+            Color crosshairColor = Color.yellow; // Change this value to set the color of the crosshair
+            // Draw horizontal line
+            Debug.DrawLine(hitPoint - Vector3.right * crosshairSize, hitPoint + Vector3.right * crosshairSize, crosshairColor);
+            // Draw vertical line
+            Debug.DrawLine(hitPoint - Vector3.up * crosshairSize, hitPoint + Vector3.up * crosshairSize, crosshairColor);
+
+            hitPoint.y += m_floorObstructionRaycastHeight;
             Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
 
-            // Return if the new position is not within the desired range
-            if (IsPosWithinScrollRange(lerpedHitPoint) == false)
-            {
-                //Debug.Log("lerpedHitPoint NOT within range");
-                return;
-            }
+            //// Return if the new position is not within the desired range
+            //if (IsPosWithinScrollRange(lerpedHitPoint) == false)
+            //{
+            //    //Debug.Log("lerpedHitPoint NOT within range");
+            //    return;
+            //}
 
             transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
             TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);

@@ -63,7 +63,7 @@ Transform:
   m_GameObject: {fileID: 5841150887074833061}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.34, z: -2.84}
+  m_LocalPosition: {x: 0, y: 2.58, z: -4.54}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -186,7 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_objectToLookAt: {fileID: 6474726478688372190}
   m_rotationSpeed: 5
-  m_clampingXRotationValues: {x: -50, y: 80}
+  m_clampingXRotationValues: {x: -40, y: 90}
   m_smoothCameraFollow: 2
   m_scrollSpeed: 4
   m_closestCamDist: 2
@@ -195,7 +195,7 @@ MonoBehaviour:
   m_closestCamDistFOV: 70
   m_scrollSmoothDampTime: 0.7
   m_lerpInfrontObstructionSpeed: 16
-  m_floorObstructionRaycastHeight: 1
+  m_floorObstructionRaycastHeight: 2
 --- !u!1 &7955218482929427650
 GameObject:
   m_ObjectHideFlags: 0
