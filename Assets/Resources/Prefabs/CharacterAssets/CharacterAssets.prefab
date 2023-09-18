@@ -218,7 +218,7 @@ MonoBehaviour:
   m_objectToLookAt: {fileID: 6474726478688372190}
   m_CameraPivot: {fileID: 6703638989594729788}
   m_rotationSpeed: 5
-  m_clampingXRotationValues: {x: -60, y: 75}
+  m_clampingXRotationValues: {x: -60, y: 70}
   m_smoothCameraFollow: 2
   m_scrollSpeed: 4
   m_closestCamDist: 2
@@ -249,7 +249,7 @@ PrefabInstance:
     - target: {fileID: 8751161469425723191, guid: 413a1d22819f431ebb3ff91a05364000,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.784
+      value: 0.779
       objectReference: {fileID: 0}
     - target: {fileID: 8751161469425723191, guid: 413a1d22819f431ebb3ff91a05364000,
         type: 3}

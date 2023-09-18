@@ -32,7 +32,7 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float m_lerpInfrontObstructionSpeed = 16.0f;
     [SerializeField]
-    private float m_floorObstructionRaycastHeight = 1.0f;
+    private float m_floorObstructionRaycastHeight = 2.0f;
 
     private Vector3 m_cameraVelocity = Vector3.zero;
 
@@ -99,6 +99,8 @@ public class CameraController : MonoBehaviour
         float comparisonAngle = eulersAngleX + currentAngleY;
 
         comparisonAngle = ClampAngle(comparisonAngle);
+
+        Debug.Log("comparisonAngle : " + comparisonAngle);
 
         if ((currentAngleY < 0 && comparisonAngle < m_clampingXRotationValues.x)
             || (currentAngleY > 0 && comparisonAngle > m_clampingXRotationValues.y))
