@@ -187,7 +187,7 @@ public class CameraController : MonoBehaviour
         Vector3 playerToCamVect = transform.position - m_objectToLookAt.position;
         float distance = playerToCamVect.magnitude;
 
-        if (Physics.Raycast(m_objectToLookAt.position, playerToCamVect, out hit, distance, layerMask)) // Static object obstruction
+        if (Physics.Raycast(m_objectToLookAt.position, playerToCamVect, out hit, distance, layerMask) || Physics.Raycast(transform.position, Vector3.down, out hit, m_floorObstructionRaycastHeight, layerMask)) // Static object obstruction
         {
             if (m_cameraIsObstructed == false)
             {
@@ -195,30 +195,7 @@ public class CameraController : MonoBehaviour
                 DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
             }
 
-            Debug.DrawRay(m_objectToLookAt.position, playerToCamVect.normalized * hit.distance, Color.red); // Static object obstruction ray
-            Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hit.point, Time.deltaTime * m_lerpInfrontObstructionSpeed);
-
-            //// Return if the new position is not within the desired range
-            //if (IsPosWithinScrollRange(lerpedHitPoint) == false)
-            //{
-            //    return;
-            //}
-
-            transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
-            TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
-            return;
-        }
-        else if (Physics.Raycast(transform.position, Vector3.down, out hit, m_floorObstructionRaycastHeight, layerMask)) // Floor obstruction
-        {
-            if (m_cameraIsObstructed == false)
-            {
-                m_cameraIsObstructed = true;
-                DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
-            }
-
-            Debug.DrawRay(transform.position, Vector3.down * m_floorObstructionRaycastHeight, Color.red); // Floor obstruction ray
             Vector3 hitPoint = hit.point;
-            //hitPoint.y += m_floorObstructionRaycastHeight;
 
             // Draw crosshair at hit point position
             float crosshairSize = 0.1f; // Adjust this value to control the size of the crosshair
@@ -228,21 +205,35 @@ public class CameraController : MonoBehaviour
             // Draw vertical line
             Debug.DrawLine(hitPoint - Vector3.up * crosshairSize, hitPoint + Vector3.up * crosshairSize, crosshairColor);
 
-            hitPoint.y += m_floorObstructionRaycastHeight;
-            Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
+            // If hitPoint is on the vector of the player to camera
+            if (Vector3.Dot(playerToCamVect, hitPoint) > Vector3.Dot(playerToCamVect, m_objectToLookAt.position))
+            {
+                Debug.DrawRay(m_objectToLookAt.position, playerToCamVect.normalized * hit.distance, Color.red); // Static object obstruction ray
+            }
+            else
+            {
+                Debug.DrawRay(m_objectToLookAt.position, playerToCamVect, Color.green); // Static object obstruction ray
+            }
 
-            //// Return if the new position is not within the desired range
-            //if (IsPosWithinScrollRange(lerpedHitPoint) == false)
-            //{
-            //    //Debug.Log("lerpedHitPoint NOT within range");
-            //    return;
-            //}
+            // If hitPoint is on the vector of the camera-down
+            if (Vector3.Dot(Vector3.down, hitPoint) > Vector3.Dot(Vector3.down, transform.position))
+            {
+                Debug.DrawRay(transform.position, Vector3.down * m_floorObstructionRaycastHeight, Color.red); // Floor obstruction ray
+                hitPoint.y += m_floorObstructionRaycastHeight;
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, Vector3.down * m_floorObstructionRaycastHeight, Color.blue); // Floor obstruction ray
+            }
+
+            Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
 
             transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
             TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
             return;
         }
 
+        // Draw non-collided rays in green
         Debug.DrawRay(m_objectToLookAt.position, playerToCamVect, Color.green); // Static object obstruction ray
         Debug.DrawRay(transform.position, Vector3.down * m_floorObstructionRaycastHeight, Color.blue); // Floor obstruction ray
 
