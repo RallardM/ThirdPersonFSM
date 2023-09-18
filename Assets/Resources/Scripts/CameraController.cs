@@ -5,14 +5,11 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private Transform m_objectToLookAt;
     [SerializeField]
-    private Transform m_CameraPivot;
-    [SerializeField]
     private float m_rotationSpeed = 5.0f;
     [SerializeField]
     private Vector2 m_clampingXRotationValues = Vector2.zero;
     [SerializeField]
     private float m_smoothCameraFollow = 2.0f;
-
 
     [Header("Scrolling Settings")]
     [SerializeField]
@@ -88,27 +85,26 @@ public class CameraController : MonoBehaviour
     private void UpdateHorizontalRotations()
     {
         float currentAngleX = Input.GetAxis("Mouse X") * m_rotationSpeed;
-        m_CameraPivot.RotateAround(m_objectToLookAt.position, m_objectToLookAt.up, currentAngleX);
+        transform.RotateAround(m_objectToLookAt.position, m_objectToLookAt.up, currentAngleX);
     }
 
     private void UpdateVerticalRotations()
     {
         float currentAngleY = Input.GetAxis("Mouse Y") * m_rotationSpeed;
-        float eulersAngleX = m_CameraPivot.rotation.eulerAngles.x;
+        float eulersAngleX = transform.rotation.eulerAngles.x;
 
         float comparisonAngle = eulersAngleX + currentAngleY;
 
         comparisonAngle = ClampAngle(comparisonAngle);
 
-        Debug.Log("comparisonAngle : " + comparisonAngle);
-
         if ((currentAngleY < 0 && comparisonAngle < m_clampingXRotationValues.x)
             || (currentAngleY > 0 && comparisonAngle > m_clampingXRotationValues.y))
         {
+            //Debug.Log("Clamping angle");
             return;
-        }
+        } 
 
-        m_CameraPivot.RotateAround(m_objectToLookAt.position, transform.right, currentAngleY);
+        transform.RotateAround(m_objectToLookAt.position, transform.right, currentAngleY);
     }
 
     private float ClampAngle(float angle)
@@ -200,8 +196,13 @@ public class CameraController : MonoBehaviour
             }
 
             Debug.DrawRay(m_objectToLookAt.position, playerToCamVect.normalized * hit.distance, Color.red); // Static object obstruction ray
-            
             Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hit.point, Time.deltaTime * m_lerpInfrontObstructionSpeed);
+
+            // Return if the new position is not within the desired range
+            if (IsPosWithinScrollRange(lerpedHitPoint) == false)
+            {
+                return;
+            }
 
             transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
             TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
@@ -215,10 +216,17 @@ public class CameraController : MonoBehaviour
                 DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
             }
 
-            Debug.DrawRay(transform.position, Vector3.down * hit.distance, Color.red); // Floor obstruction ray
+            Debug.DrawRay(transform.position, Vector3.down * m_floorObstructionRaycastHeight, Color.red); // Floor obstruction ray
             Vector3 hitPoint = hit.point;
-            hitPoint.y += m_floorObstructionRaycastHeight;
+            hitPoint.y += m_floorObstructionRaycastHeight * 0.9f;
             Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
+
+            // Return if the new position is not within the desired range
+            if (IsPosWithinScrollRange(lerpedHitPoint) == false)
+            {
+                //Debug.Log("lerpedHitPoint NOT within range");
+                return;
+            }
 
             transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
             TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
@@ -226,7 +234,7 @@ public class CameraController : MonoBehaviour
         }
 
         Debug.DrawRay(m_objectToLookAt.position, playerToCamVect, Color.green); // Static object obstruction ray
-        Debug.DrawRay(transform.position, Vector3.down, Color.blue); // Floor obstruction ray
+        Debug.DrawRay(transform.position, Vector3.down * m_floorObstructionRaycastHeight, Color.blue); // Floor obstruction ray
 
         if (m_cameraIsObstructed == false)
         {
