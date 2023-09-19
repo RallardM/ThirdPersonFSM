@@ -195,7 +195,7 @@ MonoBehaviour:
   m_closestCamDistFOV: 70
   m_scrollSmoothDampTime: 0.7
   m_lerpInfrontObstructionSpeed: 16
-  m_floorObstructionRaycastHeight: 2
+  m_floorObstructionRaycastHeight: 0.1
 --- !u!1 &7955218482929427650
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -30,24 +31,28 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float m_lerpInfrontObstructionSpeed = 16.0f;
     [SerializeField]
-    private float m_floorObstructionRaycastHeight = 2.0f;
+    private float m_floorObstructionRaycastHeight = 0.1f;
 
     private Vector3 m_cameraVelocity = Vector3.zero;
 
     private const float SCROLL_POS_SAFE_THRESHOLD = 2.5f;
     private const float SCROLL_FOV_SLOW_TRANSITION = 55.0f;
+    private float m_initialFloorObstructionRaycastHeight = 0.1f;
 
-    private float TemporaryOffset { get; set; }
+    private float CurrentOffset { get; set; }
     private float DesiredOffset { get;  set; }
     private float m_previousScrollDelta = 0.0f;
+    private float m_floorDetectLengthScalingFactor = 0.1f;
 
+    private const uint DECUPLE = 10;
     private bool m_cameraIsObstructedByObject = false;
     private bool m_cameraIsObstructedByFloor = false;
 
     private void Awake()
     {
         DesiredOffset = m_farthestCamDist;
-        TemporaryOffset = m_farthestCamDist;
+        CurrentOffset = m_farthestCamDist;
+        m_initialFloorObstructionRaycastHeight = m_floorObstructionRaycastHeight;
     }
 
     // Update is called once per frame
@@ -56,6 +61,7 @@ public class CameraController : MonoBehaviour
         UpdateFollowPlayer();
         UpdateHorizontalRotations();
         UpdateVerticalRotations();
+        //UpdateCameraFloorDetectLength();
     }
 
     void FixedUpdate()
@@ -72,7 +78,8 @@ public class CameraController : MonoBehaviour
 
     private void UpdateFollowPlayer()
     {
-        Vector3 targetPosition = m_objectToLookAt.position - transform.forward * TemporaryOffset;
+        // Use the current offset of the camera to follow the player position
+        Vector3 targetPosition = m_objectToLookAt.position - transform.forward * CurrentOffset;
         Vector3 smoothLerpedToTarget = Vector3.Lerp(transform.position, targetPosition, m_smoothCameraFollow * Time.deltaTime);
 
         // Keep the Y raw so that the camera stays on the same level as the player move and jumps with the player
@@ -158,7 +165,7 @@ public class CameraController : MonoBehaviour
         // https://docs.unity3d.com/ScriptReference/Vector3.SmoothDamp.html
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
 
-        TemporaryOffset = Vector3.Distance(newPosition, m_objectToLookAt.position);
+        CurrentOffset = Vector3.Distance(newPosition, m_objectToLookAt.position);
         m_previousScrollDelta = scrollDelta;
     }
 
@@ -176,6 +183,8 @@ public class CameraController : MonoBehaviour
         // Bit shift the index of the layer (8) to get a bit mask
         // Add static object layer 8 (static objects)
         int layerMask = 1 << 8;
+        // Add layer 7 (floor objects)
+        layerMask |= 1 << 7;
 
         RaycastHit hit;
 
@@ -209,7 +218,8 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        TemporaryOffset = DesiredOffset;
+
+        CurrentOffset = DesiredOffset;
         m_cameraIsObstructedByObject = false;
     }
 
@@ -225,26 +235,36 @@ public class CameraController : MonoBehaviour
         Vector3 cameraDownVector = transform.position;
         cameraDownVector.y += m_floorObstructionRaycastHeight;
         Vector3 downVectToCam = transform.position - cameraDownVector;
-        float distance = downVectToCam.magnitude;
+        //float distance = downVectToCam.magnitude;
 
         if (Physics.Raycast(transform.position, Vector3.down, out hit, m_floorObstructionRaycastHeight, layerMask))
         {
             if (m_cameraIsObstructedByFloor == false)
             {
                 m_cameraIsObstructedByFloor = true;
-                DesiredOffset = Vector3.Distance(transform.position, cameraDownVector);
+                DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
             }
 
-            Vector3 hitPoint = hit.point;
+            Vector3 topHitPoint = hit.point;
 
-            DrawCrosshair(hitPoint);
+            //DrawCrosshair(topHitPoint);
 
             Debug.DrawRay(transform.position, downVectToCam.normalized * hit.distance, Color.red);
 
-            hitPoint.y += m_floorObstructionRaycastHeight;
-            //DrawCrosshair(hitPoint);
+            Vector3 directionToTopHitPoint = topHitPoint - m_objectToLookAt.position;
+            //Debug.DrawRay(m_objectToLookAt.position, directionToTopHitPoint, Color.gray);
 
-            LerpToPoint(hitPoint);
+            Vector3 bottomHitPoint = hit.point;
+            bottomHitPoint.y += m_floorObstructionRaycastHeight;
+            //DrawCrosshair(bottomHitPoint);
+
+            Vector3 playerToCameraDirection = transform.position - m_objectToLookAt.position; // green ray cast
+            Vector3 playerToHitFloorDirection = directionToTopHitPoint - m_objectToLookAt.position; // grey ray cast
+            Vector3 projectOnHitFloor = Vector3.Project(playerToCameraDirection, playerToHitFloorDirection) + m_objectToLookAt.position;
+            Vector3 projectBackOnPlayerToCam = Vector3.Project(projectOnHitFloor - m_objectToLookAt.position, playerToCameraDirection) + m_objectToLookAt.position;
+
+            DrawCrosshair(projectBackOnPlayerToCam);
+            LerpToPointFaster(projectBackOnPlayerToCam);
             return;
         }
 
@@ -256,7 +276,7 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        TemporaryOffset = DesiredOffset;
+        CurrentOffset = DesiredOffset;
         m_cameraIsObstructedByFloor = false;
     }
 
@@ -275,7 +295,14 @@ public class CameraController : MonoBehaviour
     {
         Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
         transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
-        TemporaryOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+        CurrentOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+    }
+
+    private void LerpToPointFaster(Vector3 hitPoint)
+    {
+        Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed * DECUPLE);
+        transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
+        CurrentOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
     }
 
     private bool IsPosWithinScrollRange(Vector3 position)
@@ -291,5 +318,21 @@ public class CameraController : MonoBehaviour
         bool isWithinRange = isWithinClosestRange && isWithinFarthestRange;
         
         return isWithinRange;
+    }
+
+    private void UpdateCameraFloorDetectLength()
+    {
+        float distance = Vector3.Distance(transform.position, m_objectToLookAt.position);
+
+        // Calculate the new raycast length
+        float newRaycastLength = m_initialFloorObstructionRaycastHeight + distance * m_floorDetectLengthScalingFactor;
+
+        // Check if we need to change the raycast length
+        if (newRaycastLength > m_floorObstructionRaycastHeight)
+        {
+            // Update the raycast length
+            m_floorObstructionRaycastHeight = newRaycastLength;
+            Debug.Log("m_floorObstructionRaycastHeight: " + m_floorObstructionRaycastHeight);
+        }
     }
 }
