@@ -67,7 +67,7 @@ public class CameraController : MonoBehaviour
     void FixedUpdate()
     {
         FixedUpdateObjectObstruction();
-        FixedUpdateFloorObstruction();
+        //FixedUpdateFloorObstruction();
     }
 
     private void LateUpdate()

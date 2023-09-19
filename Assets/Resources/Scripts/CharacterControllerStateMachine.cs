@@ -74,7 +74,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
                 continue;
             }
 
-            if (state.CanEnter())
+            if (state.CanEnter(state))
             {
                 // Quit the current state
                 m_currentState.OnExit();
@@ -136,6 +136,11 @@ public class CharacterControllerStateMachine : MonoBehaviour
         }
 
         Animator.SetBool("TouchGround", !isJumping);
+    }
+
+    public void UpdateAttackAnimation()
+    {
+        Animator.SetTrigger("Attacking");
     }
 
     public void UpdateHitAnimation()

@@ -23,7 +23,7 @@ public class CharacterState : IState
     {
     }
 
-    public virtual bool CanEnter()
+    public virtual bool CanEnter(CharacterState state)
     {
         throw new System.NotImplementedException();
     }

@@ -75,10 +75,16 @@ public class JumpState : CharacterState
         m_currentStateTimer -= Time.deltaTime;
     }
 
-    public override bool CanEnter()
+    public override bool CanEnter(CharacterState currentState)
     {
-        // This must be run in Update absolutely
-        return Input.GetKeyDown(KeyCode.Space);
+        //CharacterState freeState = currentState as FreeState;
+
+        //if (freeState != null)
+        //{
+            return Input.GetKeyDown(KeyCode.Space);
+        //}
+           
+        //return false;
     }
 
     public override bool CanExit()

@@ -115,10 +115,20 @@ public class FreeState : CharacterState
         //Debug.Log("Exit state: Free state");
     }
 
-    public override bool CanEnter()
+    public override bool CanEnter(CharacterState currentState)
     {
-        // Can only enter the free state if the player touches the ground
-        return m_stateMachine.IsInContactWithFloor();
+        //CharacterState jumpState = currentState as JumpState;
+
+        //if (jumpState != null) 
+        //{
+            // If I am here it means that I am presently in the jump state
+            // If I can enter in FreeState
+
+            // I cannot enter in the FreeSate only if the player touch the ground
+            return m_stateMachine.IsInContactWithFloor();
+        //}
+
+        //return false;
     }
 
     public override bool CanExit()

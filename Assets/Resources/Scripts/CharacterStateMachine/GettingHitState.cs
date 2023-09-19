@@ -7,7 +7,7 @@ public class GettingHitState : CharacterState
 
     public override void OnEnter()
     {
-        Debug.Log("Enter State: Getting Hit state");
+        //Debug.Log("Enter State: Getting Hit state");
         m_stateMachine.UpdateHeatlh();
         m_stateMachine.UpdateHitAnimation();
         m_currentStateTimer = STATE_EXIT_TIMER;
@@ -15,7 +15,7 @@ public class GettingHitState : CharacterState
 
     public override void OnExit()
     {
-        Debug.Log("Exit state: Getting Hit state");
+        //Debug.Log("Exit state: Getting Hit state");
     }
 
     public override void OnFixedUpdate()
@@ -28,9 +28,16 @@ public class GettingHitState : CharacterState
         m_currentStateTimer -= Time.deltaTime;
     }
 
-    public override bool CanEnter()
+    public override bool CanEnter(CharacterState currentState)
     {
-        return m_stateMachine.Health < m_stateMachine.PreviousHealth;
+        //CharacterState freeState = currentState as FreeState;
+
+        //if (freeState != null)
+        //{
+            return m_stateMachine.Health < m_stateMachine.PreviousHealth;
+        //}
+
+        //return false;
     }
 
     public override bool CanExit()
