@@ -195,7 +195,7 @@ MonoBehaviour:
   m_closestCamDistFOV: 70
   m_scrollSmoothDampTime: 0.7
   m_lerpInfrontObstructionSpeed: 16
-  m_floorObstructionRaycastHeight: 0.1
+  m_floorObstructionRaycastHeight: 1
 --- !u!1 &7955218482929427650
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,7 +290,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 304432620883903249, guid: 413a1d22819f431ebb3ff91a05364000, type: 3}
+    - {fileID: 3029310427291274162, guid: 413a1d22819f431ebb3ff91a05364000, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

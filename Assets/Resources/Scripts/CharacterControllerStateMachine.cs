@@ -33,6 +33,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
         m_possibleStates.Add(new FreeState());
         m_possibleStates.Add(new JumpState());
         m_possibleStates.Add(new GettingHitState());
+        m_possibleStates.Add(new AttackState());
     }
 
     // Start is called before the first frame update
@@ -140,11 +141,35 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     public void UpdateAttackAnimation()
     {
-        Animator.SetTrigger("Attacking");
+        // Source : https://discussions.unity.com/t/how-can-i-check-if-an-animation-is-playing-or-has-finished-using-animator-c/57888/5
+        AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
+
+        if (stateInfo.IsName("Attacking") && stateInfo.normalizedTime < 1.0f)
+        {
+            // If the animation is already playing, restart it
+            Animator.Play("Attacking", 0, 0f);
+        }
+        else if (!stateInfo.IsName("Attacking"))
+        {
+            // Start the animation if it's not already playing
+            Animator.SetTrigger("Attacking");
+        }
     }
 
     public void UpdateHitAnimation()
     {
-        Animator.SetTrigger("GettingHit");
+        // Source : https://discussions.unity.com/t/how-can-i-check-if-an-animation-is-playing-or-has-finished-using-animator-c/57888/5
+        AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
+
+        if (stateInfo.IsName("GettingHit") && stateInfo.normalizedTime < 1.0f)
+        {
+            // If the animation is already playing, restart it
+            Animator.Play("GettingHit", 0, 0f);
+        }
+        else if (!stateInfo.IsName("GettingHit"))
+        {
+            // Start the animation if it's not already playing
+            Animator.SetTrigger("GettingHit");
+        }
     }
 }
