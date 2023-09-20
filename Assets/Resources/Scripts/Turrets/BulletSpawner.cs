@@ -14,23 +14,35 @@ public class BulletSpawner : MonoBehaviour
     [SerializeField] private int m_maxPoolSize = 100;
 
     private ObjectPool<GameObject> m_projectilePool;
-    
+
 
     private void Awake()
     {
         m_projectilePool = new ObjectPool<GameObject>(
-            createFunc: () =>
-            {
-                GameObject projectile = Instantiate(m_projectilePrefab);
-                projectile.SetActive(false);
-                return projectile;
-            },
-            actionOnGet: (projectile) => projectile.SetActive(true),
-            actionOnRelease: (projectile) => projectile.SetActive(false),
-            actionOnDestroy: null,
-            collectionCheck: true,
-            defaultCapacity: m_maxPoolSize
+            CreateProjectile,
+            ActivateProjectile,
+            DeactivateProjectile,
+            null,
+            true,
+            m_maxPoolSize
         );
+    }
+
+    private GameObject CreateProjectile()
+    {
+        GameObject projectile = Instantiate(m_projectilePrefab);
+        projectile.SetActive(false);
+        return projectile;
+    }
+
+    private void ActivateProjectile(GameObject projectile)
+    {
+        projectile.SetActive(true);
+    }
+
+    private void DeactivateProjectile(GameObject projectile)
+    {
+        projectile.SetActive(false);
     }
 
     private void Start()
