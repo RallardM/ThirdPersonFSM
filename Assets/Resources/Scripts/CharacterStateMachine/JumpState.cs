@@ -9,14 +9,14 @@ public class JumpState : CharacterState
         //Debug.Log("Enter State: Jump State");
 
         m_stateMachine.RB.AddForce(Vector3.up * m_stateMachine.JumpIntensity, ForceMode.Acceleration);
-        m_stateMachine.SetJumpAnimation(true);
+        m_stateMachine.InformAnimator(this, true);
         m_currentStateTimer = STATE_EXIT_TIMER;
     }
 
     public override void OnExit()
     {
         //Debug.Log("Exit state: Jump state");
-        m_stateMachine.SetJumpAnimation(false);
+        m_stateMachine.InformAnimator(this, false);
     }
 
     public override void OnFixedUpdate()

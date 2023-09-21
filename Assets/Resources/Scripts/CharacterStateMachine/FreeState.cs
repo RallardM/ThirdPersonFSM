@@ -5,6 +5,13 @@ public class FreeState : CharacterState
     public override void OnEnter()
     {
         //Debug.Log("Enter state: Free State");
+        m_stateMachine.InformAnimator(this, true);
+    }
+
+    public override void OnExit()
+    {
+        //Debug.Log("Exit state: Free state");
+        m_stateMachine.InformAnimator(this, false);
     }
 
     public override void OnUpdate()
@@ -105,11 +112,6 @@ public class FreeState : CharacterState
             float interpolationSpeed = 1.0f;
             m_stateMachine.RB.rotation = Quaternion.Slerp(m_stateMachine.RB.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
         }
-    }
-
-    public override void OnExit()
-    {
-        //Debug.Log("Exit state: Free state");
     }
 
     public override bool CanEnter(CharacterState currentState)

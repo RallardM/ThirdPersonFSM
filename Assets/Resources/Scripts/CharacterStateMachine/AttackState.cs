@@ -8,7 +8,7 @@ public class AttackState : CharacterState
     public override void OnEnter()
     {
         //Debug.Log("Enter State: Attacking state");
-
+        
         m_stateMachine.UpdateAttackAnimation();
         m_currentStateTimer = STATE_EXIT_TIMER;
     }
