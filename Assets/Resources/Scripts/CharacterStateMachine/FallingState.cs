@@ -6,13 +6,13 @@ public class FallingState : CharacterState
     public override void OnEnter()
     {
         Debug.Log("Enter State: Falling state");
-        m_stateMachine.SetFallingAnimation(true);
+        m_stateMachine.UpdateAnimation(this);
     }
 
     public override void OnExit()
     {
         Debug.Log("Exit state: Falling state");
-        m_stateMachine.SetFallingAnimation(false);
+        m_stateMachine.UpdateAnimation(this);
     }
 
     public override void OnFixedUpdate()

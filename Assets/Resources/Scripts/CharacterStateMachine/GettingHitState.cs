@@ -9,7 +9,7 @@ public class GettingHitState : CharacterState
     {
         //Debug.Log("Enter State: Getting Hit state");
         m_stateMachine.UpdateHeatlh();
-        m_stateMachine.UpdateHitAnimation();
+        m_stateMachine.UpdateAnimation(this);
         m_currentStateTimer = STATE_EXIT_TIMER;
     }
 

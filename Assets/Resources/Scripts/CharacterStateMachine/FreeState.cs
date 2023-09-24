@@ -4,14 +4,18 @@ public class FreeState : CharacterState
 {
     public override void OnEnter()
     {
-        //Debug.Log("Enter state: Free State");
-        m_stateMachine.InformAnimator(this, true);
+        Debug.Log("Enter state: Free State");
+
+        // TODO : This is to differenciate the upper body and lower body layers in the animator
+        // TODO : the animator layers are not created yet
     }
 
     public override void OnExit()
     {
-        //Debug.Log("Exit state: Free state");
-        m_stateMachine.InformAnimator(this, false);
+        Debug.Log("Exit state: Free state");
+
+        // TODO : This is to differenciate the upper body and lower body layers in the animator
+        // TODO : the animator layers are not created yet
     }
 
     public override void OnUpdate()
