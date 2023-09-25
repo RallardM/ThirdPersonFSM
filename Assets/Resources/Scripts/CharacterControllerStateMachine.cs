@@ -191,10 +191,11 @@ public class CharacterControllerStateMachine : MonoBehaviour
             }
             else
             {
-                Debug.Log("Start fall animation");
+                //Debug.Log("Start fall animation");
+                Debug.Log("Start fall animation || Commented out");
 
                 // Start the animation if it's not already playing
-                Animator.SetTrigger("Fall");
+                //Animator.SetTrigger("Fall");
             }
         }
 
@@ -215,7 +216,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
                 Debug.Log("Start jump animation");
 
                 // Start the animation if Jump state animation not already playing
-                Animator.SetTrigger("Jump");
+                //Animator.SetTrigger("Jump");
 
                 // Inform the animator that the player is jumping
                 Animator.SetBool("IsJumping", true);

@@ -89,11 +89,12 @@ public class JumpState : CharacterState
 
     public override bool CanExit()
     {
-        if (m_currentStateTimer <= 0.0f)
-        {
-            Debug.Log("Timer ended CanExit: Jump State");
-        }
+        //if (m_currentStateTimer <= 0.0f)
+        //{
+        //    Debug.Log("Timer ended CanExit: Jump State");
+        //}
 
-        return m_currentStateTimer <= 0.0f;
+        //return m_currentStateTimer <= 0.0f;
+        return m_stateMachine.IsInContactWithFloor() && m_currentStateTimer <= 0.0f;
     }
 }
