@@ -81,7 +81,7 @@ public class JumpState : CharacterState
 
         //if (freeState != null)
         //{
-            return Input.GetKeyDown(KeyCode.Space);
+        return Input.GetKeyDown(KeyCode.Space);
         //}
            
         //return false;

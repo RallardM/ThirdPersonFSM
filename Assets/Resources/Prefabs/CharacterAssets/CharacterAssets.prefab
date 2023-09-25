@@ -235,6 +235,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4077768442347561192}
     m_Modifications:
+    - target: {fileID: 1707683312325293533, guid: 413a1d22819f431ebb3ff91a05364000,
+        type: 3}
+      propertyPath: <m_stateMachine>k__BackingField
+      value: 
+      objectReference: {fileID: 6193792722279511905}
+    - target: {fileID: 3427927787343281485, guid: 413a1d22819f431ebb3ff91a05364000,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 79a25dde2cbf00049820d2da6c0c0df6, type: 2}
     - target: {fileID: 8230766273605467533, guid: 413a1d22819f431ebb3ff91a05364000,
         type: 3}
       propertyPath: m_Name
@@ -301,6 +311,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 6915790295247744790}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &6193792722279511905 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 724260455359142007, guid: 413a1d22819f431ebb3ff91a05364000,
+    type: 3}
+  m_PrefabInstance: {fileID: 6915790295247744790}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f79716e1523254a93a169e7ea9a577, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6474726478688372190 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 442210160645810888, guid: 413a1d22819f431ebb3ff91a05364000,

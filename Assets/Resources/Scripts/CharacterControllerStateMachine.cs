@@ -8,7 +8,6 @@ public class CharacterControllerStateMachine : MonoBehaviour
     public Rigidbody RB { get; private set; }
     [field: SerializeField]
     private Animator Animator { get; set; }
-
     [field: SerializeField]
     public float AccelerationValue { get; private set; }
     [field: SerializeField]
@@ -22,9 +21,11 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     private CharacterState m_currentState;
     private List<CharacterState> m_possibleStates;
-
     public int Health { get; private set; } = 100;
     public int PreviousHealth { get; private set; } = 100;
+    public bool IsStunned { get; private set; }
+    public bool IsDead { get; private set; }
+    public bool IsKeyPressed { get; private set; }
 
     private void Awake()
     {
@@ -34,6 +35,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
         m_possibleStates.Add(new GettingHitState());
         m_possibleStates.Add(new AttackState());
         m_possibleStates.Add(new FallingState());
+        m_possibleStates.Add(new StunnedState());
 
     }
 
@@ -54,6 +56,19 @@ public class CharacterControllerStateMachine : MonoBehaviour
     {
         m_currentState.OnUpdate();
         TryStateTransition();
+        CheckIfKeyPresed();
+    }
+
+    private void CheckIfKeyPresed()
+    {
+        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.Space))
+        {
+            IsKeyPressed = true;
+        }
+        else
+        {
+            IsKeyPressed = false;
+        }
     }
 
     // Update is called once per frame
@@ -96,10 +111,21 @@ public class CharacterControllerStateMachine : MonoBehaviour
     public void TakeDamage(int damage)
     {
         Health -= damage;
+
         if (Health <= 0)
         {
             Die();
         }
+
+        if (damage > 10)
+        {
+            IsStunned = true;
+        }
+    }
+
+    public void StunnedStateEndded()
+    {
+        IsStunned = false;
     }
 
     public void UpdateHeatlh()
@@ -107,9 +133,17 @@ public class CharacterControllerStateMachine : MonoBehaviour
         PreviousHealth = Health;
     }
 
+    // Animator access :
     private void Die()
-    { 
-        // TODO: Implement death animation
+    {
+        Debug.Log("Player died");
+        IsDead = true;
+        Animator.SetBool("IsStunned", true);
+    }
+
+    public void SetTouchGround(bool isOnGround)
+    {
+        Animator.SetBool("IsTouchingGround", isOnGround);
     }
 
     public void UpdateAnimatorMovements(Vector3 movementValue)

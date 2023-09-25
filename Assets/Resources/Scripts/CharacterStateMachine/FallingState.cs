@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class FallingState : CharacterState
 {
-
     public override void OnEnter()
     {
         Debug.Log("Enter State: Falling state");
