@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class JumpState : CharacterState
 {
-    private const float STATE_EXIT_TIMER = 0.2f;
+    private const float STATE_EXIT_TIMER = 0.7f;
     private float m_currentStateTimer = 0.0f;
     public override void OnEnter()
     {
@@ -89,6 +89,11 @@ public class JumpState : CharacterState
 
     public override bool CanExit()
     {
+        if (m_currentStateTimer <= 0.0f)
+        {
+            Debug.Log("Timer ended CanExit: Jump State");
+        }
+
         return m_currentStateTimer <= 0.0f;
     }
 }
