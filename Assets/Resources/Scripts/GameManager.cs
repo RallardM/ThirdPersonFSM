@@ -1,13 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        //Cursor.visible = false;
+        Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         //Cursor.lockState = CursorLockMode.Confined;
     }
@@ -17,7 +16,8 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Escape))
         {
-            Application.Quit(0);
+            Application.Quit();
+            UnityEditor.EditorApplication.isPlaying = false;
         }
     }
 }
