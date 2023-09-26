@@ -119,13 +119,9 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
         if (damage > 10)
         {
+            Debug.Log("Player is stunned.");
             IsStunned = true;
         }
-    }
-
-    public void StunnedStateEndded()
-    {
-        IsStunned = false;
     }
 
     public void UpdateHeatlh()
@@ -134,6 +130,9 @@ public class CharacterControllerStateMachine : MonoBehaviour
     }
 
     // Animator access :
+
+
+
     private void Die()
     {
         Debug.Log("Player died");
@@ -172,15 +171,15 @@ public class CharacterControllerStateMachine : MonoBehaviour
         CharacterState hitState = state as GettingHitState;
         if (hitState != null)
         {
-            if (stateInfo.IsName("GetHit") && stateInfo.normalizedTime < 1.0f)
+            if (stateInfo.IsName("GettingHit") && stateInfo.normalizedTime < 1.0f)
             {
                 // If the animation is already playing, restart it
-                Animator.Play("GetHit", 0, 0f);
+                Animator.Play("GettingHit", 0, 0f);
             }
-            else if (!stateInfo.IsName("GetHit"))
+            else if (!stateInfo.IsName("GettingHit"))
             {
                 // Start the animation if it's not already playing
-                Animator.SetTrigger("GetHit");
+                Animator.SetTrigger("GettingHit");
             }
         }
 
@@ -253,6 +252,27 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
                 // Inform the animator that the player is jumping
                 Animator.SetBool("IsJumping", true);
+            }
+        }
+
+        CharacterState stunnedState = state as StunnedState;
+        if (stunnedState != null)
+        {
+            // If in one of the two jumping states
+            if (Animator.GetBool("IsStunned"))
+            {
+                Debug.Log("Inform that the stunned anim ended");
+
+                // Inform the animator that the player is not stunned anymore
+                Animator.SetBool("IsStunned", false);
+
+            }
+            else
+            {
+                Debug.Log("Start stunned animation");
+
+                // Inform the animator that the player is stunned
+                Animator.SetBool("IsStunned", true);
             }
         }
     }

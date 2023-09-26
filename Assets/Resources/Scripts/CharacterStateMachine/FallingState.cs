@@ -4,6 +4,7 @@ using UnityEngine;
 public class FallingState : CharacterState
 {
     private float m_fallingvelocity = 0.0f;
+    private const float MAX_FALLING_VELOCITY_BEFORE_DAMAGE = 12.0f;
     public override void OnEnter()
     {
         Debug.Log("Enter State: Falling state");
@@ -12,9 +13,7 @@ public class FallingState : CharacterState
 
     public override void OnExit()
     {
-        Debug.Log("Exit state: Falling state");
-        if(Absolute(m_fallingvelocity) > 12.0f)
-        m_stateMachine.UpdateAnimation(this);
+
     }
 
     public override void OnFixedUpdate()
@@ -24,8 +23,14 @@ public class FallingState : CharacterState
 
     public override void OnUpdate()
     {
-        Debug.Log("Current falling velocity: " + m_stateMachine.RB.velocity.y);
-        m_fallingvelocity = m_stateMachine.RB.velocity.y;
+        if (Mathf.Abs(m_stateMachine.RB.velocity.y) < m_fallingvelocity)
+        {
+            return;
+        }
+
+        // Register velocity if it is greater than the previous one
+        m_fallingvelocity = Mathf.Abs(m_stateMachine.RB.velocity.y);
+        //Debug.Log("Current falling velocity: " + Mathf.Abs(m_stateMachine.RB.velocity.y));
     }
 
     public override bool CanEnter(CharacterState currentState)
@@ -35,6 +40,26 @@ public class FallingState : CharacterState
 
     public override bool CanExit()
     {
-        return m_stateMachine.IsInContactWithFloor();
+        if (m_stateMachine.IsInContactWithFloor())
+        {
+            Debug.Log("Can exit falling state, is in contact with ground.");
+
+            Debug.Log("Exit state: Falling state");
+            if (Mathf.Abs(m_fallingvelocity) > MAX_FALLING_VELOCITY_BEFORE_DAMAGE)
+            {
+                Debug.Log("Player took damage from falling : " + (int)m_fallingvelocity);
+                m_stateMachine.TakeDamage((int)m_fallingvelocity);
+            }
+            else
+            {
+                Debug.Log("Player didn't took damage from falling.");
+                m_stateMachine.UpdateAnimation(this);
+            }
+
+            m_fallingvelocity = 0.0f;
+            return m_stateMachine.IsInContactWithFloor();
+        }
+
+        return false;
     }
 }

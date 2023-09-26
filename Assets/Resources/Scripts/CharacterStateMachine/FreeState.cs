@@ -5,17 +5,11 @@ public class FreeState : CharacterState
     public override void OnEnter()
     {
         Debug.Log("Enter state: Free State");
-
-        // TODO : This is to differenciate the upper body and lower body layers in the animator
-        // TODO : the animator layers are not created yet
     }
 
     public override void OnExit()
     {
         Debug.Log("Exit state: Free state");
-
-        // TODO : This is to differenciate the upper body and lower body layers in the animator
-        // TODO : the animator layers are not created yet
     }
 
     public override void OnUpdate()
@@ -120,22 +114,32 @@ public class FreeState : CharacterState
 
     public override bool CanEnter(CharacterState currentState)
     {
-        //CharacterState jumpState = currentState as JumpState;
+        CharacterState jumpState = currentState as JumpState;
+        CharacterState fallingState = currentState as FallingState;
 
-        //if (jumpState != null) 
-        //{
-            // If I am here it means that I am presently in the jump state
-            // If I can enter in FreeState
+        if (jumpState != null || fallingState != null) 
+        {
+            if (m_stateMachine.IsInContactWithFloor())
+            {
+                Debug.Log("1) is player on ground : " + m_stateMachine.IsInContactWithFloor());
+                Debug.Log("2) is player stunned : " + m_stateMachine.IsStunned);
+                Debug.Log("3) can enter : " + (m_stateMachine.IsInContactWithFloor() && m_stateMachine.IsStunned == false));
+                return m_stateMachine.IsInContactWithFloor() && m_stateMachine.IsStunned == false;
+            }
+        }
 
-            // I cannot enter in the FreeSate only if the player touch the ground
-            return m_stateMachine.IsInContactWithFloor();
-        //}
+        CharacterState stunnedState = currentState as StunnedState;
 
-        //return false;
+        if (stunnedState != null)
+        {
+            return m_stateMachine.IsKeyPressed;
+        }
+
+        return false;
     }
 
     public override bool CanExit()
     {
-        return true;
+        return m_stateMachine.IsInContactWithFloor() == false;
     }
 }
