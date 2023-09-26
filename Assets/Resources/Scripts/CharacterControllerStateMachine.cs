@@ -131,8 +131,6 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     // Animator access :
 
-
-
     private void Die()
     {
         Debug.Log("Player died");
@@ -143,6 +141,11 @@ public class CharacterControllerStateMachine : MonoBehaviour
     public void SetTouchGround(bool isOnGround)
     {
         Animator.SetBool("IsTouchingGround", isOnGround);
+    }
+
+    public bool IsPlayerFell()
+    {
+        return Animator.GetBool("IsFalling");
     }
 
     public void UpdateAnimatorMovements(Vector3 movementValue)
@@ -219,40 +222,37 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
                 // If the animation is already playing, stop it
                 Animator.Play("InAir", 0, 0f);
+                Animator.SetBool("IsFalling", true);
 
             }
-            else
+            else if (isFallAnim && isPlaying == false)
             {
                 //Debug.Log("Start fall animation");
-                Debug.Log("Start fall animation || Commented out");
-
+                Debug.Log("Start fall animation");
+                Animator.SetBool("IsFalling", true);
                 // Start the animation if it's not already playing
                 //Animator.SetTrigger("Fall");
+            }
+            else if (isFallAnim == false && isPlaying == false && IsInContactWithFloor())
+            {
+                Debug.Log("Inform animator fall eneded");
+                Animator.SetBool("IsFalling", false);
             }
         }
 
         CharacterState jumpState = state as JumpState;
         if (jumpState != null)
         {
-            // If in one of the two jumping states
             if (Animator.GetBool("IsJumping"))
             {
-                Debug.Log("Inform that the jump anim ended");
-
-                // Inform the animator that the player is not jumping anymore
                 Animator.SetBool("IsJumping", false);
-
+                return;
             }
-            else
-            {
-                Debug.Log("Start jump animation");
 
-                // Start the animation if Jump state animation not already playing
-                //Animator.SetTrigger("Jump");
-
-                // Inform the animator that the player is jumping
-                Animator.SetBool("IsJumping", true);
-            }
+            Debug.Log("Start jump animation");
+            // If not jumping
+            // Inform the animator that the player is jumping
+            Animator.SetBool("IsJumping", true);
         }
 
         CharacterState stunnedState = state as StunnedState;

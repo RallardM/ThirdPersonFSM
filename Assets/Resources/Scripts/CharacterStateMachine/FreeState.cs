@@ -114,32 +114,34 @@ public class FreeState : CharacterState
 
     public override bool CanEnter(CharacterState currentState)
     {
-        CharacterState jumpState = currentState as JumpState;
-        CharacterState fallingState = currentState as FallingState;
-
-        if (jumpState != null || fallingState != null) 
-        {
-            if (m_stateMachine.IsInContactWithFloor())
-            {
-                Debug.Log("1) is player on ground : " + m_stateMachine.IsInContactWithFloor());
-                Debug.Log("2) is player stunned : " + m_stateMachine.IsStunned);
-                Debug.Log("3) can enter : " + (m_stateMachine.IsInContactWithFloor() && m_stateMachine.IsStunned == false));
+        //CharacterState jumpState = currentState as JumpState;
+        //CharacterState fallingState = currentState as FallingState;
+        Debug.Log("Can enter freestate checking state : " + currentState.GetType().Name);
+        //Debug.Log("jumpState : " + (jumpState != null) + " fallingState : " + (fallingState != null));
+        //if (jumpState != null || fallingState != null) 
+        //{
+        //    Debug.Log("jumpState != null || fallingState != null and IsInContactWithFloor : " + m_stateMachine.IsInContactWithFloor());
+        //    if (m_stateMachine.IsInContactWithFloor())
+        //    {
+        //        Debug.Log("1) is player on ground : " + m_stateMachine.IsInContactWithFloor());
+        //        Debug.Log("2) is player stunned : " + m_stateMachine.IsStunned);
+        //        Debug.Log("3) can enter : " + (m_stateMachine.IsInContactWithFloor() && m_stateMachine.IsStunned == false));
                 return m_stateMachine.IsInContactWithFloor() && m_stateMachine.IsStunned == false;
-            }
-        }
+        //    }
+        //}
 
-        CharacterState stunnedState = currentState as StunnedState;
+        //CharacterState stunnedState = currentState as StunnedState;
 
-        if (stunnedState != null)
-        {
-            return m_stateMachine.IsKeyPressed;
-        }
+        //if (stunnedState != null)
+        //{
+        //    return m_stateMachine.IsKeyPressed;
+        //}
 
-        return false;
+        //return false;
     }
 
     public override bool CanExit()
     {
-        return m_stateMachine.IsInContactWithFloor() == false;
+        return true;
     }
 }

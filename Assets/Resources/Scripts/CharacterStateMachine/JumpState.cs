@@ -81,7 +81,13 @@ public class JumpState : CharacterState
 
         //if (freeState != null)
         //{
-        return Input.GetKeyDown(KeyCode.Space);
+        if (m_stateMachine.IsInContactWithFloor() && Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("Can enter: Jump State");
+            return true;
+        }
+
+        return false;
         //}
            
         //return false;
@@ -95,6 +101,13 @@ public class JumpState : CharacterState
         //}
 
         //return m_currentStateTimer <= 0.0f;
-        return m_stateMachine.IsInContactWithFloor() && m_currentStateTimer <= 0.0f;
+        if (m_stateMachine.IsInContactWithFloor() && m_currentStateTimer <= 0.0f)
+        {
+            Debug.Log("Can exit: Jump State");
+            return true;
+        }
+
+        //Debug.Log("Cannot exit: Jump State");
+        return false;
     }
 }

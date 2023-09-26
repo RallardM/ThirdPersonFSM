@@ -12,6 +12,12 @@ public class CharacterFloorTrigger : MonoBehaviour
         {
             //Debug.Log("Touched the ground");
         }
+
+        if(m_stateMachine.IsPlayerFell())
+        {
+            return;
+        }
+
         m_stateMachine.SetTouchGround(true);
         IsOnFloor = true;
     }
