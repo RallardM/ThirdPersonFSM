@@ -63,6 +63,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.Space))
         {
+            //Debug.Log("A key is pressed");
             IsKeyPressed = true;
         }
         else
@@ -124,6 +125,12 @@ public class CharacterControllerStateMachine : MonoBehaviour
         }
     }
 
+    public void GetStun()
+    {
+        Debug.Log("Player got stunned");
+        IsStunned = true;
+    }
+
     public void UpdateHeatlh()
     {
         PreviousHealth = Health;
@@ -143,10 +150,10 @@ public class CharacterControllerStateMachine : MonoBehaviour
         Animator.SetBool("IsTouchingGround", isOnGround);
     }
 
-    public bool IsPlayerFell()
-    {
-        return Animator.GetBool("IsFalling");
-    }
+    //public bool IsPlayerFell()
+    //{
+    //    return Animator.GetBool("IsFalling");
+    //}
 
     public void UpdateAnimatorMovements(Vector3 movementValue)
     {
@@ -214,18 +221,23 @@ public class CharacterControllerStateMachine : MonoBehaviour
         if (fallState != null)
         {
             bool isFallAnim = stateInfo.IsName("InAir");
+            bool isFalling = Animator.GetBool("IsFalling");
             bool isPlaying = stateInfo.normalizedTime < 1.0f;
 
-            if (isFallAnim && isPlaying)
+            Animator.SetFloat("MoveX", 0.0f);
+            Animator.SetFloat("MoveY", 0.0f);
+
+            //if (isFallAnim && isPlaying && isFalling)
+            if (isFallAnim && isPlaying && isFalling)
             {
                 Debug.Log("Restarting fall animation");
 
-                // If the animation is already playing, stop it
+                // If the animation is already playing, restart it
                 Animator.Play("InAir", 0, 0f);
                 Animator.SetBool("IsFalling", true);
 
             }
-            else if (isFallAnim && isPlaying == false)
+            else if (isFalling == false)
             {
                 //Debug.Log("Start fall animation");
                 Debug.Log("Start fall animation");
@@ -233,7 +245,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
                 // Start the animation if it's not already playing
                 //Animator.SetTrigger("Fall");
             }
-            else if (isFallAnim == false && isPlaying == false && IsInContactWithFloor())
+            else if (isFallAnim == false && isPlaying == false && IsInContactWithFloor() && isFalling)
             {
                 Debug.Log("Inform animator fall eneded");
                 Animator.SetBool("IsFalling", false);
@@ -243,16 +255,17 @@ public class CharacterControllerStateMachine : MonoBehaviour
         CharacterState jumpState = state as JumpState;
         if (jumpState != null)
         {
-            if (Animator.GetBool("IsJumping"))
-            {
-                Animator.SetBool("IsJumping", false);
-                return;
-            }
+            //if (Animator.GetBool("IsJumping"))
+            //{
+            //    Animator.SetBool("IsJumping", false);
+            //    return;
+            //}
 
             Debug.Log("Start jump animation");
             // If not jumping
             // Inform the animator that the player is jumping
-            Animator.SetBool("IsJumping", true);
+            //Animator.SetBool("IsJumping", true);
+            Animator.SetTrigger("Jump");
         }
 
         CharacterState stunnedState = state as StunnedState;
@@ -265,6 +278,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
                 // Inform the animator that the player is not stunned anymore
                 Animator.SetBool("IsStunned", false);
+                IsStunned = false;
 
             }
             else
@@ -273,6 +287,9 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
                 // Inform the animator that the player is stunned
                 Animator.SetBool("IsStunned", true);
+
+                // Reset Getting hit so that it does not start the hit state after the stun
+                Animator.ResetTrigger("GettingHit");
             }
         }
     }

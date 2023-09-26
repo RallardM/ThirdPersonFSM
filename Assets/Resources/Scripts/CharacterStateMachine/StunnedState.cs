@@ -26,11 +26,23 @@ public class StunnedState : CharacterState
 
     public override bool CanEnter(CharacterState currentState)
     {
-        return m_stateMachine.IsStunned;
+        if (m_stateMachine.IsStunned) 
+        {
+            Debug.Log("Can enter Stunned sate  : " + currentState.GetType().Name);
+            return true;
+        }
+
+        return false;
     }
 
     public override bool CanExit()
     {
-        return m_stateMachine.IsDead == false && m_stateMachine.IsKeyPressed;
+        if (m_stateMachine.IsDead == false && m_stateMachine.IsKeyPressed)
+        {
+            Debug.Log("Can exit Stunned state : a key is pressed");
+            return true;
+        }
+
+        return false;
     }
 }

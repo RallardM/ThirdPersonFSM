@@ -1,3 +1,4 @@
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
 public class FreeState : CharacterState
@@ -116,7 +117,6 @@ public class FreeState : CharacterState
     {
         //CharacterState jumpState = currentState as JumpState;
         //CharacterState fallingState = currentState as FallingState;
-        Debug.Log("Can enter freestate checking state : " + currentState.GetType().Name);
         //Debug.Log("jumpState : " + (jumpState != null) + " fallingState : " + (fallingState != null));
         //if (jumpState != null || fallingState != null) 
         //{
@@ -126,7 +126,30 @@ public class FreeState : CharacterState
         //        Debug.Log("1) is player on ground : " + m_stateMachine.IsInContactWithFloor());
         //        Debug.Log("2) is player stunned : " + m_stateMachine.IsStunned);
         //        Debug.Log("3) can enter : " + (m_stateMachine.IsInContactWithFloor() && m_stateMachine.IsStunned == false));
-                return m_stateMachine.IsInContactWithFloor() && m_stateMachine.IsStunned == false;
+        CharacterState stunState = currentState as StunnedState;
+        if (stunState == null)
+        {
+            Debug.Log("Stun state enter free state");
+            return true;
+        }
+
+         CharacterState freeState = currentState as FreeState;
+        if (freeState == null)
+        {
+            //Debug.Log("Can enter freestate  : " + currentState.GetType().Name);
+            // If not freestate chek if in contact with floor
+            if (m_stateMachine.IsInContactWithFloor())
+            {
+                //Debug.Log("Can enter freestate  : " + currentState.GetType().Name);
+                return true;
+            }
+            return false;
+        }
+
+        //Debug.Log("Try enter freestate  : " + currentState.GetType().Name);
+        return m_stateMachine.IsInContactWithFloor() && m_stateMachine.IsStunned == false;
+
+        //return m_stateMachine.IsInContactWithFloor() && m_stateMachine.IsStunned == false;
         //    }
         //}
 

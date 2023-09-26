@@ -1,7 +1,6 @@
 // Source : https://unity.com/how-to/use-object-pooling-boost-performance-c-scripts-unity
 using UnityEngine.Pool;
 using UnityEngine;
-using System;
 using System.Collections;
 
 public class BulletSpawner : MonoBehaviour

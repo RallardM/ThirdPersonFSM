@@ -16,7 +16,6 @@ public class JumpState : CharacterState
     public override void OnExit()
     {
         Debug.Log("Exit state: Jump state");
-        m_stateMachine.UpdateAnimation(this);
     }
 
     public override void OnFixedUpdate()

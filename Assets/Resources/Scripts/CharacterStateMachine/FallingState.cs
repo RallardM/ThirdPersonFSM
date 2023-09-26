@@ -44,8 +44,6 @@ public class FallingState : CharacterState
         if (m_stateMachine.IsInContactWithFloor())
         {
             Debug.Log("Can exit falling state, is in contact with ground.");
-
-            Debug.Log("Exit state: Falling state");
             if (Mathf.Abs(m_fallingvelocity) > MAX_FALLING_VELOCITY_BEFORE_DAMAGE)
             {
                 Debug.Log("Player took damage from falling : " + (int)m_fallingvelocity);
