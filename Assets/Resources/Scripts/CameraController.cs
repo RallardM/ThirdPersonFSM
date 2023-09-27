@@ -218,7 +218,7 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-
+        Debug.Log("DesiredOffset : " + DesiredOffset + " put in CurrentOffset : " + CurrentOffset);
         CurrentOffset = DesiredOffset;
         m_cameraIsObstructedByObject = false;
     }
@@ -276,6 +276,7 @@ public class CameraController : MonoBehaviour
             return;
         }
 
+        Debug.Log("DesiredOffset : " + DesiredOffset + " put in CurrentOffset : " + CurrentOffset);
         CurrentOffset = DesiredOffset;
         m_cameraIsObstructedByFloor = false;
     }

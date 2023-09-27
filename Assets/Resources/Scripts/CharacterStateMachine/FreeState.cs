@@ -5,12 +5,12 @@ public class FreeState : CharacterState
 {
     public override void OnEnter()
     {
-        Debug.Log("Enter state: Free State");
+        //Debug.Log("Enter state: Free State");
     }
 
     public override void OnExit()
     {
-        Debug.Log("Exit state: Free state");
+        //Debug.Log("Exit state: Free state");
     }
 
     public override void OnUpdate()
@@ -129,7 +129,7 @@ public class FreeState : CharacterState
         CharacterState stunState = currentState as StunnedState;
         if (stunState == null)
         {
-            Debug.Log("Stun state enter free state");
+            //Debug.Log("Stun state can enter free state");
             return true;
         }
 

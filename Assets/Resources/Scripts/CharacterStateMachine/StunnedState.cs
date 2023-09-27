@@ -4,13 +4,13 @@ public class StunnedState : CharacterState
 {
     public override void OnEnter()
     {
-        Debug.Log("Enter State: Stunned state");
+        //Debug.Log("Enter State: Stunned state");
         m_stateMachine.UpdateAnimation(this);
     }
 
     public override void OnExit()
     {
-        Debug.Log("Exit state: Stunned state");
+        //Debug.Log("Exit state: Stunned state");
         m_stateMachine.UpdateAnimation(this);
     }
 

@@ -7,13 +7,13 @@ public class FallingState : CharacterState
     private const float MAX_FALLING_VELOCITY_BEFORE_DAMAGE = 12.0f;
     public override void OnEnter()
     {
-        Debug.Log("Enter State: Falling state");
+        //Debug.Log("Enter State: Falling state");
         m_stateMachine.UpdateAnimation(this);
     }
 
     public override void OnExit()
     {
-        Debug.Log("Exit State: Falling state");
+        //Debug.Log("Exit State: Falling state");
         m_stateMachine.UpdateAnimation(this);
     }
 

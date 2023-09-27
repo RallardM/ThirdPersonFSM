@@ -7,7 +7,7 @@ public class AttackState : CharacterState
 
     public override void OnEnter()
     {
-        Debug.Log("Enter State: Attacking state");
+        //Debug.Log("Enter State: Attacking state");
         
         m_stateMachine.UpdateAnimation(this);
         m_currentStateTimer = STATE_EXIT_TIMER;
@@ -15,7 +15,7 @@ public class AttackState : CharacterState
 
     public override void OnExit()
     {
-        Debug.Log("Exit state: Attacking state");
+        //Debug.Log("Exit state: Attacking state");
     }
 
     public override void OnFixedUpdate()

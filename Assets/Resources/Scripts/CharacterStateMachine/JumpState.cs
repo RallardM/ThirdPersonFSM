@@ -6,7 +6,7 @@ public class JumpState : CharacterState
     private float m_currentStateTimer = 0.0f;
     public override void OnEnter()
     {
-        Debug.Log("Enter State: Jump State");
+        //Debug.Log("Enter State: Jump State");
 
         m_stateMachine.RB.AddForce(Vector3.up * m_stateMachine.JumpIntensity, ForceMode.Acceleration);
         m_stateMachine.UpdateAnimation(this);
@@ -15,7 +15,7 @@ public class JumpState : CharacterState
 
     public override void OnExit()
     {
-        Debug.Log("Exit state: Jump state");
+        //Debug.Log("Exit state: Jump state");
     }
 
     public override void OnFixedUpdate()
