@@ -13,7 +13,9 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private Vector2 m_clampingXRotationValues = Vector2.zero;
     [SerializeField]
-    private float m_smoothCameraFollow = 2.0f;
+    private float m_smoothCameraFollow = 2.0f;    
+    [SerializeField]
+    private float m_smoothCameraUnobstruct = 4.0f;
 
     [Header("Scrolling Settings")]
     [SerializeField]
@@ -31,10 +33,10 @@ public class CameraController : MonoBehaviour
 
     [Header("Camera Obstruction")]
     [SerializeField]
-    private float m_lerpInfrontObstructionSpeed = 16.0f;
+    //private float m_lerpInfrontObstructionSpeed = 16.0f;
 
     private Vector3 m_cameraVelocity = Vector3.zero;
-    private Vector3 m_lastObstrutionDistance = Vector3.zero;
+    //private Vector3 m_lastObstrutionDistance = Vector3.zero;
     private Vector3 m_currentObstrutionDistance = Vector3.zero;
     private Vector3 m_playerToCamVect = Vector3.zero;
 
@@ -48,11 +50,12 @@ public class CameraController : MonoBehaviour
     private float DesiredOffset { get; set; }
     private float m_previousScrollDelta = 0.0f;
 
+    [SerializeField]
     private bool m_cameraIsObstructed = false;
 
     private void Awake()
     {
-        DesiredOffset = m_farthestCamDist;
+        //DesiredOffset = m_farthestCamDist;
         CurrentOffset = m_farthestCamDist;
     }
 
@@ -80,9 +83,19 @@ public class CameraController : MonoBehaviour
 
     private void UpdateFollowPlayer()
     {
+        float cameraSmoothDiplacement = 0.0f;
+        if (m_cameraIsObstructed)
+        {
+            cameraSmoothDiplacement = m_smoothCameraUnobstruct;
+        }
+        else
+        {
+            cameraSmoothDiplacement = m_smoothCameraFollow;
+        }
+
         // Use the current offset of the camera to follow the player position
         Vector3 targetPosition = m_objectToLookAt.position - transform.forward * CurrentOffset;
-        Vector3 smoothLerpedToTarget = Vector3.Lerp(transform.position, targetPosition, m_smoothCameraFollow * Time.deltaTime);
+        Vector3 smoothLerpedToTarget = Vector3.Lerp(transform.position, targetPosition, cameraSmoothDiplacement * Time.deltaTime);
 
         // Keep the Y raw so that the camera stays on the same level as the player move and jumps with the player
         smoothLerpedToTarget.y = transform.position.y;
@@ -169,7 +182,6 @@ public class CameraController : MonoBehaviour
         }
 
         // Else apply the camera offset
-        // https://docs.unity3d.com/ScriptReference/Vector3.SmoothDamp.html
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
 
         CurrentOffset = Vector3.Distance(newPosition, m_objectToLookAt.position);
@@ -194,14 +206,22 @@ public class CameraController : MonoBehaviour
         layerMask |= 1 << 7;
 
         RaycastHit ObjectObstructHitTemp = default;
-        //RaycastHit FloorObstructHitTemp = default;
 
         // Does the raycast intersect any objects excluding the player layer
         Vector3 playerToCamObstructionVect = transform.position - m_objectToLookAt.position;
         m_playerToCamVect = playerToCamObstructionVect;
 
-
-        float distance = playerToCamObstructionVect.magnitude;
+        float distance = 0.0f;
+        //Debug.Log("DesiredOffset : " + DesiredOffset);
+        if (DesiredOffset == 0.0f)
+        {
+            distance = playerToCamObstructionVect.magnitude;
+        }
+        else
+        {
+            distance = DesiredOffset;
+        }
+        
 
         if (Physics.Raycast(m_objectToLookAt.position, playerToCamObstructionVect, out ObjectObstructHitTemp, distance, layerMask)) // Objects obstruction
         {
@@ -210,14 +230,22 @@ public class CameraController : MonoBehaviour
             ObjectObstructHit = ObjectObstructHitTemp;
             if (m_cameraIsObstructed == false)
             {
-                Debug.Log("Camera offset registered");
-                m_lastObstrutionDistance = playerToCamObstructionVect;
+                //Debug.Log("Camera offset registered");
+                DesiredOffset = distance;
+                //m_lastObstrutionDistance = playerToCamObstructionVect;
                 m_cameraIsObstructed = true;
             }
 
             return;
         }
 
+        if(m_cameraIsObstructed == false)
+        {
+            return;
+        }
+
+        //Debug.Log("Camera not obstructed, CurrentOffset : " + CurrentOffset + " DesiredOffset : " + DesiredOffset);
+        CurrentOffset = DesiredOffset;
         m_cameraIsObstructed = false;
     }
 
@@ -244,16 +272,16 @@ public class CameraController : MonoBehaviour
             DrawCrosshair(ObjectObstructHit.point);
             LerpToPoint(ObjectObstructHit.point);
             //m_playerToCamObstructionVect = Vector3.zero;
-            ObjectObstructHit = new RaycastHit();
+            //ObjectObstructHit = new RaycastHit();
             return;
         }
 
-        if (m_cameraIsObstructed == false)
-        {
-            return;
-        }
+        //if (m_cameraIsObstructed == false)
+        //{
+        //    return;
+        //}
 
-        CurrentOffset = DesiredOffset;
+        //CurrentOffset = DesiredOffset;
     }
 
     // Visual debug
@@ -271,9 +299,54 @@ public class CameraController : MonoBehaviour
     private void LerpToPoint(Vector3 hitPoint)
     {
         // Add 3 unit to the hit point to avoid the camera being stuck in the object
-        hitPoint -= m_playerToCamVect.normalized * 3;
-        Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
-        transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
+        //hitPoint -= m_playerToCamVect.normalized * 3;
+
+        // Calculate the desired camera offset based on the scroll input
+        //Vector3 desiredCamTranslation = transform.forward;
+
+        // Calculate the new camera position
+        //Vector3 newPosition = hitPoint + desiredCamTranslation;
+
+        // Return if the new position is not within the desired range
+        //if (IsPosWithinScrollRange(newPosition) == false)
+        //{
+        //    return;
+        //}
+        Vector3 camPlayerVector = m_objectToLookAt.position - transform.forward;
+        Vector3 hitPlayerVector = m_objectToLookAt.position - hitPoint;
+
+        float currentCamPlayerDistance = camPlayerVector.magnitude;
+        float desiredHitPlayerDistance = hitPlayerVector.magnitude;
+
+        if (currentCamPlayerDistance < desiredHitPlayerDistance 
+            || currentCamPlayerDistance <= m_closestCamDist)
+        {
+            //Debug.Log("current cam dist "+ currentCamPlayerDistance +" < hit dist " + desiredHitPlayerDistance);
+            return;
+        }
+
+        // New position does not affect the heigh of the camera
+        //Vector3 newPosition = new(m_objectToLookAt.position.x, transform.position.y, m_objectToLookAt.position.z );
+
+        //Debug.Log("Lerp to hit point : " + hitPoint);
+        // Else apply the camera offset
+        //transform.position = Vector3.Lerp(transform.position, newPosition, 0.8f);
+
+        //float projectHitOnCam = Vector3.Dot(hitPlayerVector, camPlayerVector);
+        //Vector3 newPosition = camPlayerVector.normalized * projectHitOnCam;
+        Debug.Log("desiredHitPlayerDistance : " + desiredHitPlayerDistance);
+        Vector3 newPosition = camPlayerVector.normalized * desiredHitPlayerDistance;
+        //Vector3 newPosition = camPlayerVector.normalized * DesiredOffset;
+
+        //Debug.Log("DesiredOffset : " + DesiredOffset);
+        //Debug.Log("camPlayerVector.normalized : " + camPlayerVector.normalized);
+        //Debug.Log("hitPlayerVector : " + hitPlayerVector);
+        //Debug.Log("newposition : " + newPosition);
+        //CurrentOffset = Vector3.Distance(hitPoint, m_objectToLookAt.position);
+        CurrentOffset = Vector3.Distance(newPosition, m_objectToLookAt.position);
+
+        //Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
+        //transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
     }
 
     private bool IsPosWithinScrollRange(Vector3 position)

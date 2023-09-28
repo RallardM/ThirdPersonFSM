@@ -37,6 +37,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
         m_possibleStates.Add(new StunnedState());
         m_possibleStates.Add(new DeadState());
         m_possibleStates.Add(new HitInAir());
+        //m_possibleStates.Add(new StunnedInAir()); // TODO
 
     }
 

@@ -7077,6 +7077,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3046478345294703624, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
+      propertyPath: m_smoothCameraFollow
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3046478345294703624, guid: dc9ba2af680d1744f996ce30bd0f8e23,
+        type: 3}
       propertyPath: m_floorRaycastMaxLength
       value: 10
       objectReference: {fileID: 0}

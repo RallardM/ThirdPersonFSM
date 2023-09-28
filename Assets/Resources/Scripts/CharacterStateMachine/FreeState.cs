@@ -70,7 +70,7 @@ public class FreeState : CharacterState
             //Debug.Log("Forward input : " + forwardInput + " Right input : " + rightInput);
             // Source : https://www.youtube.com/watch?v=mFOi6W7lohk
             float inputAngle = Mathf.Atan2(rightInput, forwardInput);
-            Debug.Log("Input angle : " + inputAngle);
+            //Debug.Log("Input angle : " + inputAngle);
             float forwardContribution = Mathf.Cos(inputAngle) * forwardInput * m_stateMachine.AccelerationValue;
             float rightContribution = Mathf.Sin(inputAngle) * rightInput * m_stateMachine.AccelerationValue;
 
