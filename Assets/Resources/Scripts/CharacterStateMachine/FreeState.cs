@@ -23,6 +23,8 @@ public class FreeState : CharacterState
         // Calculate the camera's forward and right vectors projected on the horizontal plane
         Vector3 cameraForward = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up).normalized;
         Vector3 cameraRight = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.right, Vector3.up).normalized;
+        float forwardInput = 0;
+        float rightInput = 0;
 
         if (!Input.anyKey)
         {
@@ -31,18 +33,22 @@ public class FreeState : CharacterState
         if (Input.GetKey(KeyCode.W))
         {
             newDirection += cameraForward * m_stateMachine.AccelerationValue;
+            forwardInput = 1;
         }
         if (Input.GetKey(KeyCode.S))
         {
             newDirection -= cameraForward * m_stateMachine.AccelerationValue;
+            forwardInput = -1;
         }
         if (Input.GetKey(KeyCode.A))
         {
             newDirection -= cameraRight * m_stateMachine.AccelerationValue;
+            forwardInput = -1;
         }
         if (Input.GetKey(KeyCode.D))
         {
             newDirection += cameraRight * m_stateMachine.AccelerationValue;
+            rightInput = 1;
         }
 
         /*
@@ -57,11 +63,15 @@ public class FreeState : CharacterState
         {
             m_stateMachine.RB.velocity = m_stateMachine.RB.velocity.normalized;
             m_stateMachine.RB.velocity *= m_stateMachine.MaxVelocity;
-            //Vector3 currentDirectionNorm = m_stateMachine.RB.transform.forward.normalized;
-            //Vector3 newDirectionNorm = newDirection.normalized;
-            //float dotProduct = Vector3.Dot(currentDirectionNorm, newDirectionNorm);
-            //Debug.Log("Dot product : " + dotProduct);
-            //m_stateMachine.RB.velocity = (dotProduct;
+        }
+
+        if (forwardInput != 0 || rightInput != 0)
+        {
+            Debug.Log("Forward input : " + forwardInput + " Right input : " + rightInput);
+        }
+        else
+        {
+            m_stateMachine.RB.velocity = Vector3.zero;
         }
 
         // Update the character animation
