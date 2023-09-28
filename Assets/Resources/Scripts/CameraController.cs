@@ -1,7 +1,4 @@
-using System;
-using Unity.Burst.CompilerServices;
-using Unity.Mathematics;
-using Unity.VisualScripting;
+using System.Runtime.InteropServices.WindowsRuntime;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -39,6 +36,8 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float m_floorRaycastMinLength = 1.0f;
 
+    private Transform m_initialCameraParentTransform;
+
     private Vector3 m_cameraVelocity = Vector3.zero;
     private Vector3 m_lastObstrutionDistance = Vector3.zero;
     private Vector3 m_currentObstrutionDistance = Vector3.zero;
@@ -61,6 +60,7 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
+        m_initialCameraParentTransform = transform.parent;
         DesiredOffset = m_farthestCamDist;
         CurrentOffset = m_farthestCamDist;
     }
@@ -127,13 +127,13 @@ public class CameraController : MonoBehaviour
     private void UpdateHorizontalRotations()
     {
         float currentAngleX = Input.GetAxis("Mouse X") * m_rotationSpeed;
-        transform.RotateAround(m_objectToLookAt.position, m_objectToLookAt.up, currentAngleX);
+        m_initialCameraParentTransform.RotateAround(m_objectToLookAt.position, m_objectToLookAt.up, currentAngleX);
     }
 
     private void UpdateVerticalRotations()
     {
         float currentAngleY = Input.GetAxis("Mouse Y") * m_rotationSpeed;
-        float eulersAngleX = transform.rotation.eulerAngles.x;
+        float eulersAngleX = m_initialCameraParentTransform.rotation.eulerAngles.x;
 
         float comparisonAngle = eulersAngleX + currentAngleY;
 
@@ -146,7 +146,7 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        transform.RotateAround(m_objectToLookAt.position, transform.right, currentAngleY);
+        m_initialCameraParentTransform.RotateAround(m_objectToLookAt.position, m_initialCameraParentTransform.right, currentAngleY);
     }
 
     private float ClampAngle(float angle)
@@ -187,10 +187,10 @@ public class CameraController : MonoBehaviour
         }
 
         // Calculate the desired camera offset based on the scroll input
-        Vector3 desiredCamTranslation = transform.forward * scrollDelta * smallFOVSpeed * m_scrollSpeed;
+        Vector3 desiredCamTranslation = m_initialCameraParentTransform.forward * scrollDelta * smallFOVSpeed * m_scrollSpeed;
 
         // Calculate the new camera position
-        Vector3 newPosition = transform.position + desiredCamTranslation;
+        Vector3 newPosition = m_initialCameraParentTransform.position + desiredCamTranslation;
 
         // Return if the new position is not within the desired range
         if (IsPosWithinScrollRange(newPosition) == false)
@@ -199,8 +199,7 @@ public class CameraController : MonoBehaviour
         }
 
         // Else apply the camera offset
-        // https://docs.unity3d.com/ScriptReference/Vector3.SmoothDamp.html
-        transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
+        m_initialCameraParentTransform.position = Vector3.SmoothDamp(m_initialCameraParentTransform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
 
         CurrentOffset = Vector3.Distance(newPosition, m_objectToLookAt.position);
         m_previousScrollDelta = scrollDelta;
@@ -226,24 +225,15 @@ public class CameraController : MonoBehaviour
         RaycastHit ObjectObstructHitTemp = default;
         //RaycastHit FloorObstructHitTemp = default;
 
-        Vector3 cameraPosition = Vector3.zero;
-        if (m_cameraIsObstructed == false)
-        {
-            cameraPosition = transform.position;
-        }
-        else
-        {
-
-        }
 
         // Does the raycast intersect any objects excluding the player layer
-        Vector3 playerToCamObstructionVect = transform.position - m_objectToLookAt.position;
+        Vector3 playerToCamObstructionVect = m_initialCameraParentTransform.position - m_objectToLookAt.position;
         //Vector3 playerToCamObstructionVect = transform.position - m_objectToLookAt.position;
 
         m_playerToCamCurrentRaycastVect = playerToCamObstructionVect;
 
         if (Physics.Raycast(m_objectToLookAt.position, playerToCamObstructionVect, out ObjectObstructHitTemp, playerToCamObstructionVect.magnitude, layerMask)) // Objects obstruction
-         //|| Physics.Raycast(transform.position, Vector3.down, out FloorObstructHitTemp, m_currentFloorObstructionRaycastLength, layerMask)) // Floor obstruction
+                                                                                                                                                                //|| Physics.Raycast(transform.position, Vector3.down, out FloorObstructHitTemp, m_currentFloorObstructionRaycastLength, layerMask)) // Floor obstruction
         {
             //Debug.Log("Camera obstructed");
             m_currentObstrutionDistance = playerToCamObstructionVect;
@@ -253,7 +243,8 @@ public class CameraController : MonoBehaviour
             //Debug.Log("m_floorObstructionRaycastHit" + m_floorObstructionRaycastHit.point);
             if (m_cameraIsObstructed == false)
             {
-                Debug.Log("Camera offset registered");
+                Debug.Log("Camera obstructed");
+                //Debug.Log("Camera offset registered");
                 LastObjectObstructHit = ObjectObstructHitTemp;
                 m_lastObstrutionDistance = playerToCamObstructionVect;
                 //DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
@@ -264,6 +255,7 @@ public class CameraController : MonoBehaviour
             //Vector3 cameraDownVector = transform.position;
             //cameraDownVector.y += m_currentFloorObstructionRaycastLength;
             //m_downVectToCamFloorObstructionDetector = transform.position - cameraDownVector;
+            return;
         }
 
         //if ((ObjectObstructHit.point.magnitude != 0)
@@ -273,7 +265,13 @@ public class CameraController : MonoBehaviour
         //    return;
         //}
 
-        Debug.Log("2 ObjectObstructHit : " + ObjectObstructHit.point.magnitude + " LastObjectObstructHit : " + LastObjectObstructHit.point.magnitude);
+        //Debug.Log("2 ObjectObstructHit : " + ObjectObstructHit.point.magnitude + " LastObjectObstructHit : " + LastObjectObstructHit.point.magnitude);
+        if (m_cameraIsObstructed == false)
+        {
+            return;
+        }
+
+        Debug.Log("Camera not obstructed");
         m_cameraIsObstructed = false;
     }
 

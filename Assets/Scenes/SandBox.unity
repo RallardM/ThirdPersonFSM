@@ -7075,26 +7075,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3046478345294703624, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_floorRaycastMaxLength
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 3046478345294703624, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_floorRaycastMinLength
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 3046478345294703624, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_lerpInfrontObstructionSpeed
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 3046478345294703624, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_currentFloorObstructionRaycastLength
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 4077768442347561192, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7145,15 +7125,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4138777151954381541, guid: dc9ba2af680d1744f996ce30bd0f8e23,
+        type: 3}
+      propertyPath: m_Name
+      value: InitialCamPosition
+      objectReference: {fileID: 0}
     - target: {fileID: 5333832068087085440, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
       propertyPath: m_Name
       value: CharacterAssets
-      objectReference: {fileID: 0}
-    - target: {fileID: 5841150887074833064, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 5.78
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8202,7 +8182,7 @@ Transform:
   m_GameObject: {fileID: 1551917863}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.29508156, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8219,12 +8199,12 @@ ReflectionProbe:
   serializedVersion: 2
   m_Type: 0
   m_Mode: 1
-  m_RefreshMode: 0
-  m_TimeSlicingMode: 0
+  m_RefreshMode: 1
+  m_TimeSlicingMode: 1
   m_Resolution: 512
   m_UpdateFrequency: 0
-  m_BoxSize: {x: 30.408169, y: 16.776001, z: 26.388168}
-  m_BoxOffset: {x: -0.20738411, y: 3.3880005, z: 1.938312}
+  m_BoxSize: {x: 19.566505, y: 16.776001, z: 26.388168}
+  m_BoxOffset: {x: 0.7046585, y: 6.054654, z: 1.9383125}
   m_NearClip: 0.3
   m_FarClip: 1000
   m_ShadowDistance: 100
@@ -9334,7 +9314,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!215 &1837153022
 ReflectionProbe:
   m_ObjectHideFlags: 0
@@ -10506,6 +10486,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: SmallCube
       objectReference: {fileID: 0}
+    - target: {fileID: 2778266211501679209, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_BoxSize.x
+      value: 23.004324
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778266211501679209, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_BoxOffset.x
+      value: 3.9118605
+      objectReference: {fileID: 0}
     - target: {fileID: 2901531313945891985, guid: bb27ecba0925096439ec56de3591542b,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -11105,10 +11095,65 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1336553575}
     m_Modifications:
+    - target: {fileID: 105606489096009179, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.18138781
+      objectReference: {fileID: 0}
+    - target: {fileID: 105606489096009179, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.14103353
+      objectReference: {fileID: 0}
     - target: {fileID: 1058502358607339321, guid: bb27ecba0925096439ec56de3591542b,
         type: 3}
       propertyPath: m_Name
       value: SmallCube
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778266211501679209, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_HDR
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778266211501679209, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_BoxSize.x
+      value: 26.753092
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778266211501679209, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_BoxSize.y
+      value: 10.248069
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778266211501679209, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_ClearFlags
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778266211501679209, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_Resolution
+      value: 256
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778266211501679209, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_BoxOffset.x
+      value: 2.0374775
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778266211501679209, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_BoxOffset.y
+      value: 3.3538294
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778266211501679209, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_BoxOffset.z
+      value: -0.5569049
+      objectReference: {fileID: 0}
+    - target: {fileID: 2778266211501679209, guid: bb27ecba0925096439ec56de3591542b,
+        type: 3}
+      propertyPath: m_TimeSlicingMode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2901531313945891985, guid: bb27ecba0925096439ec56de3591542b,
         type: 3}
