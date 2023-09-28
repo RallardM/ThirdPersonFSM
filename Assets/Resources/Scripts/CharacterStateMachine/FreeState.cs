@@ -67,7 +67,9 @@ public class FreeState : CharacterState
 
         if (forwardInput != 0 || rightInput != 0)
         {
-            Debug.Log("Forward input : " + forwardInput + " Right input : " + rightInput);
+            //Debug.Log("Forward input : " + forwardInput + " Right input : " + rightInput);
+            float inputAngle = Mathf.Atan2(rightInput, forwardInput);
+            Debug.Log("Input angle : " + inputAngle);
         }
         else
         {
