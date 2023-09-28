@@ -21,15 +21,17 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float m_scrollSpeed = 2.0f;
     [SerializeField]
-    private float m_closestCamDist = 2.0f;
+    private float m_minCamDist = 2.0f;
     [SerializeField]
-    private float m_farthestCamDist = 16.0f;
+    private float m_maxCamDist = 40.0f;
     [SerializeField]
-    private float m_farthestCamDistFOV = 10.0f;
+    private float m_maxCamDistFOV = 20.0f;
     [SerializeField]
-    private float m_closestCamDistFOV = 60.0f;
+    private float m_minCamDistFOV = 70.0f;
     [SerializeField]
     private float m_scrollSmoothDampTime = 0.7f;
+
+    private float m_currentMaxCamDist = 0.0f;
 
     [Header("Camera Obstruction")]
     [SerializeField]
@@ -47,7 +49,7 @@ public class CameraController : MonoBehaviour
     private const float SCROLL_FOV_SLOW_TRANSITION = 55.0f;
 
     private float CurrentScrollDistance { get; set; }
-    private float DesiredDistance { get; set; }
+    private float DesiredUnobstructedDistance { get; set; }
     private float m_previousScrollDelta = 0.0f;
 
     [SerializeField]
@@ -56,7 +58,8 @@ public class CameraController : MonoBehaviour
     private void Awake()
     {
         //DesiredOffset = m_farthestCamDist;
-        CurrentScrollDistance = m_farthestCamDist;
+        CurrentScrollDistance = m_maxCamDist;
+        m_currentMaxCamDist = m_maxCamDist;
     }
 
     // Update is called once per frame
@@ -186,9 +189,9 @@ public class CameraController : MonoBehaviour
     private void UpdateFOV()
     {
         float currentDistance = Vector3.Distance(transform.position, m_objectToLookAt.position);
-        float distancePercent = currentDistance / m_farthestCamDist;
+        float distancePercent = currentDistance / m_currentMaxCamDist;
 
-        float newFOV = Mathf.Lerp(m_closestCamDistFOV, m_farthestCamDistFOV, distancePercent);
+        float newFOV = Mathf.Lerp(m_minCamDistFOV, m_maxCamDistFOV, distancePercent);
         transform.GetComponent<Camera>().fieldOfView = newFOV;
     }
 
@@ -208,13 +211,13 @@ public class CameraController : MonoBehaviour
 
         float distance = 0.0f;
         //Debug.Log("DesiredOffset : " + DesiredOffset);
-        if (DesiredDistance == 0.0f)
+        if (DesiredUnobstructedDistance == 0.0f)
         {
             distance = playerToCamObstructionVect.magnitude;
         }
         else
         {
-            distance = DesiredDistance;
+            distance = DesiredUnobstructedDistance;
         }
         
 
@@ -226,7 +229,7 @@ public class CameraController : MonoBehaviour
             if (m_cameraIsObstructed == false)
             {
                 //Debug.Log("Camera offset registered");
-                DesiredDistance = distance;
+                DesiredUnobstructedDistance = distance;
                 //m_lastObstrutionDistance = playerToCamObstructionVect;
                 m_cameraIsObstructed = true;
             }
@@ -240,7 +243,8 @@ public class CameraController : MonoBehaviour
         }
 
         //Debug.Log("Camera not obstructed, CurrentOffset : " + CurrentOffset + " DesiredOffset : " + DesiredOffset);
-        CurrentScrollDistance = DesiredDistance;
+        //CurrentScrollDistance = DesiredDistance;
+
         m_cameraIsObstructed = false;
     }
 
@@ -264,8 +268,27 @@ public class CameraController : MonoBehaviour
         if (m_cameraIsObstructed && ObjectObstructHit.point != Vector3.zero)
         {
             //Debug.Log("Lerp to hit point : " + ObjectObstructHit.point);
-            DrawCrosshair(ObjectObstructHit.point);
-            LerpToPoint();
+            //DrawCrosshair(ObjectObstructHit.point);
+            //LerpToDistance(ObjectObstructHit.point.magnitude);
+            m_currentMaxCamDist = Vector3.Distance(transform.position, ObjectObstructHit.point);
+            
+
+            // Calculate the desired camera offset based on the scroll input
+            Vector3 desiredCamTranslation = transform.forward * m_currentMaxCamDist;
+            DrawCrosshair(desiredCamTranslation);
+            // Calculate the new camera position
+            Vector3 newPosition = transform.position + desiredCamTranslation;
+
+            // Return if the new position is not within the desired range
+            //if (IsPosWithinScrollRange(newPosition) == false)
+            //{
+            //    return;
+            //}
+
+            // Else apply the camera offset
+            //transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
+            transform.position = Vector3.SmoothDamp(transform.position, ObjectObstructHit.point, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
+
             //m_playerToCamObstructionVect = Vector3.zero;
             //ObjectObstructHit = new RaycastHit();
             return;
@@ -275,15 +298,15 @@ public class CameraController : MonoBehaviour
         //{
         //    return;
         //}
-
-        //CurrentOffset = DesiredOffset;
+        //LerpToDistance(DesiredUnobstructedDistance);
+        m_currentMaxCamDist = m_maxCamDist;
     }
 
     // Visual debug
     private static void DrawCrosshair(Vector3 hitPoint)
     {
         // Draw crosshair at hit point position
-        float crosshairSize = 0.1f; // Adjust this value to control the size of the crosshair
+        float crosshairSize = 0.2f; // Adjust this value to control the size of the crosshair
         Color crosshairColor = Color.yellow; // Change this value to set the color of the crosshair
                                              // Draw horizontal line
         Debug.DrawLine(hitPoint - Vector3.right * crosshairSize, hitPoint + Vector3.right * crosshairSize, crosshairColor);
@@ -291,7 +314,7 @@ public class CameraController : MonoBehaviour
         Debug.DrawLine(hitPoint - Vector3.up * crosshairSize, hitPoint + Vector3.up * crosshairSize, crosshairColor);
     }
 
-    private void LerpToPoint()
+    private void LerpToDistance(float distance)
     {
         Vector3 camPlayerVector = m_objectToLookAt.position - transform.forward;
         Vector3 hitPlayerVector = m_objectToLookAt.position - ObjectObstructHit.point;
@@ -300,15 +323,19 @@ public class CameraController : MonoBehaviour
         float desiredHitPlayerDistance = Vector3.Distance(m_objectToLookAt.position, ObjectObstructHit.point);
 
         if (currentCamPlayerDistance < desiredHitPlayerDistance 
-            || currentCamPlayerDistance <= m_closestCamDist)
+            || currentCamPlayerDistance <= m_minCamDist)
         {
             
             return;
         }
 
-        Vector3 newPosition = camPlayerVector.normalized * m_closestCamDist;
-        CurrentScrollDistance = Vector3.Distance(hitPlayerVector, m_objectToLookAt.position);
-        //CurrentOffset = Vector3.Distance(newPosition, m_objectToLookAt.position);
+        Vector3 newPosition = hitPlayerVector.normalized * distance;
+        //DrawCrosshair(ObjectObstructHit.point);
+
+        Debug.Log("Drawcrossair");
+        //CurrentScrollDistance = Vector3.Distance(hitPlayerVector, m_objectToLookAt.position);
+        //transform.position = Vector3.Lerp(transform.position, newPosition, 0.5f);
+        //CurrentScrollDistance = Vector3.Distance(newPosition, m_objectToLookAt.position);
     }
 
     private bool IsPosWithinScrollRange(Vector3 position)
@@ -319,8 +346,8 @@ public class CameraController : MonoBehaviour
         // Round to two decimal places
         distance = Mathf.Round(distance * 100f) / 100f;
 
-        bool isWithinClosestRange = distance >= m_closestCamDist + SCROLL_POS_SAFE_THRESHOLD;
-        bool isWithinFarthestRange = distance <= m_farthestCamDist - SCROLL_POS_SAFE_THRESHOLD;
+        bool isWithinClosestRange = distance >= m_minCamDist + SCROLL_POS_SAFE_THRESHOLD;
+        bool isWithinFarthestRange = distance <= m_currentMaxCamDist - SCROLL_POS_SAFE_THRESHOLD;
         bool isWithinRange = isWithinClosestRange && isWithinFarthestRange;
 
         return isWithinRange;
