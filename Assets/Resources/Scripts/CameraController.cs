@@ -1,4 +1,5 @@
 using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -111,17 +112,17 @@ public class CameraController : MonoBehaviour
         }
 
         // Use the current offset of the camera to follow the player position
-        Vector3 targetPosition = m_objectToLookAt.position - transform.forward * CurrentOffset;
-        Vector3 smoothLerpedToTarget = Vector3.Lerp(transform.position, targetPosition, m_smoothCameraFollow * Time.deltaTime);
+        Vector3 targetPosition = m_objectToLookAt.position - m_initialCameraParentTransform.forward * CurrentOffset;
+        Vector3 smoothLerpedToTarget = Vector3.Lerp(m_initialCameraParentTransform.position, targetPosition, m_smoothCameraFollow * Time.deltaTime);
 
         // Keep the Y raw so that the camera stays on the same level as the player move and jumps with the player
-        smoothLerpedToTarget.y = transform.position.y;
+        smoothLerpedToTarget.y = m_initialCameraParentTransform.position.y;
 
         // Smoothly interpolate the camera position towards the target position
-        transform.position = smoothLerpedToTarget;
+        m_initialCameraParentTransform.position = smoothLerpedToTarget;
 
         // Look at the target
-        transform.LookAt(m_objectToLookAt);
+        m_initialCameraParentTransform.LookAt(m_objectToLookAt);
     }
 
     private void UpdateHorizontalRotations()
@@ -266,13 +267,14 @@ public class CameraController : MonoBehaviour
         //}
 
         //Debug.Log("2 ObjectObstructHit : " + ObjectObstructHit.point.magnitude + " LastObjectObstructHit : " + LastObjectObstructHit.point.magnitude);
-        if (m_cameraIsObstructed == false)
-        {
-            return;
-        }
+        //if (m_cameraIsObstructed == false)
+        //{
+        //    return;
+        //}
 
         Debug.Log("Camera not obstructed");
         m_cameraIsObstructed = false;
+        m_initialCameraParentTransform.position = Vector3.Lerp(m_initialCameraParentTransform.position, transform.position, Time.deltaTime);
     }
 
     private void UpdateObstructionRaycasts()
