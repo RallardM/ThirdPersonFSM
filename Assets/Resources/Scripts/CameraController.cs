@@ -40,10 +40,12 @@ public class CameraController : MonoBehaviour
     private float m_floorRaycastMinLength = 1.0f;
 
     private Vector3 m_cameraVelocity = Vector3.zero;
-    private Vector3 m_playerToCamObstructionVect = Vector3.zero;
-    private Vector3 m_downVectToCamFloorObstructionDetector;
+    private Vector3 m_lastObstrutionDistance = Vector3.zero;
+    private Vector3 m_currentObstrutionDistance = Vector3.zero;
+    private Vector3 m_playerToCamVect = Vector3.zero;
+    //private Vector3 m_downVectToCamFloorObstructionDetector;
     private RaycastHit ObjectObstructHit { get; set; } = new RaycastHit();
-    private RaycastHit FloorObstructHit { get; set; } = new RaycastHit();
+    //private RaycastHit FloorObstructHit { get; set; } = new RaycastHit();
 
     private const float SCROLL_POS_SAFE_THRESHOLD = 2.5f;
     private const float SCROLL_FOV_SLOW_TRANSITION = 55.0f;
@@ -51,9 +53,8 @@ public class CameraController : MonoBehaviour
     private float CurrentOffset { get; set; }
     private float DesiredOffset { get; set; }
     private float m_previousScrollDelta = 0.0f;
-    //private float m_floorDetectLengthScalingFactor = 0.1f;
 
-    private const uint DECUPLE = 10;
+    //private const uint DECUPLE = 10;
     private bool m_cameraIsObstructed = false;
 
     private void Awake()
@@ -68,7 +69,7 @@ public class CameraController : MonoBehaviour
         UpdateFollowPlayer();
         UpdateHorizontalRotations();
         UpdateVerticalRotations();
-        UpdateFloorRaycastLength();
+        //UpdateFloorRaycastLength();
     }
 
     void FixedUpdate()
@@ -136,6 +137,11 @@ public class CameraController : MonoBehaviour
 
     private void UpdateCameraScroll()
     {
+        if (m_cameraIsObstructed)
+        {
+            return;
+        }
+
         float scrollDelta = Input.mouseScrollDelta.y;
 
         if (Mathf.Approximately(scrollDelta, 0f))
@@ -198,12 +204,22 @@ public class CameraController : MonoBehaviour
         //RaycastHit FloorObstructHitTemp = default;
 
         // Does the raycast intersect any objects excluding the player layer
-        m_playerToCamObstructionVect = transform.position - m_objectToLookAt.position;
-        float distance = m_playerToCamObstructionVect.magnitude;
+        Vector3 playerToCamObstructionVect = transform.position - m_objectToLookAt.position;
+        m_playerToCamVect = playerToCamObstructionVect;
+        //// Keep the last player to camera vector if still in obstruction
+        //if (m_cameraIsObstructed)
+        //{
+        //    Debug.Log("Camera still obstructed");
+        //    playerToCamObstructionVect = m_playerToCamObstructionVect;
+        //}
 
-        if (Physics.Raycast(m_objectToLookAt.position, m_playerToCamObstructionVect, out ObjectObstructHitTemp, distance, layerMask)) // Objects obstruction
-            //|| Physics.Raycast(transform.position, Vector3.down, out FloorObstructHitTemp, m_floorObstructionRaycastHeight, layerMask)) // Floor obstruction
+        float distance = playerToCamObstructionVect.magnitude;
+
+        if (Physics.Raycast(m_objectToLookAt.position, playerToCamObstructionVect, out ObjectObstructHitTemp, distance, layerMask)) // Objects obstruction
+         //|| Physics.Raycast(transform.position, Vector3.down, out FloorObstructHitTemp, m_currentFloorObstructionRaycastLength, layerMask)) // Floor obstruction
         {
+            //Debug.Log("Camera obstructed");
+            m_currentObstrutionDistance = playerToCamObstructionVect;
             ObjectObstructHit = ObjectObstructHitTemp;
             //FloorObstructHit = FloorObstructHitTemp;
             //Debug.Log("m_objectObstructionRaycastHit" + ObjectObstructHit.point);
@@ -211,14 +227,15 @@ public class CameraController : MonoBehaviour
             if (m_cameraIsObstructed == false)
             {
                 Debug.Log("Camera offset registered");
-                DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+                m_lastObstrutionDistance = playerToCamObstructionVect;
+                //DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
                 m_cameraIsObstructed = true;
             }
 
-            // Register the down raycast values at the current position
-            Vector3 cameraDownVector = transform.position;
-            cameraDownVector.y += m_currentFloorObstructionRaycastLength;
-            m_downVectToCamFloorObstructionDetector = transform.position - cameraDownVector;
+            //// Register the down raycast values at the current position
+            //Vector3 cameraDownVector = transform.position;
+            //cameraDownVector.y += m_currentFloorObstructionRaycastLength;
+            //m_downVectToCamFloorObstructionDetector = transform.position - cameraDownVector;
 
             return;
         }
@@ -231,18 +248,18 @@ public class CameraController : MonoBehaviour
         if (m_cameraIsObstructed)
         {
             // Object obstruction red raycast
-            Debug.DrawRay(m_objectToLookAt.position, m_playerToCamObstructionVect.normalized * ObjectObstructHit.distance, Color.red);
+            Debug.DrawRay(m_objectToLookAt.position, m_currentObstrutionDistance.normalized * ObjectObstructHit.distance, Color.red);
 
-            // Floor obstruction red raycast
-            Debug.DrawRay(transform.position, m_downVectToCamFloorObstructionDetector.normalized * FloorObstructHit.distance, Color.red);
-            return;
+            //// Floor obstruction red raycast
+            //Debug.DrawRay(transform.position, m_downVectToCamFloorObstructionDetector.normalized * FloorObstructHit.distance, Color.red);
+            return; // Comment to see both green and red
         }
 
         // Object obstruction green raycast
-        Debug.DrawRay(m_objectToLookAt.position, m_playerToCamObstructionVect, Color.green);
+        Debug.DrawRay(m_objectToLookAt.position, m_playerToCamVect, Color.green);
 
-        // Floor obstruction blue raycast
-        Debug.DrawRay(transform.position, m_downVectToCamFloorObstructionDetector, Color.blue);
+        //// Floor obstruction blue raycast
+        //Debug.DrawRay(transform.position, m_downVectToCamFloorObstructionDetector, Color.blue);
     }
 
     private void UpdateObstructionOffsetPosition()
@@ -251,17 +268,20 @@ public class CameraController : MonoBehaviour
         if (m_cameraIsObstructed && ObjectObstructHit.point != Vector3.zero)
         {
             //Debug.Log("Lerp to hit point : " + ObjectObstructHit.point);
+            DrawCrosshair(ObjectObstructHit.point);
             LerpToPoint(ObjectObstructHit.point);
-            ResetObstructionVariables();
+            //m_playerToCamObstructionVect = Vector3.zero;
+            ObjectObstructHit = new RaycastHit();
             return;
         }
-        else if(m_cameraIsObstructed && FloorObstructHit.point != Vector3.zero)
-        {
-            Debug.Log("Lerp to hit point : " + FloorObstructHit.point);
-            LerpToPointFaster(FloorObstructHit.point);
-            ResetObstructionVariables();
-            return;
-        }
+        //else if (m_cameraIsObstructed && FloorObstructHit.point != Vector3.zero)
+        //{
+        //    Debug.Log("Lerp to hit point : " + FloorObstructHit.point);
+        //    LerpToPointFaster(FloorObstructHit.point);
+        //    m_downVectToCamFloorObstructionDetector = Vector3.zero;
+        //    FloorObstructHit = new RaycastHit();
+        //    return;
+        //}
 
         if (m_cameraIsObstructed == false)
         {
@@ -269,14 +289,6 @@ public class CameraController : MonoBehaviour
         }
 
         CurrentOffset = DesiredOffset;
-    }
-
-    private void ResetObstructionVariables()
-    {
-        m_playerToCamObstructionVect = Vector3.zero;
-        m_downVectToCamFloorObstructionDetector = Vector3.zero;
-        ObjectObstructHit = new RaycastHit();
-        FloorObstructHit = new RaycastHit();
     }
 
     // Visual debug
@@ -293,17 +305,19 @@ public class CameraController : MonoBehaviour
 
     private void LerpToPoint(Vector3 hitPoint)
     {
+        // Add 3 unit to the hit point to avoid the camera being stuck in the object
+        hitPoint -= m_playerToCamVect.normalized * 3;
         Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
         transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
-        CurrentOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+        //CurrentOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
     }
 
-    private void LerpToPointFaster(Vector3 hitPoint)
-    {
-        Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed * DECUPLE);
-        transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
-        CurrentOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
-    }
+    //private void LerpToPointFaster(Vector3 hitPoint)
+    //{
+    //    Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed * DECUPLE);
+    //    transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
+    //    CurrentOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+    //}
 
     private bool IsPosWithinScrollRange(Vector3 position)
     {
@@ -320,11 +334,11 @@ public class CameraController : MonoBehaviour
         return isWithinRange;
     }
 
-    private void UpdateFloorRaycastLength()
-    {
-        float distance = Vector3.Distance(transform.position, m_objectToLookAt.position);
-        float newRaycastLength = Mathf.Lerp(m_floorRaycastMinLength, m_floorRaycastMaxLength, distance / m_farthestCamDist);
+    //private void UpdateFloorRaycastLength()
+    //{
+    //    float distance = Vector3.Distance(transform.position, m_objectToLookAt.position);
+    //    float newRaycastLength = Mathf.Lerp(m_floorRaycastMinLength, m_floorRaycastMaxLength, distance / m_farthestCamDist);
 
-        m_currentFloorObstructionRaycastLength = newRaycastLength;
-    }
+    //    m_currentFloorObstructionRaycastLength = newRaycastLength;
+    //}
 }
