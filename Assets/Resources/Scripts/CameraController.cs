@@ -1,4 +1,6 @@
 using System;
+using Unity.Burst.CompilerServices;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -31,28 +33,33 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     private float m_lerpInfrontObstructionSpeed = 16.0f;
     [SerializeField]
-    private float m_floorObstructionRaycastHeight = 0.1f;
+    private float m_currentFloorObstructionRaycastLength = 1.0f;
+    [SerializeField]
+    private float m_floorRaycastMaxLength = 2.0f;
+    [SerializeField]
+    private float m_floorRaycastMinLength = 1.0f;
 
     private Vector3 m_cameraVelocity = Vector3.zero;
+    private Vector3 m_playerToCamObstructionVect = Vector3.zero;
+    private Vector3 m_downVectToCamFloorObstructionDetector;
+    private RaycastHit ObjectObstructHit { get; set; } = new RaycastHit();
+    private RaycastHit FloorObstructHit { get; set; } = new RaycastHit();
 
     private const float SCROLL_POS_SAFE_THRESHOLD = 2.5f;
     private const float SCROLL_FOV_SLOW_TRANSITION = 55.0f;
-    private float m_initialFloorObstructionRaycastHeight = 0.1f;
 
     private float CurrentOffset { get; set; }
-    private float DesiredOffset { get;  set; }
+    private float DesiredOffset { get; set; }
     private float m_previousScrollDelta = 0.0f;
-    private float m_floorDetectLengthScalingFactor = 0.1f;
+    //private float m_floorDetectLengthScalingFactor = 0.1f;
 
     private const uint DECUPLE = 10;
-    private bool m_cameraIsObstructedByObject = false;
-    private bool m_cameraIsObstructedByFloor = false;
+    private bool m_cameraIsObstructed = false;
 
     private void Awake()
     {
         DesiredOffset = m_farthestCamDist;
         CurrentOffset = m_farthestCamDist;
-        m_initialFloorObstructionRaycastHeight = m_floorObstructionRaycastHeight;
     }
 
     // Update is called once per frame
@@ -61,19 +68,20 @@ public class CameraController : MonoBehaviour
         UpdateFollowPlayer();
         UpdateHorizontalRotations();
         UpdateVerticalRotations();
-        //UpdateCameraFloorDetectLength();
+        UpdateFloorRaycastLength();
     }
 
     void FixedUpdate()
     {
-        FixedUpdateObjectObstruction();
-        //FixedUpdateFloorObstruction();
+        CheckIfCameraObstructed();
+        UpdateObstructionRaycasts();
     }
 
     private void LateUpdate()
     {
         UpdateCameraScroll();
         UpdateFOV();
+        UpdateObstructionOffsetPosition();
     }
 
     private void UpdateFollowPlayer()
@@ -112,7 +120,7 @@ public class CameraController : MonoBehaviour
         {
             //Debug.Log("Clamping angle");
             return;
-        } 
+        }
 
         transform.RotateAround(m_objectToLookAt.position, transform.right, currentAngleY);
     }
@@ -178,7 +186,7 @@ public class CameraController : MonoBehaviour
         transform.GetComponent<Camera>().fieldOfView = newFOV;
     }
 
-    private void FixedUpdateObjectObstruction()
+    private void CheckIfCameraObstructed()
     {
         // Bit shift the index of the layer (8) to get a bit mask
         // Add static object layer 8 (static objects)
@@ -186,101 +194,92 @@ public class CameraController : MonoBehaviour
         // Add layer 7 (floor objects)
         layerMask |= 1 << 7;
 
-        RaycastHit hit;
+        RaycastHit ObjectObstructHitTemp = default;
+        //RaycastHit FloorObstructHitTemp = default;
 
-        // Does the ray intersect any objects excluding the player layer
-        Vector3 playerToCamVect = transform.position - m_objectToLookAt.position;
-        float distance = playerToCamVect.magnitude;
+        // Does the raycast intersect any objects excluding the player layer
+        m_playerToCamObstructionVect = transform.position - m_objectToLookAt.position;
+        float distance = m_playerToCamObstructionVect.magnitude;
 
-        if (Physics.Raycast(m_objectToLookAt.position, playerToCamVect, out hit, distance, layerMask))
+        if (Physics.Raycast(m_objectToLookAt.position, m_playerToCamObstructionVect, out ObjectObstructHitTemp, distance, layerMask)) // Objects obstruction
+            //|| Physics.Raycast(transform.position, Vector3.down, out FloorObstructHitTemp, m_floorObstructionRaycastHeight, layerMask)) // Floor obstruction
         {
-            if (m_cameraIsObstructedByObject == false)
+            ObjectObstructHit = ObjectObstructHitTemp;
+            //FloorObstructHit = FloorObstructHitTemp;
+            //Debug.Log("m_objectObstructionRaycastHit" + ObjectObstructHit.point);
+            //Debug.Log("m_floorObstructionRaycastHit" + m_floorObstructionRaycastHit.point);
+            if (m_cameraIsObstructed == false)
             {
-                m_cameraIsObstructedByObject = true;
+                Debug.Log("Camera offset registered");
                 DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
+                m_cameraIsObstructed = true;
             }
 
-            Vector3 hitPoint = hit.point;
+            // Register the down raycast values at the current position
+            Vector3 cameraDownVector = transform.position;
+            cameraDownVector.y += m_currentFloorObstructionRaycastLength;
+            m_downVectToCamFloorObstructionDetector = transform.position - cameraDownVector;
 
-            DrawCrosshair(hitPoint);
-
-            Debug.DrawRay(m_objectToLookAt.position, playerToCamVect.normalized * hit.distance, Color.red);
-
-            LerpToPoint(hitPoint);
             return;
         }
 
-        // Draw non-collided rays in green
-        Debug.DrawRay(m_objectToLookAt.position, playerToCamVect, Color.green);
-
-        if (m_cameraIsObstructedByObject == false)
-        {
-            return;
-        }
-
-        Debug.Log("DesiredOffset : " + DesiredOffset + " put in CurrentOffset : " + CurrentOffset);
-        CurrentOffset = DesiredOffset;
-        m_cameraIsObstructedByObject = false;
+        m_cameraIsObstructed = false;
     }
 
-    private void FixedUpdateFloorObstruction()
+    private void UpdateObstructionRaycasts()
     {
-        // Bit shift the index of the layer (7) to get a bit mask
-        // Add static object layer 7 (floor objects)
-        int layerMask = 1 << 7;
-
-        RaycastHit hit;
-
-        // Does the ray intersect the floor and the camera
-        Vector3 cameraDownVector = transform.position;
-        cameraDownVector.y += m_floorObstructionRaycastHeight;
-        Vector3 downVectToCam = transform.position - cameraDownVector;
-        //float distance = downVectToCam.magnitude;
-
-        if (Physics.Raycast(transform.position, Vector3.down, out hit, m_floorObstructionRaycastHeight, layerMask))
+        if (m_cameraIsObstructed)
         {
-            if (m_cameraIsObstructedByFloor == false)
-            {
-                m_cameraIsObstructedByFloor = true;
-                DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
-            }
+            // Object obstruction red raycast
+            Debug.DrawRay(m_objectToLookAt.position, m_playerToCamObstructionVect.normalized * ObjectObstructHit.distance, Color.red);
 
-            Vector3 topHitPoint = hit.point;
-
-            //DrawCrosshair(topHitPoint);
-
-            Debug.DrawRay(transform.position, downVectToCam.normalized * hit.distance, Color.red);
-
-            Vector3 directionToTopHitPoint = topHitPoint - m_objectToLookAt.position;
-            //Debug.DrawRay(m_objectToLookAt.position, directionToTopHitPoint, Color.gray);
-
-            Vector3 bottomHitPoint = hit.point;
-            bottomHitPoint.y += m_floorObstructionRaycastHeight;
-            //DrawCrosshair(bottomHitPoint);
-
-            Vector3 playerToCameraDirection = transform.position - m_objectToLookAt.position; // green ray cast
-            Vector3 playerToHitFloorDirection = directionToTopHitPoint - m_objectToLookAt.position; // grey ray cast
-            Vector3 projectOnHitFloor = Vector3.Project(playerToCameraDirection, playerToHitFloorDirection) + m_objectToLookAt.position;
-            Vector3 projectBackOnPlayerToCam = Vector3.Project(projectOnHitFloor - m_objectToLookAt.position, playerToCameraDirection) + m_objectToLookAt.position;
-
-            DrawCrosshair(projectBackOnPlayerToCam);
-            LerpToPointFaster(projectBackOnPlayerToCam);
+            // Floor obstruction red raycast
+            Debug.DrawRay(transform.position, m_downVectToCamFloorObstructionDetector.normalized * FloorObstructHit.distance, Color.red);
             return;
         }
 
-        // Draw non-collided rays in green
-        Debug.DrawRay(transform.position, downVectToCam, Color.blue);
+        // Object obstruction green raycast
+        Debug.DrawRay(m_objectToLookAt.position, m_playerToCamObstructionVect, Color.green);
 
-        if (m_cameraIsObstructedByFloor == false)
-        {
-            return;
-        }
-
-        Debug.Log("DesiredOffset : " + DesiredOffset + " put in CurrentOffset : " + CurrentOffset);
-        CurrentOffset = DesiredOffset;
-        m_cameraIsObstructedByFloor = false;
+        // Floor obstruction blue raycast
+        Debug.DrawRay(transform.position, m_downVectToCamFloorObstructionDetector, Color.blue);
     }
 
+    private void UpdateObstructionOffsetPosition()
+    {
+        //Debug.Log("m_objectObstructionRaycastHit lateUpdate" + ObjectObstructHit.point);
+        if (m_cameraIsObstructed && ObjectObstructHit.point != Vector3.zero)
+        {
+            //Debug.Log("Lerp to hit point : " + ObjectObstructHit.point);
+            LerpToPoint(ObjectObstructHit.point);
+            ResetObstructionVariables();
+            return;
+        }
+        else if(m_cameraIsObstructed && FloorObstructHit.point != Vector3.zero)
+        {
+            Debug.Log("Lerp to hit point : " + FloorObstructHit.point);
+            LerpToPointFaster(FloorObstructHit.point);
+            ResetObstructionVariables();
+            return;
+        }
+
+        if (m_cameraIsObstructed == false)
+        {
+            return;
+        }
+
+        CurrentOffset = DesiredOffset;
+    }
+
+    private void ResetObstructionVariables()
+    {
+        m_playerToCamObstructionVect = Vector3.zero;
+        m_downVectToCamFloorObstructionDetector = Vector3.zero;
+        ObjectObstructHit = new RaycastHit();
+        FloorObstructHit = new RaycastHit();
+    }
+
+    // Visual debug
     private static void DrawCrosshair(Vector3 hitPoint)
     {
         // Draw crosshair at hit point position
@@ -317,23 +316,15 @@ public class CameraController : MonoBehaviour
         bool isWithinClosestRange = distance >= m_closestCamDist + SCROLL_POS_SAFE_THRESHOLD;
         bool isWithinFarthestRange = distance <= m_farthestCamDist - SCROLL_POS_SAFE_THRESHOLD;
         bool isWithinRange = isWithinClosestRange && isWithinFarthestRange;
-        
+
         return isWithinRange;
     }
 
-    private void UpdateCameraFloorDetectLength()
+    private void UpdateFloorRaycastLength()
     {
         float distance = Vector3.Distance(transform.position, m_objectToLookAt.position);
+        float newRaycastLength = Mathf.Lerp(m_floorRaycastMinLength, m_floorRaycastMaxLength, distance / m_farthestCamDist);
 
-        // Calculate the new raycast length
-        float newRaycastLength = m_initialFloorObstructionRaycastHeight + distance * m_floorDetectLengthScalingFactor;
-
-        // Check if we need to change the raycast length
-        if (newRaycastLength > m_floorObstructionRaycastHeight)
-        {
-            // Update the raycast length
-            m_floorObstructionRaycastHeight = newRaycastLength;
-            Debug.Log("m_floorObstructionRaycastHeight: " + m_floorObstructionRaycastHeight);
-        }
+        m_currentFloorObstructionRaycastLength = newRaycastLength;
     }
 }
