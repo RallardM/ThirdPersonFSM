@@ -14,8 +14,6 @@ public class CharacterControllerStateMachine : MonoBehaviour
     [field: SerializeField]
     public float MaxVelocity { get; private set; }
     [field: SerializeField]
-    public float SideVelocity { get; private set; }
-    [field: SerializeField]
     public float JumpIntensity { get; private set; } = 1000.0f;
     [field: SerializeField]
     private CharacterFloorTrigger m_floorTrigger;

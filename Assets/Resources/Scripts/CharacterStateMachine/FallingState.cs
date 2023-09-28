@@ -36,7 +36,8 @@ public class FallingState : CharacterState
 
     public override bool CanEnter(CharacterState currentState)
     {
-        return m_stateMachine.IsInContactWithFloor() == false && currentState is not JumpState;
+        return (m_stateMachine.IsInContactWithFloor() == false && currentState is GettingHitState)
+            || (m_stateMachine.IsInContactWithFloor() == false && currentState is not JumpState);
     }
 
     public override bool CanExit()
