@@ -226,16 +226,6 @@ public class CameraController : MonoBehaviour
         RaycastHit ObjectObstructHitTemp = default;
         //RaycastHit FloorObstructHitTemp = default;
 
-        Vector3 cameraPosition = Vector3.zero;
-        if (m_cameraIsObstructed == false)
-        {
-            cameraPosition = transform.position;
-        }
-        else
-        {
-
-        }
-
         // Does the raycast intersect any objects excluding the player layer
         Vector3 playerToCamObstructionVect = transform.position - m_objectToLookAt.position;
         //Vector3 playerToCamObstructionVect = transform.position - m_objectToLookAt.position;
@@ -253,7 +243,7 @@ public class CameraController : MonoBehaviour
             //Debug.Log("m_floorObstructionRaycastHit" + m_floorObstructionRaycastHit.point);
             if (m_cameraIsObstructed == false)
             {
-                Debug.Log("Camera offset registered");
+                Debug.Log("Camera obstructed");
                 LastObjectObstructHit = ObjectObstructHitTemp;
                 m_lastObstrutionDistance = playerToCamObstructionVect;
                 //DesiredOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
@@ -274,6 +264,12 @@ public class CameraController : MonoBehaviour
         //}
 
         //Debug.Log("2 ObjectObstructHit : " + ObjectObstructHit.point.magnitude + " LastObjectObstructHit : " + LastObjectObstructHit.point.magnitude);
+        if (m_cameraIsObstructed == false)
+        {
+            return;
+        }
+
+        Debug.Log("Camera not obstructed");
         m_cameraIsObstructed = false;
     }
 
