@@ -85,6 +85,22 @@ public class CameraController : MonoBehaviour
         UpdateObstructionOffsetPosition();
     }
 
+    //private void UpdateFollowPlayer()
+    //{
+    //    // Use the current offset of the camera to follow the player position
+    //    Vector3 targetPosition = m_objectToLookAt.position - transform.forward * CurrentOffset;
+    //    Vector3 smoothLerpedToTarget = Vector3.Lerp(transform.position, targetPosition, m_smoothCameraFollow * Time.deltaTime);
+
+    //    // Keep the Y raw so that the camera stays on the same level as the player move and jumps with the player
+    //    smoothLerpedToTarget.y = transform.position.y;
+
+    //    // Smoothly interpolate the camera position towards the target position
+    //    transform.position = smoothLerpedToTarget;
+
+    //    // Look at the target
+    //    transform.LookAt(m_objectToLookAt);
+    //}
+
     private void UpdateFollowPlayer()
     {
         // Use the current offset of the camera to follow the player position
@@ -309,7 +325,6 @@ public class CameraController : MonoBehaviour
         hitPoint -= m_playerToCamVect.normalized * 3;
         Vector3 lerpedHitPoint = Vector3.Lerp(transform.position, hitPoint, Time.deltaTime * m_lerpInfrontObstructionSpeed);
         transform.SetPositionAndRotation(lerpedHitPoint, transform.rotation);
-        //CurrentOffset = Vector3.Distance(transform.position, m_objectToLookAt.position);
     }
 
     //private void LerpToPointFaster(Vector3 hitPoint)

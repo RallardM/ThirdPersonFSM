@@ -7087,13 +7087,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3046478345294703624, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
+      propertyPath: m_lerpInfrontObstructionSpeed
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3046478345294703624, guid: dc9ba2af680d1744f996ce30bd0f8e23,
+        type: 3}
       propertyPath: m_currentFloorObstructionRaycastLength
       value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 4077768442347561192, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 15.49
       objectReference: {fileID: 0}
     - target: {fileID: 4077768442347561192, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
@@ -7103,7 +7108,7 @@ PrefabInstance:
     - target: {fileID: 4077768442347561192, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 4.02
       objectReference: {fileID: 0}
     - target: {fileID: 4077768442347561192, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
