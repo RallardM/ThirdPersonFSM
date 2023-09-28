@@ -38,7 +38,7 @@ public class FreeState : CharacterState
         if (Input.GetKey(KeyCode.S))
         {
             newDirection -= cameraForward * m_stateMachine.AccelerationValue;
-            forwardInput = -1;
+            forwardInput = -0.5f; // Exception to reduce acceleration when moving backward so it does not stop completely
         }
         if (Input.GetKey(KeyCode.A))
         {
@@ -68,8 +68,14 @@ public class FreeState : CharacterState
         if (forwardInput != 0 || rightInput != 0)
         {
             //Debug.Log("Forward input : " + forwardInput + " Right input : " + rightInput);
+            // Source : https://www.youtube.com/watch?v=mFOi6W7lohk
             float inputAngle = Mathf.Atan2(rightInput, forwardInput);
             Debug.Log("Input angle : " + inputAngle);
+            float forwardContribution = Mathf.Cos(inputAngle) * forwardInput * m_stateMachine.AccelerationValue;
+            float rightContribution = Mathf.Sin(inputAngle) * rightInput * m_stateMachine.AccelerationValue;
+
+            newDirection += cameraForward * forwardContribution;
+            newDirection += cameraRight * rightContribution;
         }
         else
         {
