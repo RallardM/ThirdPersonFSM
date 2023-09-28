@@ -273,7 +273,7 @@ public class CameraController : MonoBehaviour
         //    return;
         //}
 
-        Debug.Log("2 ObjectObstructHit : " + ObjectObstructHit.point.magnitude + " LastObjectObstructHit : " + LastObjectObstructHit.point.magnitude);
+        //Debug.Log("2 ObjectObstructHit : " + ObjectObstructHit.point.magnitude + " LastObjectObstructHit : " + LastObjectObstructHit.point.magnitude);
         m_cameraIsObstructed = false;
     }
 
