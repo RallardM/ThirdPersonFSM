@@ -30,7 +30,8 @@ public class GettingHitState : CharacterState
 
     public override bool CanEnter(CharacterState currentState)
     {
-        return m_stateMachine.Health < m_stateMachine.PreviousHealth;
+        return (m_stateMachine.Health < m_stateMachine.PreviousHealth)
+        && (currentState is not FallingState || currentState is not JumpState);
     }
 
     public override bool CanExit()

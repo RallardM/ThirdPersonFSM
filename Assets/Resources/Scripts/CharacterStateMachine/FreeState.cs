@@ -146,7 +146,7 @@ public class FreeState : CharacterState
             // If not freestate chek if in contact with floor
             if (m_stateMachine.IsInContactWithFloor())
             {
-                //Debug.Log("Can enter freestate  : " + currentState.GetType().Name);
+                Debug.Log("Can enter freestate  : " + currentState.GetType().Name);
                 return true;
             }
             return false;

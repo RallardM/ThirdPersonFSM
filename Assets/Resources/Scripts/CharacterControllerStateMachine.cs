@@ -36,6 +36,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
         m_possibleStates.Add(new FallingState());
         m_possibleStates.Add(new StunnedState());
         m_possibleStates.Add(new DeadState());
+        m_possibleStates.Add(new HitInAir());
 
     }
 
@@ -172,7 +173,8 @@ public class CharacterControllerStateMachine : MonoBehaviour
         AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
 
         CharacterState hitState = state as GettingHitState;
-        if (hitState != null)
+        CharacterState hitInAirState = state as HitInAir;
+        if (hitState != null || hitInAirState != null)
         {
             if (stateInfo.IsName("GettingHit") && stateInfo.normalizedTime < 1.0f)
             {
