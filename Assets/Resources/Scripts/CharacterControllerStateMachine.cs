@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Xml;
 using UnityEngine;
 
 public class CharacterControllerStateMachine : MonoBehaviour
@@ -36,6 +37,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
         m_possibleStates.Add(new AttackState());
         m_possibleStates.Add(new FallingState());
         m_possibleStates.Add(new StunnedState());
+        m_possibleStates.Add(new DeadState());
 
     }
 
@@ -140,20 +142,13 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("Player died");
         IsDead = true;
-        Animator.SetBool("IsStunned", true);
     }
 
     public void SetTouchGround(bool isOnGround)
     {
         Animator.SetBool("IsTouchingGround", isOnGround);
     }
-
-    //public bool IsPlayerFell()
-    //{
-    //    return Animator.GetBool("IsFalling");
-    //}
 
     public void UpdateAnimatorMovements(Vector3 movementValue)
     {
@@ -255,12 +250,6 @@ public class CharacterControllerStateMachine : MonoBehaviour
         CharacterState jumpState = state as JumpState;
         if (jumpState != null)
         {
-            //if (Animator.GetBool("IsJumping"))
-            //{
-            //    Animator.SetBool("IsJumping", false);
-            //    return;
-            //}
-
             Debug.Log("Start jump animation");
             // If not jumping
             // Inform the animator that the player is jumping
@@ -291,6 +280,13 @@ public class CharacterControllerStateMachine : MonoBehaviour
                 // Reset Getting hit so that it does not start the hit state after the stun
                 Animator.ResetTrigger("GettingHit");
             }
+        }
+
+        CharacterState deadState = state as DeadState;
+        if (deadState != null)
+        {
+            Debug.Log("Player died");
+            Animator.SetBool("IsStunned", true);
         }
     }
 }

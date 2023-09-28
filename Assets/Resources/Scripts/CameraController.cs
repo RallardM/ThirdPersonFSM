@@ -32,20 +32,14 @@ public class CameraController : MonoBehaviour
     [Header("Camera Obstruction")]
     [SerializeField]
     private float m_lerpInfrontObstructionSpeed = 16.0f;
-    [SerializeField]
-    private float m_currentFloorObstructionRaycastLength = 1.0f;
-    [SerializeField]
-    private float m_floorRaycastMaxLength = 2.0f;
-    [SerializeField]
-    private float m_floorRaycastMinLength = 1.0f;
 
     private Vector3 m_cameraVelocity = Vector3.zero;
     private Vector3 m_lastObstrutionDistance = Vector3.zero;
     private Vector3 m_currentObstrutionDistance = Vector3.zero;
     private Vector3 m_playerToCamVect = Vector3.zero;
-    //private Vector3 m_downVectToCamFloorObstructionDetector;
+
     private RaycastHit ObjectObstructHit { get; set; } = new RaycastHit();
-    //private RaycastHit FloorObstructHit { get; set; } = new RaycastHit();
+
 
     private const float SCROLL_POS_SAFE_THRESHOLD = 2.5f;
     private const float SCROLL_FOV_SLOW_TRANSITION = 55.0f;
@@ -54,7 +48,6 @@ public class CameraController : MonoBehaviour
     private float DesiredOffset { get; set; }
     private float m_previousScrollDelta = 0.0f;
 
-    //private const uint DECUPLE = 10;
     private bool m_cameraIsObstructed = false;
 
     private void Awake()
