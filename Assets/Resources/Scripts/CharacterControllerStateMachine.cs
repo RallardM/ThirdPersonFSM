@@ -20,8 +20,8 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     private CharacterState m_currentState;
     private List<CharacterState> m_possibleStates;
-    public int Health { get; private set; } = 100;
-    public int PreviousHealth { get; private set; } = 100;
+    public int Health { get; private set; } = 1000;
+    public int PreviousHealth { get; private set; } = 1000;
     public bool IsStunned { get; private set; }
     public bool IsDead { get; private set; }
     public bool IsKeyPressed { get; private set; }
