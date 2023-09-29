@@ -107,7 +107,7 @@ public class CameraController : MonoBehaviour
         Vector3 leprFollowCamToObstructCam = Vector3.zero;
         if (m_currentObstrutionPosition != Vector3.zero)
         {
-            leprFollowCamToObstructCam = Vector3.Lerp(m_smoothLerpedTowardPlayer, m_currentObstrutionPosition, 0.5f);
+            leprFollowCamToObstructCam = Vector3.Lerp(transform.position, m_currentObstrutionPosition, 0.5f);
         }
         else
         {
