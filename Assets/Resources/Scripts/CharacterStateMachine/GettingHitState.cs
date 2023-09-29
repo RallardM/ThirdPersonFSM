@@ -30,6 +30,7 @@ public class GettingHitState : CharacterState
 
     public override bool CanEnter(CharacterState currentState)
     {
+        Debug.Log("Can enter Getting Hit state: fallingstate " + (currentState is not FallingState) + " jumpstate " + (currentState is not JumpState) + " states : " + (currentState is not FallingState || currentState is not JumpState) + " all :" + ((m_stateMachine.Health < m_stateMachine.PreviousHealth) && (currentState is not FallingState || currentState is not JumpState)));
         return (m_stateMachine.Health < m_stateMachine.PreviousHealth)
         && (currentState is not FallingState || currentState is not JumpState);
     }
