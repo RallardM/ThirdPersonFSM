@@ -39,8 +39,10 @@ public class CameraController : MonoBehaviour
 
     private Vector3 m_cameraVelocity = Vector3.zero;
     //private Vector3 m_lastObstrutionDistance = Vector3.zero;
-    private Vector3 m_currentObstrutionDistance = Vector3.zero;
+    private Vector3 m_currentObstrutionPosition = Vector3.zero;
+    private Vector3 m_currentObstrutionRaycastVect = Vector3.zero;
     private Vector3 m_playerToCamVect = Vector3.zero;
+    private Vector3 m_smoothLerpedTowardPlayer = Vector3.zero;
 
     private RaycastHit ObjectObstructHit { get; set; } = new RaycastHit();
 
@@ -96,18 +98,36 @@ public class CameraController : MonoBehaviour
             cameraSmoothDiplacement = m_smoothCameraFollow;
         }
 
+        m_smoothLerpedTowardPlayer = Vector3.zero;
+
         // Use the current offset of the camera to follow the player position
         Vector3 targetPosition = m_objectToLookAt.position - transform.forward * CurrentScrollDistance;
-        Vector3 smoothLerpedToTarget = Vector3.Lerp(transform.position, targetPosition, cameraSmoothDiplacement * Time.deltaTime);
+        m_smoothLerpedTowardPlayer = Vector3.Lerp(transform.position, targetPosition, cameraSmoothDiplacement * Time.deltaTime);
 
         // Keep the Y raw so that the camera stays on the same level as the player move and jumps with the player
-        smoothLerpedToTarget.y = transform.position.y;
+        m_smoothLerpedTowardPlayer.y = transform.position.y;
 
-        // Smoothly interpolate the camera position towards the target position
-        transform.position = smoothLerpedToTarget;
+        UpdateCameraPosition();
 
         // Look at the target
         transform.LookAt(m_objectToLookAt);
+    }
+
+    // All camera translations should be done here
+    private void UpdateCameraPosition()
+    {
+        Vector3 leprFollowCamToObstructCam = Vector3.zero;
+        if (m_currentObstrutionPosition != Vector3.zero)
+        {
+            leprFollowCamToObstructCam = Vector3.Lerp(m_smoothLerpedTowardPlayer, m_currentObstrutionPosition, 0.5f);
+        }
+        else
+        {
+            leprFollowCamToObstructCam = m_smoothLerpedTowardPlayer;
+        }
+
+        // Smoothly interpolate the camera position towards the new player's position
+        transform.position = leprFollowCamToObstructCam;
     }
 
     private void UpdateHorizontalRotations()
@@ -219,18 +239,16 @@ public class CameraController : MonoBehaviour
         {
             distance = DesiredUnobstructedDistance;
         }
-        
 
         if (Physics.Raycast(m_objectToLookAt.position, playerToCamObstructionVect, out ObjectObstructHitTemp, distance, layerMask)) // Objects obstruction
         {
             //Debug.Log("Camera obstructed");
-            m_currentObstrutionDistance = playerToCamObstructionVect;
+            m_currentObstrutionRaycastVect = playerToCamObstructionVect;
             ObjectObstructHit = ObjectObstructHitTemp;
             if (m_cameraIsObstructed == false)
             {
                 //Debug.Log("Camera offset registered");
                 DesiredUnobstructedDistance = distance;
-                //m_lastObstrutionDistance = playerToCamObstructionVect;
                 m_cameraIsObstructed = true;
             }
 
@@ -242,9 +260,6 @@ public class CameraController : MonoBehaviour
             return;
         }
 
-        //Debug.Log("Camera not obstructed, CurrentOffset : " + CurrentOffset + " DesiredOffset : " + DesiredOffset);
-        //CurrentScrollDistance = DesiredDistance;
-
         m_cameraIsObstructed = false;
     }
 
@@ -253,7 +268,7 @@ public class CameraController : MonoBehaviour
         if (m_cameraIsObstructed)
         {
             // Object obstruction red raycast
-            Debug.DrawRay(m_objectToLookAt.position, m_currentObstrutionDistance.normalized * ObjectObstructHit.distance, Color.red);
+            Debug.DrawRay(m_objectToLookAt.position, m_currentObstrutionRaycastVect.normalized * ObjectObstructHit.distance, Color.red);
 
             return; // Comment to see both green and red
         }
@@ -267,39 +282,26 @@ public class CameraController : MonoBehaviour
         //Debug.Log("m_objectObstructionRaycastHit lateUpdate" + ObjectObstructHit.point);
         if (m_cameraIsObstructed && ObjectObstructHit.point != Vector3.zero)
         {
-            //Debug.Log("Lerp to hit point : " + ObjectObstructHit.point);
-            //DrawCrosshair(ObjectObstructHit.point);
-            //LerpToDistance(ObjectObstructHit.point.magnitude);
-            m_currentMaxCamDist = Vector3.Distance(transform.position, ObjectObstructHit.point);
-            
-
+            float distancePlayerToHitPoint = Vector3.Distance(m_objectToLookAt.position, ObjectObstructHit.point);
+            m_currentMaxCamDist = Mathf.Lerp(m_currentMaxCamDist, distancePlayerToHitPoint, Time.deltaTime);
+            m_currentObstrutionPosition = ObjectObstructHit.point;
             // Calculate the desired camera offset based on the scroll input
-            Vector3 desiredCamTranslation = transform.forward * m_currentMaxCamDist;
-            DrawCrosshair(desiredCamTranslation);
+            //Vector3 desiredCamTranslation = -transform.forward * m_currentMaxCamDist;
+
+
+
+            //DrawCrosshair(desiredCamTranslation);
+            //Debug.DrawRay(m_objectToLookAt.position, desiredCamTranslation, Color.white);
             // Calculate the new camera position
-            Vector3 newPosition = transform.position + desiredCamTranslation;
+            //Vector3 newPosition = transform.position + desiredCamTranslation;
 
-            // Return if the new position is not within the desired range
-            //if (IsPosWithinScrollRange(newPosition) == false)
-            //{
-            //    return;
-            //}
+            //transform.position = Vector3.SmoothDamp(transform.position, ObjectObstructHit.point, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
 
-            // Else apply the camera offset
-            //transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
-            transform.position = Vector3.SmoothDamp(transform.position, ObjectObstructHit.point, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
-
-            //m_playerToCamObstructionVect = Vector3.zero;
-            //ObjectObstructHit = new RaycastHit();
             return;
         }
 
-        //if (m_cameraIsObstructed == false)
-        //{
-        //    return;
-        //}
-        //LerpToDistance(DesiredUnobstructedDistance);
-        m_currentMaxCamDist = m_maxCamDist;
+        m_currentObstrutionPosition = Vector3.zero;
+        m_currentMaxCamDist = Mathf.Lerp(m_currentMaxCamDist, m_maxCamDist, Time.deltaTime);
     }
 
     // Visual debug
@@ -332,7 +334,7 @@ public class CameraController : MonoBehaviour
         Vector3 newPosition = hitPlayerVector.normalized * distance;
         //DrawCrosshair(ObjectObstructHit.point);
 
-        Debug.Log("Drawcrossair");
+        //Debug.Log("Drawcrossair");
         //CurrentScrollDistance = Vector3.Distance(hitPlayerVector, m_objectToLookAt.position);
         //transform.position = Vector3.Lerp(transform.position, newPosition, 0.5f);
         //CurrentScrollDistance = Vector3.Distance(newPosition, m_objectToLookAt.position);
