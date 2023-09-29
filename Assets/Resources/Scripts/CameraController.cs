@@ -1,7 +1,3 @@
-using System;
-using Unity.Burst.CompilerServices;
-using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class CameraController : MonoBehaviour
@@ -30,32 +26,24 @@ public class CameraController : MonoBehaviour
     private float m_minCamDistFOV = 70.0f;
     [SerializeField]
     private float m_scrollSmoothDampTime = 0.7f;
-
-    private float m_currentMaxCamDist = 0.0f;
-
-    [Header("Camera Obstruction")]
     [SerializeField]
-    //private float m_lerpInfrontObstructionSpeed = 16.0f;
+    private bool m_cameraIsObstructed = false;
 
     private Vector3 m_cameraVelocity = Vector3.zero;
-    //private Vector3 m_lastObstrutionDistance = Vector3.zero;
     private Vector3 m_currentObstrutionPosition = Vector3.zero;
     private Vector3 m_currentObstrutionRaycastVect = Vector3.zero;
     private Vector3 m_playerToCamVect = Vector3.zero;
     private Vector3 m_smoothLerpedTowardPlayer = Vector3.zero;
 
-    private RaycastHit ObjectObstructHit { get; set; } = new RaycastHit();
-
-
     private const float SCROLL_POS_SAFE_THRESHOLD = 2.5f;
     private const float SCROLL_FOV_SLOW_TRANSITION = 55.0f;
 
+    private float m_previousScrollDelta = 0.0f;
+    private float m_currentMaxCamDist = 0.0f;
+
+    private RaycastHit ObjectObstructHit { get; set; } = new RaycastHit();
     private float CurrentScrollDistance { get; set; }
     private float DesiredUnobstructedDistance { get; set; }
-    private float m_previousScrollDelta = 0.0f;
-
-    [SerializeField]
-    private bool m_cameraIsObstructed = false;
 
     private void Awake()
     {
@@ -269,7 +257,7 @@ public class CameraController : MonoBehaviour
         {
             // Object obstruction red raycast
             Debug.DrawRay(m_objectToLookAt.position, m_currentObstrutionRaycastVect.normalized * ObjectObstructHit.distance, Color.red);
-
+            DrawCrosshair(ObjectObstructHit.point);
             return; // Comment to see both green and red
         }
 
@@ -285,18 +273,6 @@ public class CameraController : MonoBehaviour
             float distancePlayerToHitPoint = Vector3.Distance(m_objectToLookAt.position, ObjectObstructHit.point);
             m_currentMaxCamDist = Mathf.Lerp(m_currentMaxCamDist, distancePlayerToHitPoint, Time.deltaTime);
             m_currentObstrutionPosition = ObjectObstructHit.point;
-            // Calculate the desired camera offset based on the scroll input
-            //Vector3 desiredCamTranslation = -transform.forward * m_currentMaxCamDist;
-
-
-
-            //DrawCrosshair(desiredCamTranslation);
-            //Debug.DrawRay(m_objectToLookAt.position, desiredCamTranslation, Color.white);
-            // Calculate the new camera position
-            //Vector3 newPosition = transform.position + desiredCamTranslation;
-
-            //transform.position = Vector3.SmoothDamp(transform.position, ObjectObstructHit.point, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
-
             return;
         }
 
@@ -314,30 +290,6 @@ public class CameraController : MonoBehaviour
         Debug.DrawLine(hitPoint - Vector3.right * crosshairSize, hitPoint + Vector3.right * crosshairSize, crosshairColor);
         // Draw vertical line
         Debug.DrawLine(hitPoint - Vector3.up * crosshairSize, hitPoint + Vector3.up * crosshairSize, crosshairColor);
-    }
-
-    private void LerpToDistance(float distance)
-    {
-        Vector3 camPlayerVector = m_objectToLookAt.position - transform.forward;
-        Vector3 hitPlayerVector = m_objectToLookAt.position - ObjectObstructHit.point;
-
-        float currentCamPlayerDistance = Vector3.Distance(m_objectToLookAt.position, transform.forward);
-        float desiredHitPlayerDistance = Vector3.Distance(m_objectToLookAt.position, ObjectObstructHit.point);
-
-        if (currentCamPlayerDistance < desiredHitPlayerDistance 
-            || currentCamPlayerDistance <= m_minCamDist)
-        {
-            
-            return;
-        }
-
-        Vector3 newPosition = hitPlayerVector.normalized * distance;
-        //DrawCrosshair(ObjectObstructHit.point);
-
-        //Debug.Log("Drawcrossair");
-        //CurrentScrollDistance = Vector3.Distance(hitPlayerVector, m_objectToLookAt.position);
-        //transform.position = Vector3.Lerp(transform.position, newPosition, 0.5f);
-        //CurrentScrollDistance = Vector3.Distance(newPosition, m_objectToLookAt.position);
     }
 
     private bool IsPosWithinScrollRange(Vector3 position)
