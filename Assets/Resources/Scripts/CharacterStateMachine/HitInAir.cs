@@ -23,7 +23,7 @@ public class HitInAir : CharacterState
 
     }
 
-    public override bool CanEnter(CharacterState currentState)
+    public override bool CanEnter(IState currentState)
     {
         return (m_stateMachine.Health < m_stateMachine.PreviousHealth)
             && (currentState is FallingState || currentState is JumpState);

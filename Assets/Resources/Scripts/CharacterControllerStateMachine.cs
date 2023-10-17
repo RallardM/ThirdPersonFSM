@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Xml;
 using UnityEngine;
 
-public class CharacterControllerStateMachine : MonoBehaviour
+public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>, IDamageable
 {
     public Camera Camera { get; private set; }
     [field: SerializeField]
@@ -18,15 +18,43 @@ public class CharacterControllerStateMachine : MonoBehaviour
     [field: SerializeField]
     private CharacterFloorTrigger m_floorTrigger;
 
-    private CharacterState m_currentState;
-    private List<CharacterState> m_possibleStates;
     public int Health { get; private set; } = 1000;
     public int PreviousHealth { get; private set; } = 1000;
     public bool IsStunned { get; private set; }
     public bool IsDead { get; private set; }
     public bool IsKeyPressed { get; private set; }
+    public bool OnHitStimuliReceived { get; set; } = false;
+    public bool OnStunStimuliReceived { get; set; } = false;
 
-    private void Awake()
+
+
+    // Start is called before the first frame update
+    protected override void Start()
+    {
+        foreach (CharacterState state in m_possibleStates)
+        {
+            state.OnStart(this);
+        }
+
+        m_currentState = m_possibleStates[0];
+        m_currentState.OnEnter();
+
+        Camera = Camera.main;
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        CheckIfKeyPresed();
+    }
+
+    // Update is called once per frame
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
+    }
+
+    protected override void CreatePossibleStates()
     {
         m_possibleStates = new List<CharacterState>();
         m_possibleStates.Add(new FreeState());
@@ -38,27 +66,6 @@ public class CharacterControllerStateMachine : MonoBehaviour
         m_possibleStates.Add(new DeadState());
         m_possibleStates.Add(new HitInAir());
         //m_possibleStates.Add(new StunnedInAir()); // TODO
-
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        Camera = Camera.main;
-
-        foreach (CharacterState state in m_possibleStates)
-        {
-            state.OnStart(this);
-        }
-        m_currentState = m_possibleStates[0];
-        m_currentState.OnEnter();
-    }
-
-    private void Update()
-    {
-        m_currentState.OnUpdate();
-        TryStateTransition();
-        CheckIfKeyPresed();
     }
 
     private void CheckIfKeyPresed()
@@ -72,12 +79,6 @@ public class CharacterControllerStateMachine : MonoBehaviour
         {
             IsKeyPressed = false;
         }
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        m_currentState.OnFixedUpdate();
     }
 
     private void TryStateTransition()
@@ -111,7 +112,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
         return m_floorTrigger.IsOnFloor;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(int damage) // TODO : Merge with ReceiveDamage
     {
         Health -= damage;
 
@@ -124,6 +125,18 @@ public class CharacterControllerStateMachine : MonoBehaviour
         {
             Debug.Log("Player is stunned.");
             IsStunned = true;
+        }
+    }
+
+    public void ReceiveDamage(EDamageType damageType)
+    {
+        if (damageType == EDamageType.Normal)
+        {
+            OnHitStimuliReceived = true;
+        }
+        if (damageType == EDamageType.Stunning)
+        {
+            OnStunStimuliReceived = true;
         }
     }
 
@@ -168,13 +181,13 @@ public class CharacterControllerStateMachine : MonoBehaviour
         Animator.SetFloat("MoveY", movementValue.z);
     }
 
-    public void UpdateAnimation(CharacterState state)
+    public void UpdateAnimation(IState state)
     {
         // Source : https://discussions.unity.com/t/how-can-i-check-if-an-animation-is-playing-or-has-finished-using-animator-c/57888/5
         AnimatorStateInfo stateInfo = Animator.GetCurrentAnimatorStateInfo(0);
 
-        CharacterState hitState = state as GettingHitState;
-        CharacterState hitInAirState = state as HitInAir;
+        IState hitState = state as GettingHitState;
+        IState hitInAirState = state as HitInAir;
         if (hitState != null || hitInAirState != null)
         {
             if (stateInfo.IsName("GettingHit") && stateInfo.normalizedTime < 1.0f)
@@ -189,7 +202,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
             }
         }
 
-        CharacterState attackState = state as AttackState;
+        IState attackState = state as AttackState;
         if (attackState != null)
         {
             bool isAttackAnim = stateInfo.IsName("AttackState");
@@ -213,7 +226,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
             }
         }
 
-        CharacterState fallState = state as FallingState;
+        IState fallState = state as FallingState;
         if (fallState != null)
         {
             bool isFallAnim = stateInfo.IsName("InAir");
@@ -248,7 +261,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
             }
         }
 
-        CharacterState jumpState = state as JumpState;
+        IState jumpState = state as JumpState;
         if (jumpState != null)
         {
             Debug.Log("Start jump animation");
@@ -258,7 +271,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
             Animator.SetTrigger("Jump");
         }
 
-        CharacterState stunnedState = state as StunnedState;
+        IState stunnedState = state as StunnedState;
         if (stunnedState != null)
         {
             // If in one of the two jumping states
@@ -283,7 +296,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
             }
         }
 
-        CharacterState deadState = state as DeadState;
+        IState deadState = state as DeadState;
         if (deadState != null)
         {
             Debug.Log("Player died");

@@ -36,7 +36,7 @@ public class AttackState : CharacterState
         m_stateMachine.RB.rotation = Quaternion.Slerp(m_stateMachine.RB.rotation, meshRotation, interpolationSpeed * Time.deltaTime);
     }
 
-    public override bool CanEnter(CharacterState currentState)
+    public override bool CanEnter(IState currentState)
     {
         return Input.GetMouseButtonDown(0);
     }

@@ -1,10 +1,18 @@
-public class CharacterState : IState
+public abstract class CharacterState : IState
 {
     protected CharacterControllerStateMachine m_stateMachine;
 
-    public void OnStart(CharacterControllerStateMachine stateMachine)
+    public void OnStart()
     {
-        m_stateMachine = stateMachine;
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void OnStart(CharacterControllerStateMachine stateMachineRef)
+    {
+        //TODO: Refactor in progress
+        //Do not forget to call and send the state machine
+        //To characterStates
+        m_stateMachine = stateMachineRef;
     }
 
     public virtual void OnEnter()
@@ -23,7 +31,7 @@ public class CharacterState : IState
     {
     }
 
-    public virtual bool CanEnter(CharacterState state)
+    public virtual bool CanEnter(IState currentState)
     {
         throw new System.NotImplementedException();
     }

@@ -23,7 +23,7 @@ public class StunnedInAir : CharacterState
 
     }
 
-    public override bool CanEnter(CharacterState currentState)
+    public override bool CanEnter(IState currentState)
     {
         return false;
     }

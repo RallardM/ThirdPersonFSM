@@ -34,7 +34,7 @@ public class FallingState : CharacterState
         //Debug.Log("Current falling velocity: " + Mathf.Abs(m_stateMachine.RB.velocity.y));
     }
 
-    public override bool CanEnter(CharacterState currentState)
+    public override bool CanEnter(IState currentState)
     {
         return (m_stateMachine.IsInContactWithFloor() == false && currentState is GettingHitState)
             || (m_stateMachine.IsInContactWithFloor() == false && currentState is not JumpState);

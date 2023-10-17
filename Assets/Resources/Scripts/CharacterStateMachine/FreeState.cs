@@ -130,16 +130,16 @@ public class FreeState : CharacterState
         }
     }
 
-    public override bool CanEnter(CharacterState currentState)
+    public override bool CanEnter(IState currentState)
     {
-         CharacterState stunState = currentState as StunnedState;
+        IState stunState = currentState as StunnedState;
         if (stunState == null)
         {
             //Debug.Log("Stun state can enter free state");
             return true;
         }
 
-         CharacterState freeState = currentState as FreeState;
+        IState freeState = currentState as FreeState;
         if (freeState == null)
         {
             //Debug.Log("Can enter freestate  : " + currentState.GetType().Name);
