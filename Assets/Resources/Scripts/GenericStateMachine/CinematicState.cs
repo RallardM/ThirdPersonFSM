@@ -22,6 +22,7 @@ public class CinematicState : IState
     public void OnEnter()
     {
         Debug.Log("On Enter CinematicState");
+        
         m_camera.enabled = true;
     }
 
