@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Xml;
 using UnityEngine;
 
 public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>, IDamageable
@@ -25,8 +24,6 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
     public bool IsKeyPressed { get; private set; }
     public bool OnHitStimuliReceived { get; set; } = false;
     public bool OnStunStimuliReceived { get; set; } = false;
-
-
 
     // Start is called before the first frame update
     protected override void Start()
@@ -78,32 +75,6 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
         else
         {
             IsKeyPressed = false;
-        }
-    }
-
-    private void TryStateTransition()
-    {
-        if (!m_currentState.CanExit())
-        {
-            return;
-        }
-
-        foreach (var state in m_possibleStates)
-        {
-            if (m_currentState == state)
-            {
-                continue;
-            }
-
-            if (state.CanEnter(state))
-            {
-                // Quit the current state
-                m_currentState.OnExit();
-                m_currentState = state;
-                // Enter the new current state
-                m_currentState.OnEnter();
-                return;
-            }
         }
     }
 

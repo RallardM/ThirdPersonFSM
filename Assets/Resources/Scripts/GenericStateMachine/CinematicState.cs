@@ -22,13 +22,14 @@ public class CinematicState : IState
     public void OnEnter()
     {
         Debug.Log("On Enter CinematicState");
-        
+        GameManagerSM.GetInstance().CanPlayerMove = false;
         m_camera.enabled = true;
     }
 
     public void OnExit()
     {
         Debug.Log("On Exit CinematicState");
+        GameManagerSM.GetInstance().CanPlayerMove = true;
         m_camera.enabled = false;
     }
 

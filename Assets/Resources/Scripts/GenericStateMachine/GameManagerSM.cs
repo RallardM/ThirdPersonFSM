@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using static UnityEditor.ShaderGraph.Internal.KeywordDependentCollection;
 
 public class GameManagerSM : BaseStateMachine<IState>
 {
@@ -7,6 +8,25 @@ public class GameManagerSM : BaseStateMachine<IState>
     protected Camera m_gameplayCamera;
     [SerializeField]
     protected Camera m_cinematicCamera;
+
+    private static GameManagerSM s_instance;
+
+    public bool CanPlayerMove { get; set; } = true;
+
+    public static GameManagerSM GetInstance()
+    {
+        if (s_instance == null)
+        {
+            return new GameManagerSM();
+        }
+
+        return s_instance;
+    }
+
+    public GameManagerSM()
+    {
+        s_instance = this;
+    }
 
     protected override void CreatePossibleStates()
     {

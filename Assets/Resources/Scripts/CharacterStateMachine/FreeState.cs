@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class FreeState : CharacterState
@@ -18,6 +19,11 @@ public class FreeState : CharacterState
 
     public override void OnFixedUpdate()
     {
+        if (GameManagerSM.GetInstance().CanPlayerMove == false)
+        {
+            return;
+        }
+
         Vector3 newDirection = Vector3.zero;
 
         // Calculate the camera's forward and right vectors projected on the horizontal plane
@@ -67,8 +73,9 @@ public class FreeState : CharacterState
 
         if (forwardInput != 0 || rightInput != 0)
         {
+            // TODO does not work properly, it slows the player in world position instead of local position
             //Debug.Log("Forward input : " + forwardInput + " Right input : " + rightInput);
-            // Source : https://www.youtube.com/watch?v=mFOi6W7lohk
+            // Source : https://www.youtube.com/watch?v=mFOi6W7lohk 
             float inputAngle = Mathf.Atan2(rightInput, forwardInput);
             //Debug.Log("Input angle : " + inputAngle);
             float forwardContribution = Mathf.Cos(inputAngle) * forwardInput * m_stateMachine.AccelerationValue;
