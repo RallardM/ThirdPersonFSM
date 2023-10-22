@@ -28,6 +28,24 @@ public class GameManagerSM : BaseStateMachine<IState>
         s_instance = this;
     }
 
+    //// Start is called before the first frame update
+    //protected override void Start()
+    //{
+    //    Cursor.visible = false;
+    //    Cursor.lockState = CursorLockMode.Locked;
+    //    //Cursor.lockState = CursorLockMode.Confined;
+    //}
+
+    //// Update is called once per frame
+    //protected override void Update()
+    //{
+    //    if (Input.GetKey(KeyCode.Escape))
+    //    {
+    //        Application.Quit();
+    //        //UnityEditor.EditorApplication.isPlaying = false;
+    //    }
+    //}
+
     protected override void CreatePossibleStates()
     {
         m_possibleStates = new List<IState>();

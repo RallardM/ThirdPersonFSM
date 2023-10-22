@@ -11,6 +11,11 @@ public class GameplayState : IState
 
     public bool CanEnter(IState currentState)
     {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            Debug.Log("GameplayState CanEnter() G is pressed");
+        }
+
         return Input.GetKeyDown(KeyCode.G);
     }
 
@@ -37,6 +42,7 @@ public class GameplayState : IState
 
     public void OnStart()
     {
+        Debug.Log("GameplayState OnStart()"); // TODO: Remove after debugging
     }
 
     public void OnUpdate()

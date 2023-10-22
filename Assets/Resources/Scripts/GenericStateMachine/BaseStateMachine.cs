@@ -17,7 +17,9 @@ public abstract class BaseStateMachine<T> : MonoBehaviour where T : IState
         {
             state.OnStart();
         }
+
         m_currentState = m_possibleStates[0];
+        Debug.Log("BaseStateMachine Start()"); // TODO: Remove after debugging
         m_currentState.OnEnter();
     }
 
@@ -36,7 +38,6 @@ public abstract class BaseStateMachine<T> : MonoBehaviour where T : IState
     {
 
     }
-
 
     protected void TryStateTransition()
     {
@@ -58,7 +59,9 @@ public abstract class BaseStateMachine<T> : MonoBehaviour where T : IState
                 //Quitter le state actuel
                 m_currentState.OnExit();
                 m_currentState = state;
+
                 //Rentrer dans le state state
+                Debug.Log("BaseStateMachine TryStateTransition()"); // TODO: Remove after debugging
                 m_currentState.OnEnter();
                 return;
             }

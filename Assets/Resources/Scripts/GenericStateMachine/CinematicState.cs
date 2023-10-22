@@ -39,6 +39,7 @@ public class CinematicState : IState
 
     public void OnStart()
     {
+        Debug.Log("CinematicState OnStart()"); // TODO: Remove after debugging
     }
 
     public void OnUpdate()
