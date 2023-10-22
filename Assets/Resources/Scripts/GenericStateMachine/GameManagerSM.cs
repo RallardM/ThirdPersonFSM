@@ -28,6 +28,7 @@ public class GameManagerSM : BaseStateMachine<IState>
         s_instance = this;
     }
 
+    // TODO: Try to integrate this into the state machine
     //// Start is called before the first frame update
     //protected override void Start()
     //{
@@ -51,5 +52,6 @@ public class GameManagerSM : BaseStateMachine<IState>
         m_possibleStates = new List<IState>();
         m_possibleStates.Add(new GameplayState(m_gameplayCamera));
         m_possibleStates.Add(new CinematicState(m_cinematicCamera));
+        m_possibleStates.Add(new SceneTransitionState());
     }
 }
