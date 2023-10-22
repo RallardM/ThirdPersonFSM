@@ -1,0 +1,407 @@
+fileFormatVersion: 2
+guid: fadab065bf376104db7cc13ba9a5b26d
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 0
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 12
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: 0.06
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 512
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: imgbin_onomatopoeia-word-comic-book-comics_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 511
+        width: 290
+        height: 241
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -109.279564, y: 120.5}
+        - {x: -145, y: 27.888035}
+        - {x: -145, y: -88.827095}
+        - {x: -102.62109, y: -119.85263}
+        - {x: 45.71057, y: -120.5}
+        - {x: 145, y: -41.10382}
+        - {x: 145, y: 120.5}
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a930a63d269236c439b1a42090a7d993
+      internalID: -1255764338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imgbin_onomatopoeia-word-comic-book-comics_12
+      rect:
+        serializedVersion: 2
+        x: 185
+        y: 240
+        width: 331
+        height: 300
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -107.206055, y: 150}
+        - {x: -165.5, y: -30.885925}
+        - {x: -165.5, y: -62.373535}
+        - {x: -130.29922, y: -113.05289}
+        - {x: -34.810028, y: -150}
+        - {x: 89.76171, y: -150}
+        - {x: 131.10547, y: -132.30649}
+        - {x: 165.5, y: -48.094303}
+        - {x: 165.5, y: 46.459724}
+        - {x: 66.51962, y: 150}
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f671abf4c890f8b499f72963a77cfa31
+      internalID: -1541020984
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imgbin_onomatopoeia-word-comic-book-comics_35
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 310
+        width: 165
+        height: 150
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2809f8be6764ee24ab7abf487e3cb5f5
+      internalID: 1890968681
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imgbin_onomatopoeia-word-comic-book-comics_39
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 305
+        width: 193
+        height: 142
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 68e3a334dc903ee4eb9ce75b2ee1bc76
+      internalID: 1546974503
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imgbin_onomatopoeia-word-comic-book-comics_40
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 293
+        height: 291
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 112.56818, y: 118.27228}
+        - {x: 33.953842, y: 145.5}
+        - {x: -109.92027, y: 145.5}
+        - {x: -146.5, y: -10.58699}
+        - {x: -59.083282, y: -137.58644}
+        - {x: 107.315384, y: -139.43912}
+        - {x: 146.5, y: -31.061028}
+        - {x: 146.5, y: 31.764244}
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: bd345d2943216584a8787ba12bd3d34e
+      internalID: -1640456109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imgbin_onomatopoeia-word-comic-book-comics_41
+      rect:
+        serializedVersion: 2
+        x: 454
+        y: 0
+        width: 302
+        height: 292
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -54.48065, y: 146}
+        - {x: -151, y: 84.59764}
+        - {x: -151, y: -79.02943}
+        - {x: -24.552246, y: -146}
+        - {x: 123.988266, y: -146}
+        - {x: 151, y: -33.53412}
+        - {x: 151, y: 66.26018}
+        - {x: 62.703857, y: 146}
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d1415794d7f5cb547bf4a7155f372402
+      internalID: 1092638546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: imgbin_onomatopoeia-word-comic-book-comics_1
+      rect:
+        serializedVersion: 2
+        x: 448
+        y: 467
+        width: 302
+        height: 285
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 6, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -71.85443, y: 131.96844}
+        - {x: -143.71152, y: 42.056335}
+        - {x: -136.85104, y: -78.03296}
+        - {x: -100.5777, y: -141.50388}
+        - {x: 43.853455, y: -140.57755}
+        - {x: 142.13562, y: -71.30176}
+        - {x: 150.47267, y: 62.929283}
+        - {x: 103.222664, y: 138.27702}
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3dc5c24e6b7d22849b2f7ae92fd76f67
+      internalID: -902049578
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline:
+    - - {x: 167.64526, y: -81.075836}
+      - {x: 76.50458, y: -153.86275}
+      - {x: 73.828125, y: -308.0393}
+      - {x: 119.60156, y: -376}
+      - {x: 378, y: -376}
+      - {x: 378, y: -121.88605}
+      - {x: 336.65625, y: -81.99607}
+    - - {x: -96.86981, y: -157.34381}
+      - {x: -142.01265, y: -106.12988}
+      - {x: -219.56041, y: -83.46576}
+      - {x: -297.10828, y: -82.88684}
+      - {x: -370.6172, y: -124.840866}
+      - {x: -378, y: -241.66486}
+      - {x: -316.96207, y: -362.70334}
+      - {x: -117.35538, y: -369.80792}
+      - {x: -71.10733, y: -237.12376}
+    - - {x: 79.147064, y: 127.40686}
+      - {x: -63.603333, y: 169.18481}
+      - {x: -160.28683, y: 111.52252}
+      - {x: -197.51976, y: -36.540894}
+      - {x: -151.47197, y: -96.01187}
+      - {x: -61.84601, y: -144.31415}
+      - {x: 96.45187, y: -116.460754}
+      - {x: 142.20929, y: 28.577911}
+      - {x: 91.591705, y: 62.243744}
+    - - {x: 353.79987, y: 144.34003}
+      - {x: 373.27252, y: 296.51947}
+      - {x: 279.75775, y: 365.3333}
+      - {x: 132.00143, y: 363.016}
+      - {x: 76.7731, y: 287.37543}
+      - {x: 77.33182, y: 177.78503}
+      - {x: 124.45187, y: 90.74881}
+      - {x: 275.55017, y: 88.770996}
+    - - {x: -333.70312, y: 86.42829}
+      - {x: -369.14062, y: 40.65399}
+      - {x: -369.14062, y: -68.69941}
+      - {x: -241.25713, y: -50.295105}
+      - {x: -196.5753, y: 2.8409424}
+      - {x: -210.99814, y: 86.42828}
+    - - {x: -350.38568, y: 374.21844}
+      - {x: -378, y: 206.92358}
+      - {x: -315.36435, y: 133.11871}
+      - {x: -189.76544, y: 130.44635}
+      - {x: -88.31299, y: 206.42377}
+      - {x: -85.640625, y: 327.6803}
+      - {x: -144.47081, y: 376}
+    - - {x: 169.94354, y: -68.15439}
+      - {x: 165.51794, y: 72.58008}
+      - {x: 365.5556, y: 74.35034}
+      - {x: 364.67053, y: -73.46515}
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      imgbin_onomatopoeia-word-comic-book-comics_0: -1255764338
+      imgbin_onomatopoeia-word-comic-book-comics_1: -902049578
+      imgbin_onomatopoeia-word-comic-book-comics_10: 846562663
+      imgbin_onomatopoeia-word-comic-book-comics_11: 852305944
+      imgbin_onomatopoeia-word-comic-book-comics_12: -1541020984
+      imgbin_onomatopoeia-word-comic-book-comics_13: -830547667
+      imgbin_onomatopoeia-word-comic-book-comics_14: -1925323084
+      imgbin_onomatopoeia-word-comic-book-comics_15: -219003094
+      imgbin_onomatopoeia-word-comic-book-comics_16: 587981059
+      imgbin_onomatopoeia-word-comic-book-comics_17: -712847779
+      imgbin_onomatopoeia-word-comic-book-comics_18: -694507326
+      imgbin_onomatopoeia-word-comic-book-comics_19: 69192476
+      imgbin_onomatopoeia-word-comic-book-comics_2: -1411489997
+      imgbin_onomatopoeia-word-comic-book-comics_20: 2042772821
+      imgbin_onomatopoeia-word-comic-book-comics_21: -253019209
+      imgbin_onomatopoeia-word-comic-book-comics_22: -40863087
+      imgbin_onomatopoeia-word-comic-book-comics_23: -1192489172
+      imgbin_onomatopoeia-word-comic-book-comics_24: -1303960651
+      imgbin_onomatopoeia-word-comic-book-comics_25: -1317593343
+      imgbin_onomatopoeia-word-comic-book-comics_26: 729013695
+      imgbin_onomatopoeia-word-comic-book-comics_27: -1997263937
+      imgbin_onomatopoeia-word-comic-book-comics_28: 903439541
+      imgbin_onomatopoeia-word-comic-book-comics_29: -1512396498
+      imgbin_onomatopoeia-word-comic-book-comics_3: -1869141302
+      imgbin_onomatopoeia-word-comic-book-comics_30: -1064968072
+      imgbin_onomatopoeia-word-comic-book-comics_31: 274100026
+      imgbin_onomatopoeia-word-comic-book-comics_32: 1670137502
+      imgbin_onomatopoeia-word-comic-book-comics_33: -875626789
+      imgbin_onomatopoeia-word-comic-book-comics_34: -1901697348
+      imgbin_onomatopoeia-word-comic-book-comics_35: 1890968681
+      imgbin_onomatopoeia-word-comic-book-comics_36: -2106326680
+      imgbin_onomatopoeia-word-comic-book-comics_37: -1264948042
+      imgbin_onomatopoeia-word-comic-book-comics_38: -732526078
+      imgbin_onomatopoeia-word-comic-book-comics_39: 1546974503
+      imgbin_onomatopoeia-word-comic-book-comics_4: -41072289
+      imgbin_onomatopoeia-word-comic-book-comics_40: -1640456109
+      imgbin_onomatopoeia-word-comic-book-comics_41: 1092638546
+      imgbin_onomatopoeia-word-comic-book-comics_5: 341564857
+      imgbin_onomatopoeia-word-comic-book-comics_6: -1361883618
+      imgbin_onomatopoeia-word-comic-book-comics_7: 2004308800
+      imgbin_onomatopoeia-word-comic-book-comics_8: 1901682225
+      imgbin_onomatopoeia-word-comic-book-comics_9: -1521198461
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -7372,6 +7372,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 44030007261027977, guid: dc9ba2af680d1744f996ce30bd0f8e23,
+        type: 3}
+      propertyPath: ShapeModule.type
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 44030007261027977, guid: dc9ba2af680d1744f996ce30bd0f8e23,
+        type: 3}
+      propertyPath: ShapeModule.m_MeshNormalOffset
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4077768442347561192, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7426,6 +7436,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CharacterAssets
+      objectReference: {fileID: 0}
+    - target: {fileID: 8811000752532483551, guid: dc9ba2af680d1744f996ce30bd0f8e23,
+        type: 3}
+      propertyPath: ShapeModule.type
+      value: 12
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
