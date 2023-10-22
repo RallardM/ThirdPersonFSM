@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public abstract class CharacterState : IState
 {
     protected CharacterControllerStateMachine m_stateMachine;
@@ -39,5 +41,10 @@ public abstract class CharacterState : IState
     public virtual bool CanExit()
     {
         throw new System.NotImplementedException();
+    }
+
+    public void ActivateHitBox()
+    {
+        Debug.Log("Hit box activated");
     }
 }
