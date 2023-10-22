@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
+public class MainCameraController : MonoBehaviour
 {
     [SerializeField]
     private Transform m_objectToLookAt;
