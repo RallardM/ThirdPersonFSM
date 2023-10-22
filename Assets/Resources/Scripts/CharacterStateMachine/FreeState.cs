@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class FreeState : CharacterState
@@ -21,6 +20,8 @@ public class FreeState : CharacterState
     {
         if (GameManagerSM.GetInstance().CanPlayerMove == false)
         {
+            m_stateMachine.RB.velocity = Vector3.zero;
+            m_stateMachine.UpdateAnimatorMovements(Vector3.zero);
             return;
         }
 
@@ -150,7 +151,7 @@ public class FreeState : CharacterState
         if (freeState == null)
         {
             //Debug.Log("Can enter freestate  : " + currentState.GetType().Name);
-            // If not freestate chek if in contact with floor
+            // If not freestate check if in contact with floor
             if (m_stateMachine.IsInContactWithFloor())
             {
                 Debug.Log("Can enter freestate  : " + currentState.GetType().Name);
