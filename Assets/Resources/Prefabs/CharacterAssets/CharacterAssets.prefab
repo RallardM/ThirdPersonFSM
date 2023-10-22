@@ -12,13 +12,14 @@ GameObject:
   - component: {fileID: 7730639920239030628}
   - component: {fileID: 8000214318467234851}
   - component: {fileID: 1071382721324750406}
-  m_Layer: 6
-  m_Name: HandHitBox
+  - component: {fileID: 3706027171711953494}
+  m_Layer: 0
+  m_Name: HitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7615392332119160930
 Transform:
   m_ObjectHideFlags: 0
@@ -105,6 +106,22 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &3706027171711953494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3094966866471388799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85c354c9d570c0b4094b1e93170d95d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_canHit: 1
+  m_canReceiveHit: 0
+  m_agentType: 0
+  m_affectedAgentTypes: 01000000
 --- !u!1 &4489312480188408929
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,6 +463,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4077768442347561192}
     m_Modifications:
+    - target: {fileID: 724260455359142007, guid: 413a1d22819f431ebb3ff91a05364000,
+        type: 3}
+      propertyPath: m_hitBox
+      value: 
+      objectReference: {fileID: 3094966866471388799}
     - target: {fileID: 1707683312325293533, guid: 413a1d22819f431ebb3ff91a05364000,
         type: 3}
       propertyPath: <m_stateMachine>k__BackingField

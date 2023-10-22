@@ -279,7 +279,7 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
 
     public void OnEnableAttackHitBox (bool isEnable = true)
     {
-        Debug.Log(gameObject.name + "GameManagerSM : OnEnableAttack() : HitBox is enabled : " + isEnable);
+        //Debug.Log(gameObject.name + "GameManagerSM : OnEnableAttack() : HitBox is enabled : " + isEnable);
         m_hitBox?.SetActive(isEnable);
     }
 }
