@@ -14,8 +14,10 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
     public float MaxVelocity { get; private set; }
     [field: SerializeField]
     public float JumpIntensity { get; private set; } = 1000.0f;
-    [field: SerializeField]
+    [SerializeField]
     private CharacterFloorTrigger m_floorTrigger;
+    [SerializeField]
+    protected GameObject m_hitBox;
 
     public int Health { get; private set; } = 1000;
     public int PreviousHealth { get; private set; } = 1000;
@@ -273,5 +275,11 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
             Debug.Log("Player died");
             Animator.SetBool("IsStunned", true);
         }
+    }
+
+    public void OnEnableAttackHitBox (bool isEnable = true)
+    {
+        Debug.Log(gameObject.name + "GameManagerSM : OnEnableAttack() : HitBox is enabled : " + isEnable);
+        m_hitBox?.SetActive(isEnable);
     }
 }

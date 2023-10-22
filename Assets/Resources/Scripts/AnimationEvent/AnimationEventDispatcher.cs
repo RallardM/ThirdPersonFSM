@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class AnimationEventDispatcher : MonoBehaviour
 {
+    private CharacterControllerStateMachine m_stateMachineRef;
+
+    private void Awake()
+    {
+        m_stateMachineRef = GetComponentInChildren<CharacterControllerStateMachine>();
+    }
     public void ActivateHitBox()
     {
-        Debug.Log(gameObject.name + "AnimationEventDispatcher : ActivateHitBox() : Activate hit box");
+        m_stateMachineRef.OnEnableAttackHitBox(true);
     }
 
     public void DeactivateHitBox() 
     {
-        Debug.Log(gameObject.name + "AnimationEventDispatcher : DeactivateHitBox() : Deactivate hit box");
+        m_stateMachineRef.OnEnableAttackHitBox(false);
     }
 }
