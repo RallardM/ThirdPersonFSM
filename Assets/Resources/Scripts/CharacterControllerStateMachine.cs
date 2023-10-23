@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.PackageManager;
 using UnityEngine;
 
 public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>, IDamageable
@@ -7,7 +8,7 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
     [field: SerializeField]
     public Rigidbody RB { get; private set; }
     [field: SerializeField]
-    private Animator Animator { get; set; }
+    public Animator Animator { get; set; }
     [field: SerializeField]
     public float AccelerationValue { get; private set; }
     [field: SerializeField]
@@ -163,28 +164,36 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
         IState hitInAirState = state as HitInAir;
         if (hitState != null || hitInAirState != null)
         {
-            if (stateInfo.IsName("GettingHit") && stateInfo.normalizedTime < 1.0f)
+            if (stateInfo.IsName("GettingHitState") && stateInfo.normalizedTime < 1.0f) // TODO rewritte using clipInfo[0].clip.name
             {
                 // If the animation is already playing, restart it
-                Animator.Play("GettingHit", 0, 0f);
+                Animator.Play("GettingHitState", 0, 0f);
             }
-            else if (!stateInfo.IsName("GettingHit"))
+            else if (!stateInfo.IsName("GettingHitState")) // TODO rewritte using clipInfo[0].clip.name
             {
                 // Start the animation if it's not already playing
-                Animator.SetTrigger("GettingHit");
+                Animator.SetTrigger("GettingHitState");
             }
         }
 
         IState attackState = state as AttackState;
         if (attackState != null)
         {
-            bool isAttackAnim = stateInfo.IsName("AttackState");
+            int attackId = Animator.StringToHash("AttackState");
+            if (attackId == stateInfo.fullPathHash)
+            {
+                Debug.Log("Attack anim is playing");
+            }
+
+            AnimatorClipInfo[] clipInfo;
+            int layerIndex = 0;
+            clipInfo = Animator.GetCurrentAnimatorClipInfo(layerIndex);
+            bool isAttackAnim = clipInfo[0].clip.name == "Attack01";
             bool isPlaying = stateInfo.normalizedTime < 1.0f;
-            //Debug.Log("Is attack anim : " + isAttackAnim + " Is playing : " + isPlaying);
 
             if (isAttackAnim && isPlaying)
             {
-                //Debug.Log("Restarting attack animation");
+                Debug.Log("Restarting attack animation");
 
                 // If the animation is already playing, restart it
                 Animator.Play("AttackState", 0, 0f);
@@ -202,7 +211,7 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
         IState fallState = state as FallingState;
         if (fallState != null)
         {
-            bool isFallAnim = stateInfo.IsName("InAir");
+            bool isFallAnim = stateInfo.IsName("InAir"); // TODO rewritte using clipInfo[0].clip.name
             bool isFalling = Animator.GetBool("IsFalling");
             bool isPlaying = stateInfo.normalizedTime < 1.0f;
 
@@ -277,9 +286,9 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
         }
     }
 
-    public void OnEnableAttackHitBox (bool isEnable = true)
+    public void OnEnableAttackHitBox(bool isEnable = true)
     {
-        //Debug.Log(gameObject.name + "GameManagerSM : OnEnableAttack() : HitBox is enabled : " + isEnable);
-        m_hitBox?.SetActive(isEnable);
+        Debug.Log(gameObject.name + "GameManagerSM : OnEnableAttack() : HitBox is enabled : " + isEnable);
+        m_hitBox.SetActive(isEnable);
     }
 }

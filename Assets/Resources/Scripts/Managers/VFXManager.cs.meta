@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: ac9278db75383b247999ef6561255d71
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - m_hitPSBackground: {fileID: 2933193438712822000, guid: f73aee4462221db4caa341507fef28c2,
+      type: 3}
+  - m_hitPS3DText: {fileID: 4978302682244070084, guid: f501d7f50ce93f74db79086c98bc5991,
+      type: 3}
+  executionOrder: 0
+  icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AttackState : CharacterState
 {
-    private const float STATE_EXIT_TIMER = 0.18f;
+    private const float STATE_EXIT_TIMER = 0.80f;
     private float m_currentStateTimer = 0.0f;
 
     public override void OnEnter()
@@ -15,8 +15,16 @@ public class AttackState : CharacterState
 
     public override void OnExit()
     {
-        m_stateMachine.OnEnableAttackHitBox(false);
-        //Debug.Log("Exit state: Attacking state");
+        AnimatorStateInfo stateInfo = m_stateMachine.Animator.GetCurrentAnimatorStateInfo(0);
+        float time = stateInfo.normalizedTime;
+        float time2 = m_currentStateTimer;
+
+        if (stateInfo.IsName("AttackState"))
+        {
+            m_stateMachine.OnEnableAttackHitBox(false);
+        }
+
+        Debug.Log("Exit state: Attacking state");
     }
 
     public override void OnFixedUpdate()
@@ -27,6 +35,11 @@ public class AttackState : CharacterState
     public override void OnUpdate()
     {
         m_currentStateTimer -= Time.deltaTime;
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            m_stateMachine.UpdateAnimation(this);
+        }
 
         // Rotate the player's mesh toward the camera direction where the player throws the punch
         Vector3 cameraForward = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up).normalized;

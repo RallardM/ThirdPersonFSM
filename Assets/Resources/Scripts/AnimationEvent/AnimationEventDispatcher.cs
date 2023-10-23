@@ -10,6 +10,7 @@ public class AnimationEventDispatcher : MonoBehaviour
     {
         m_stateMachineRef = GetComponentInChildren<CharacterControllerStateMachine>();
     }
+
     public void ActivateHitBox()
     {
         m_stateMachineRef.OnEnableAttackHitBox(true);

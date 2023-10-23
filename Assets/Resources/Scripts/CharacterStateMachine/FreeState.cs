@@ -140,15 +140,20 @@ public class FreeState : CharacterState
 
     public override bool CanEnter(IState currentState)
     {
-        IState stunState = currentState as StunnedState;
-        if (stunState == null)
+        IState attackState = currentState as AttackState;
+        if (attackState != null)
         {
-            //Debug.Log("Stun state can enter free state");
-            return true;
+            if (attackState.CanExit())
+            {
+                //Debug.Log("Attack state can enter free state");
+                return true;
+            }
+
+            return false;
         }
 
         IState freeState = currentState as FreeState;
-        if (freeState == null)
+        if (freeState != null)
         {
             //Debug.Log("Can enter freestate  : " + currentState.GetType().Name);
             // If not freestate check if in contact with floor

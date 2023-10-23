@@ -14,9 +14,9 @@ public class HitBox : MonoBehaviour
     [SerializeField]
     protected List<EAgentType> m_affectedAgentTypes = new List<EAgentType>();
 
-    protected void OnTriggerEnter(Collider other)
+    protected void OnCollisionEnter(Collision collision)
     {
-        var otherHitBox = other.GetComponent<HitBox>();
+        var otherHitBox = collision.collider.GetComponent<HitBox>();
         if (otherHitBox == null) return;
 
         // Other collider else is an HitBox

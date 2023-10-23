@@ -61,7 +61,7 @@ public abstract class BaseStateMachine<T> : MonoBehaviour where T : IState
                 m_currentState = state;
 
                 //Rentrer dans le state state
-                Debug.Log("BaseStateMachine TryStateTransition()"); // TODO: Remove after debugging
+                //Debug.Log("BaseStateMachine TryStateTransition()"); // TODO: Remove after debugging
                 m_currentState.OnEnter();
                 return;
             }
