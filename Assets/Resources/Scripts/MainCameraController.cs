@@ -3,6 +3,8 @@ using UnityEngine;
 public class MainCameraController : MonoBehaviour
 {
     [SerializeField]
+    private Camera m_VFXCamera;
+    [SerializeField]
     private Transform m_objectToLookAt;
     [SerializeField]
     private float m_rotationSpeed = 5.0f;
@@ -99,6 +101,9 @@ public class MainCameraController : MonoBehaviour
 
         // Look at the target
         transform.LookAt(m_objectToLookAt);
+
+        // Apply the same lookat to the VFX camera
+        m_VFXCamera.transform.LookAt(m_objectToLookAt);
     }
 
     // All camera translations should be done here
@@ -116,12 +121,18 @@ public class MainCameraController : MonoBehaviour
 
         // Smoothly interpolate the camera position towards the new player's position
         transform.position = leprFollowCamToObstructCam;
+
+        // Apply the same position to the VFX camera
+        m_VFXCamera.transform.position = leprFollowCamToObstructCam;
     }
 
     private void UpdateHorizontalRotations()
     {
         float currentAngleX = Input.GetAxis("Mouse X") * m_rotationSpeed;
         transform.RotateAround(m_objectToLookAt.position, m_objectToLookAt.up, currentAngleX);
+
+        // Apply the same rotation to the VFX camera
+        m_VFXCamera.transform.RotateAround(m_objectToLookAt.position, m_objectToLookAt.up, currentAngleX);
     }
 
     private void UpdateVerticalRotations()
@@ -141,6 +152,9 @@ public class MainCameraController : MonoBehaviour
         }
 
         transform.RotateAround(m_objectToLookAt.position, transform.right, currentAngleY);
+
+        // Apply the same rotation to the VFX camera
+        m_VFXCamera.transform.RotateAround(m_objectToLookAt.position, transform.right, currentAngleY);
     }
 
     private float ClampAngle(float angle)
@@ -190,6 +204,9 @@ public class MainCameraController : MonoBehaviour
         // Else apply the camera offset
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
 
+        // Apply the same position to the VFX camera
+        m_VFXCamera.transform.position = transform.position;
+
         CurrentScrollDistance = Vector3.Distance(newPosition, m_objectToLookAt.position);
         m_previousScrollDelta = scrollDelta;
     }
@@ -201,6 +218,9 @@ public class MainCameraController : MonoBehaviour
 
         float newFOV = Mathf.Lerp(m_minCamDistFOV, m_maxCamDistFOV, distancePercent);
         transform.GetComponent<Camera>().fieldOfView = newFOV;
+
+        // Apply the same FOV to the VFX camera
+        m_VFXCamera.transform.GetComponent<Camera>().fieldOfView = newFOV;
     }
 
     private void CheckIfCameraObstructed()
