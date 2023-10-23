@@ -664,7 +664,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 6
     enabled: 1
-    type: 19
+    type: 12
     angle: 24.1
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
@@ -4797,10 +4797,10 @@ ParticleSystemRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 256985927
   m_SortingLayer: 1
-  m_SortingOrder: 100
+  m_SortingOrder: 2
   m_RenderMode: 0
   m_MeshDistribution: 0
-  m_SortMode: 0
+  m_SortMode: 3
   m_MinParticleSize: 0.2
   m_MaxParticleSize: 0.2
   m_CameraVelocityScale: 0

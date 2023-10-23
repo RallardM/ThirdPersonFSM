@@ -14,14 +14,15 @@ public class HitBox : MonoBehaviour
     [SerializeField]
     protected List<EAgentType> m_affectedAgentTypes = new List<EAgentType>();
 
-    protected void OnCollisionEnter(Collision collision)
+    protected void OnTriggerEnter(Collider collider)
     {
-        var otherHitBox = collision.collider.GetComponent<HitBox>();
+        var otherHitBox = collider.GetComponent<HitBox>();
         if (otherHitBox == null) return;
 
         // Other collider else is an HitBox
         if (CanHitOther(otherHitBox))
         {
+            VFXManager.GetInstance().InstantiateVFX(EVFX_Type.Hit, collider.ClosestPoint(transform.position));
             otherHitBox.GetHit(this);
         }
     }
