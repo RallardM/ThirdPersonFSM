@@ -205,7 +205,7 @@ public class MainCameraController : MonoBehaviour
         transform.position = Vector3.SmoothDamp(transform.position, newPosition, ref m_cameraVelocity, m_scrollSmoothDampTime, Mathf.Infinity, Time.deltaTime);
 
         // Apply the same position to the VFX camera
-        m_VFXCamera.transform.position = transform.position;
+        //m_VFXCamera.transform.position = transform.position;
 
         CurrentScrollDistance = Vector3.Distance(newPosition, m_objectToLookAt.position);
         m_previousScrollDelta = scrollDelta;
@@ -220,7 +220,7 @@ public class MainCameraController : MonoBehaviour
         transform.GetComponent<Camera>().fieldOfView = newFOV;
 
         // Apply the same FOV to the VFX camera
-        m_VFXCamera.transform.GetComponent<Camera>().fieldOfView = newFOV;
+        //m_VFXCamera.transform.GetComponent<Camera>().fieldOfView = newFOV;
     }
 
     private void CheckIfCameraObstructed()
