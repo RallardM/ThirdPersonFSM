@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class GameManagerSM : BaseStateMachine<IState>
 {
@@ -28,23 +29,31 @@ public class GameManagerSM : BaseStateMachine<IState>
     }
 
     // TODO: Try to integrate this into the state machine
-    //// Start is called before the first frame update
-    //protected override void Start()
-    //{
-    //    Cursor.visible = false;
-    //    Cursor.lockState = CursorLockMode.Locked;
-    //    //Cursor.lockState = CursorLockMode.Confined;
-    //}
+    // Start is called before the first frame update
+    protected override void Start()
+    {
+        base.Start();
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Confined;
+    }
 
-    //// Update is called once per frame
-    //protected override void Update()
-    //{
-    //    if (Input.GetKey(KeyCode.Escape))
-    //    {
-    //        Application.Quit();
-    //        //UnityEditor.EditorApplication.isPlaying = false;
-    //    }
-    //}
+    // Update is called once per frame
+    protected override void Update()
+    {
+        base.Update();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+            //UnityEditor.EditorApplication.isPlaying = false;
+        }
+        else if (Input.GetKeyDown(KeyCode.N))
+        {
+            // Cheat code to skip to next level
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+    }
 
     protected override void CreatePossibleStates()
     {

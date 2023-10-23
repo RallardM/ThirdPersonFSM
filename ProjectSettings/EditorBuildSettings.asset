@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SandBox.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/SandBox2.unity
+    guid: 45c3edf8ba4833741bbe52aeb76499d2
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 073ace61bbce0c34a9437bb14bb8e651,
       type: 2}
