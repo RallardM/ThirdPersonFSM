@@ -264,6 +264,7 @@ MonoBehaviour:
   m_projectileSpeed: 50
   m_fireRate: 0.5
   m_maxPoolSize: 100
+  m_isActive: 0
 --- !u!1 &4623499404958200614
 GameObject:
   m_ObjectHideFlags: 0

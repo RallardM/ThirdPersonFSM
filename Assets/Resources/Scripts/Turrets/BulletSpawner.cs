@@ -11,9 +11,9 @@ public class BulletSpawner : MonoBehaviour
     [SerializeField] private float m_projectileSpeed = 5.0f;
     [SerializeField] private float m_fireRate = 1.0f;
     [SerializeField] private int m_maxPoolSize = 100;
+    [SerializeField] private bool m_isActive = false;
 
     private ObjectPool<GameObject> m_projectilePool;
-
 
     private void Awake()
     {
@@ -54,6 +54,11 @@ public class BulletSpawner : MonoBehaviour
 
     private void ShootProjectile()
     {
+        if (!m_isActive)
+        {
+            return;
+        }
+
         GameObject projectile = m_projectilePool.Get();
         if (projectile != null)
         {
