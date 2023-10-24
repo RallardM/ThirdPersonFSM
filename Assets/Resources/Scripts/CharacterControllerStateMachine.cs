@@ -19,6 +19,7 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
     private CharacterFloorTrigger m_floorTrigger;
     [SerializeField]
     protected GameObject m_hitBox;
+    private AudioSource m_audioSource;
 
     public int Health { get; private set; } = 1000;
     public int PreviousHealth { get; private set; } = 1000;
@@ -27,6 +28,12 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
     public bool IsKeyPressed { get; private set; }
     public bool OnHitStimuliReceived { get; set; } = false;
     public bool OnStunStimuliReceived { get; set; } = false;
+
+    protected override void Awake()
+    {
+        base.Awake();
+        m_audioSource = GetComponent<AudioSource>();
+    }
 
     // Start is called before the first frame update
     protected override void Start()

@@ -8,6 +8,8 @@ public class GameManagerSM : BaseStateMachine<IState>
     protected Camera m_gameplayCamera;
     [SerializeField]
     protected Camera m_cinematicCamera;
+    [SerializeField]
+    private AudioSource m_musicTrack;
 
     private static GameManagerSM s_instance;
 
@@ -52,6 +54,17 @@ public class GameManagerSM : BaseStateMachine<IState>
         {
             // Cheat code to skip to next level
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        else if (Input.GetKeyDown(KeyCode.P))
+        {
+            if(m_musicTrack.isPlaying)
+            {
+                m_musicTrack.Pause();
+            }
+            else
+            {
+                m_musicTrack.Play();
+            }
         }
     }
 
