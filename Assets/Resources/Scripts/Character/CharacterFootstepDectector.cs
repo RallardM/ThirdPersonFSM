@@ -19,12 +19,7 @@ public class CharacterFootstepDectector : MonoBehaviour
         // Layer 7 (floor)
         if (other.gameObject.layer == 7)
         {
-            Debug.Log("CharacterFootstepDectector : OnTriggerEnter() : Layer 7");
-            CharacterAudioController a = m_audioController;
-            ESoundType b = ESoundType.Footstep;
-            Debug.Log("CharacterFootstepDectector : OnTriggerEnter() : Enters PlaySound()");
             m_audioController.PlaySound(ESoundType.Footstep);
-            Debug.Log("CharacterFootstepDectector : OnTriggerEnter() : PlaySound() Done");
         }
     }
 }
