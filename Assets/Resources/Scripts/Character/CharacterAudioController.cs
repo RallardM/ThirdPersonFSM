@@ -18,10 +18,16 @@ public class CharacterAudioController : MonoBehaviour
         switch (soundType)
         {
             case ESoundType.Jump:
+                Debug.Log("CharacterAudioController : PlaySound() : Jump");
                 m_audioSource.clip = m_jumpAudioClip;
                 break;
             case ESoundType.Land:
+                Debug.Log("CharacterAudioController : PlaySound() : Land");
                 m_audioSource.clip = m_landAudioClip;
+                break;
+            case ESoundType.Footstep:
+                Debug.Log("CharacterAudioController : PlaySound() : Footstep");
+                m_audioSource.clip = m_footstepAudioClip;
                 break;
             case ESoundType.Count:
                 Debug.LogWarning("CharacterAudioController : PlaySound() : Sound type not implemented");

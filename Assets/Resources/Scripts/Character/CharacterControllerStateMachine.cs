@@ -30,7 +30,6 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
     [SerializeField]
     protected GameObject m_hitBox;
 
-
     public int Health { get; private set; } = 1000;
     public int PreviousHealth { get; private set; } = 1000;
     public bool IsStunned { get; private set; }
@@ -82,6 +81,11 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
         m_possibleStates.Add(new DeadState());
         m_possibleStates.Add(new HitInAir());
         //m_possibleStates.Add(new StunnedInAir()); // TODO
+    }
+
+    public IState GetCurrentState()
+    {
+        return m_currentState;
     }
 
     private void CheckIfKeyPresed()
