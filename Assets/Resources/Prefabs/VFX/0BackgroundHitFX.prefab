@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7243423520081680200}
   - component: {fileID: 4065253503482106705}
   m_Layer: 11
-  m_Name: BackgroundHitFX
+  m_Name: 0BackgroundHitFX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

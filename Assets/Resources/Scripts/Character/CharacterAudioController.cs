@@ -24,6 +24,7 @@ public class CharacterAudioController : MonoBehaviour
 
     public void PlaySound(ESoundType soundType)
     {
+        int randomIndex = 0;
         switch (soundType)
         {
             case ESoundType.Jump:
@@ -36,7 +37,7 @@ public class CharacterAudioController : MonoBehaviour
                 break;
             case ESoundType.Footstep:
                 //Debug.Log("CharacterAudioController : PlaySound() : Footstep");
-                int randomIndex = Random.Range(0, m_footstepAudioClips.Count);
+                randomIndex = Random.Range(0, m_footstepAudioClips.Count);
                 m_audioSource.clip = m_footstepAudioClips[randomIndex];
                 break;
             case ESoundType.Slap:

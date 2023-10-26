@@ -8151,10 +8151,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac9278db75383b247999ef6561255d71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_hitPSBackground: {fileID: 2933193438712822000, guid: f73aee4462221db4caa341507fef28c2,
-    type: 3}
-  m_hitPS3DText: {fileID: 4978302682244070084, guid: f501d7f50ce93f74db79086c98bc5991,
-    type: 3}
+  m_backgroundHits:
+  - {fileID: 2933193438712822000, guid: f73aee4462221db4caa341507fef28c2, type: 3}
+  - {fileID: 2933193438712822000, guid: 5715a6375273a2c47aaf793e48c7b96d, type: 3}
+  - {fileID: 2933193438712822000, guid: ff75572bebae216438542a97b7dbfa7d, type: 3}
+  - {fileID: 2933193438712822000, guid: 0c12e4cbc54d04c4f8fdfba24a7e5792, type: 3}
+  - {fileID: 2933193438712822000, guid: cbfd11a4fa0715d4d8673c8673397aaa, type: 3}
+  m_3DTextHits:
+  - {fileID: 4978302682244070084, guid: f501d7f50ce93f74db79086c98bc5991, type: 3}
+  - {fileID: 4978302682244070084, guid: f9f274d60c13e2449ad223ab293d9e34, type: 3}
+  - {fileID: 4978302682244070084, guid: 1c7740b975c5dc44094426a345ef6c56, type: 3}
+  - {fileID: 4978302682244070084, guid: c82b80b20f3b5e54f8342020c4512fca, type: 3}
+  - {fileID: 4978302682244070084, guid: 8d3fdb567c55f5d40b5c9ba55d48d1ad, type: 3}
 --- !u!1 &1539217489
 GameObject:
   m_ObjectHideFlags: 0
