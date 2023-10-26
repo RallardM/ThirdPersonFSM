@@ -40,25 +40,25 @@ public class FreeState : CharacterState
         }
         if (Input.GetKey(KeyCode.W))
         {
-            Debug.Log("W pressed");
+            //Debug.Log("W pressed");
             newDirection += cameraForward * m_stateMachine.AccelerationValue;
             forwardInput = 1;
         }
         if (Input.GetKey(KeyCode.S))
         {
-            Debug.Log("S pressed");
+            //Debug.Log("S pressed");
             newDirection -= cameraForward * m_stateMachine.AccelerationValue;
             forwardInput = -0.5f; // Exception to reduce acceleration when moving backward so it does not stop completely
         }
         if (Input.GetKey(KeyCode.A))
         {
-            Debug.Log("A pressed");
+            //Debug.Log("A pressed");
             newDirection -= cameraRight * m_stateMachine.AccelerationValue;
             forwardInput = -1;
         }
         if (Input.GetKey(KeyCode.D))
         {
-            Debug.Log("D pressed");
+            //Debug.Log("D pressed");
             newDirection += cameraRight * m_stateMachine.AccelerationValue;
             rightInput = 1;
         }

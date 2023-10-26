@@ -20,12 +20,14 @@ public class HitBox : MonoBehaviour
 
     protected void OnTriggerEnter(Collider collider)
     {
+        Debug.Log("Collider enter : " + collider.name);
         var otherHitBox = collider.GetComponent<HitBox>();
         if (otherHitBox == null) return;
 
         // Other collider else is an HitBox
         if (CanHitOther(otherHitBox))
         {
+            Debug.Log("Can hit other : " + collider.name);
             VFXManager.GetInstance().InstantiateVFX(EVFX_Type.Hit, collider.ClosestPoint(transform.position));
             m_audioController.PlaySound(ESoundType.Slap);
             otherHitBox.GetHit(this);

@@ -258,6 +258,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 21977942}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &35811968 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2777467923921455137, guid: dc9ba2af680d1744f996ce30bd0f8e23,
+    type: 3}
+  m_PrefabInstance: {fileID: 1326826118}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &55692313
 GameObject:
   m_ObjectHideFlags: 0
@@ -6119,6 +6125,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnnemyAssets
       objectReference: {fileID: 0}
+    - target: {fileID: 9124513390228020587, guid: c676690285af45c4eb5ab7345de5de0a,
+        type: 3}
+      propertyPath: m_playerTransform
+      value: 
+      objectReference: {fileID: 35811968}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7401,11 +7412,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3094966866471388799, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4077768442347561192, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
       propertyPath: m_LocalPosition.x
