@@ -6,11 +6,17 @@ using UnityEngine;
 public class HitBox : MonoBehaviour
 {
     [SerializeField]
+    private CharacterAudioController m_audioController;
+
+    [SerializeField]
     protected bool m_canHit;
+
     [SerializeField]
     protected bool m_canReceiveHit;
+
     [SerializeField]
     protected EAgentType m_agentType = EAgentType.Count;
+
     [SerializeField]
     protected List<EAgentType> m_affectedAgentTypes = new List<EAgentType>();
 
@@ -23,6 +29,7 @@ public class HitBox : MonoBehaviour
         if (CanHitOther(otherHitBox))
         {
             VFXManager.GetInstance().InstantiateVFX(EVFX_Type.Hit, collider.ClosestPoint(transform.position));
+            m_audioController.PlaySound(ESoundType.Slap);
             otherHitBox.GetHit(this);
         }
     }

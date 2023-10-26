@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharacterAudioController : MonoBehaviour
 {
-    [SerializeField] 
+    [SerializeField]
     private AudioSource m_audioSource;
 
     [SerializeField]
@@ -15,6 +15,12 @@ public class CharacterAudioController : MonoBehaviour
 
     [SerializeField]
     private List<AudioClip> m_footstepAudioClips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> m_slapAudioClips = new List<AudioClip>();
+
+    [SerializeField]
+    private List<AudioClip> m_gruntAudioClips = new List<AudioClip>();
 
     public void PlaySound(ESoundType soundType)
     {
@@ -33,6 +39,16 @@ public class CharacterAudioController : MonoBehaviour
                 int randomIndex = Random.Range(0, m_footstepAudioClips.Count);
                 m_audioSource.clip = m_footstepAudioClips[randomIndex];
                 break;
+            case ESoundType.Slap:
+                //Debug.Log("CharacterAudioController : PlaySound() : Slap");
+                randomIndex = Random.Range(0, m_slapAudioClips.Count);
+                m_audioSource.clip = m_slapAudioClips[randomIndex];
+                break;
+            case ESoundType.Grunt:
+                //Debug.Log("CharacterAudioController : PlaySound() : Grunt");
+                randomIndex = Random.Range(0, m_gruntAudioClips.Count);
+                m_audioSource.clip = m_gruntAudioClips[randomIndex];
+                break;
             case ESoundType.Count:
                 Debug.LogWarning("CharacterAudioController : PlaySound() : Sound type not implemented");
                 break;
@@ -47,5 +63,7 @@ public enum ESoundType
     Jump,
     Land,
     Footstep,
+    Slap,
+    Grunt,
     Count
 }
