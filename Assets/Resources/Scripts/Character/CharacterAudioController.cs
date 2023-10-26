@@ -10,6 +10,8 @@ public class CharacterAudioController : MonoBehaviour
     private AudioClip m_jumpAudioClip;
     [SerializeField]
     private AudioClip m_landAudioClip;
+    [SerializeField]
+    private AudioClip m_footstepAudioClip;
 
     public void PlaySound(ESoundType soundType)
     {
@@ -34,5 +36,6 @@ public enum ESoundType
 {
     Jump,
     Land,
+    Footstep,
     Count
 }
