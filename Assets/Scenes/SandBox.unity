@@ -1595,7 +1595,7 @@ GameObject:
   - component: {fileID: 362946969}
   - component: {fileID: 362946968}
   - component: {fileID: 362946972}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: HitBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1630,7 +1630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c354c9d570c0b4094b1e93170d95d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_audioController: {fileID: 1326826122}
+  m_audioController: {fileID: 0}
   m_canHit: 0
   m_canReceiveHit: 1
   m_agentType: 1
@@ -7401,6 +7401,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3094966866471388799, guid: dc9ba2af680d1744f996ce30bd0f8e23,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4077768442347561192, guid: dc9ba2af680d1744f996ce30bd0f8e23,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -7461,18 +7466,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc9ba2af680d1744f996ce30bd0f8e23, type: 3}
---- !u!114 &1326826122 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2306223507987535570, guid: dc9ba2af680d1744f996ce30bd0f8e23,
-    type: 3}
-  m_PrefabInstance: {fileID: 1326826118}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b1a05f340fa0799458a81d0d709a6dcd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1336553574
 GameObject:
   m_ObjectHideFlags: 0
@@ -9843,7 +9836,7 @@ GameObject:
   - component: {fileID: 1822125346}
   - component: {fileID: 1822125348}
   - component: {fileID: 1822125347}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: HitBoxText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
