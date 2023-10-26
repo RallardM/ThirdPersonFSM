@@ -19,6 +19,7 @@ public class JumpState : CharacterState
     public override void OnExit()
     {
         Debug.Log("Exit state: Jump state");
+        m_stateMachine.AudioController.PlaySound(ESoundType.Land);
     }
 
     public override void OnFixedUpdate()

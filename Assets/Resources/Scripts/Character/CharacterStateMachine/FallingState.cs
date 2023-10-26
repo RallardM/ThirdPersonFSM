@@ -14,7 +14,6 @@ public class FallingState : CharacterState
     public override void OnExit()
     {
         Debug.Log("Exit State: Falling state");
-        m_stateMachine.AudioController.PlaySound(ESoundType.Land);
         m_stateMachine.UpdateAnimation(this);
     }
 

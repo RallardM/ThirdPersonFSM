@@ -5,22 +5,31 @@ using UnityEngine;
 public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>, IDamageable
 {
     public Camera Camera { get; private set; }
+
     [field: SerializeField]
     public Rigidbody RB { get; private set; }
+
     [field: SerializeField]
     public Animator Animator { get; set; }
+
     [field: SerializeField]
     public CharacterAudioController AudioController { get; private set; }
+
+    [field: SerializeField]
     public float AccelerationValue { get; private set; }
+
     [field: SerializeField]
     public float MaxVelocity { get; private set; }
+
     [field: SerializeField]
     public float JumpIntensity { get; private set; } = 1000.0f;
+
     [SerializeField]
     private CharacterFloorTrigger m_floorTrigger;
+
     [SerializeField]
     protected GameObject m_hitBox;
-    [field: SerializeField]
+
 
     public int Health { get; private set; } = 1000;
     public int PreviousHealth { get; private set; } = 1000;
