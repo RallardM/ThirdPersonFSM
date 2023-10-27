@@ -91,9 +91,9 @@ public class HitBox : MonoBehaviour
         //Debug.Log(gameObject.name + " got hit by " + otherHitBox.gameObject.GetComponentInParent<EnemyController>().name);
         //Debug.Log(gameObject.name + " got hit by hit box " + otherHitBox.gameObject.name);
         //Debug.Log("Velocity : " + otherHitBox.gameObject.GetComponent<Rigidbody>().velocity);
-        Rigidbody rb = otherHitBox.gameObject.GetComponent<Rigidbody>();
-        Vector3 localVelocity = rb.velocity;
-        Vector3 globalVelocity = rb.transform.TransformDirection(localVelocity);
+        //Rigidbody rb = otherHitBox.gameObject.GetComponent<Rigidbody>();
+        //Vector3 localVelocity = rb.velocity;
+        //Vector3 globalVelocity = rb.transform.TransformDirection(localVelocity);
         //Debug.Log("Global Velocity : " + globalVelocity);
         //Debug.Log("G Velocity : " + otherHitBox.m_globalVelocity);
         //m_impulseSource.GenerateImpulse(otherHitBox.m_globalVelocity);
