@@ -1,11 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 using UnityEngine;
 
 public class CharacterAudioController : MonoBehaviour
 {
     [SerializeField]
-    private AudioSource m_audioSource;
+    private AudioSource m_feetAudioSource;
+
+    [SerializeField]
+    private AudioSource m_handAudioSource;
+
+    [SerializeField]
+    private AudioSource m_mouthAudioSource;
 
     [SerializeField]
     private AudioClip m_jumpAudioClip;
@@ -24,38 +31,62 @@ public class CharacterAudioController : MonoBehaviour
 
     public void PlaySound(ESoundType soundType)
     {
+        EAudioSource source = EAudioSource.Count;
+        AudioClip clip = null;
         int randomIndex = 0;
         switch (soundType)
         {
             case ESoundType.Jump:
                 //Debug.Log("CharacterAudioController : PlaySound() : Jump");
-                m_audioSource.clip = m_jumpAudioClip;
+                clip = m_jumpAudioClip;
+                source = EAudioSource.Feet;
                 break;
             case ESoundType.Land:
                 //Debug.Log("CharacterAudioController : PlaySound() : Land");
-                m_audioSource.clip = m_landAudioClip;
+                clip = m_landAudioClip;
+                source = EAudioSource.Feet;
                 break;
             case ESoundType.Footstep:
                 //Debug.Log("CharacterAudioController : PlaySound() : Footstep");
                 randomIndex = Random.Range(0, m_footstepAudioClips.Count);
-                m_audioSource.clip = m_footstepAudioClips[randomIndex];
+                clip = m_footstepAudioClips[randomIndex];
+                source = EAudioSource.Feet;
                 break;
             case ESoundType.Slap:
                 //Debug.Log("CharacterAudioController : PlaySound() : Slap");
                 randomIndex = Random.Range(0, m_slapAudioClips.Count);
-                m_audioSource.clip = m_slapAudioClips[randomIndex];
+                clip = m_slapAudioClips[randomIndex];
+                source = EAudioSource.Hand;
                 break;
             case ESoundType.Grunt:
                 //Debug.Log("CharacterAudioController : PlaySound() : Grunt");
                 randomIndex = Random.Range(0, m_gruntAudioClips.Count);
-                m_audioSource.clip = m_gruntAudioClips[randomIndex];
+                clip = m_gruntAudioClips[randomIndex];
+                source = EAudioSource.Mouth;
                 break;
             case ESoundType.Count:
                 Debug.LogWarning("CharacterAudioController : PlaySound() : Sound type not implemented");
                 break;
         }
 
-        m_audioSource.Play();
+        switch(source)
+        {
+            case EAudioSource.Feet:
+                m_feetAudioSource.clip = clip;
+                m_feetAudioSource.Play();
+                break;
+            case EAudioSource.Hand:
+                m_handAudioSource.clip = clip;
+                m_handAudioSource.Play();
+                break;
+            case EAudioSource.Mouth:
+                m_mouthAudioSource.clip = clip;
+                m_mouthAudioSource.Play();
+                break;
+            case EAudioSource.Count:
+                Debug.LogWarning("CharacterAudioController : PlaySound() : Audio source not implemented");
+                break;
+        }
     }
 }
 
@@ -66,5 +97,13 @@ public enum ESoundType
     Footstep,
     Slap,
     Grunt,
+    Count
+}
+
+public enum EAudioSource
+{
+    Feet,
+    Hand,
+    Mouth,
     Count
 }
