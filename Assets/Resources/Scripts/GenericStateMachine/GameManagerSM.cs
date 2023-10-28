@@ -4,16 +4,22 @@ using UnityEngine.SceneManagement;
 
 public class GameManagerSM : BaseStateMachine<IState>
 {
+    [field: SerializeField]
+    public CharacterControllerStateMachine CharacterControllerStateMachine { get; private set; }
+
     [SerializeField]
     protected Camera m_gameplayCamera;
+
     [SerializeField]
     protected Camera m_cinematicCamera;
+
     [SerializeField]
     private AudioSource m_musicTrack;
 
-    private static GameManagerSM s_instance;
+    public IState DesiredState { get; set; } = null;
+    //public bool CanPlayerMove { get; set; } = true;
 
-    public bool CanPlayerMove { get; set; } = true;
+    private static GameManagerSM s_instance;
 
     public static GameManagerSM GetInstance()
     {
@@ -57,6 +63,7 @@ public class GameManagerSM : BaseStateMachine<IState>
         }
         else if (Input.GetKeyDown(KeyCode.P))
         {
+            // Cheat code to pause the music
             if(m_musicTrack.isPlaying)
             {
                 m_musicTrack.Pause();
@@ -70,9 +77,24 @@ public class GameManagerSM : BaseStateMachine<IState>
 
     protected override void CreatePossibleStates()
     {
+        Debug.Log("GameManagerSM : CreatePossibleStates()");
         m_possibleStates = new List<IState>();
-        m_possibleStates.Add(new GameplayState(m_gameplayCamera));
         m_possibleStates.Add(new CinematicState(m_cinematicCamera));
+        m_possibleStates.Add(new GameplayState(m_gameplayCamera));
         m_possibleStates.Add(new SceneTransitionState());
+    }
+
+    public void ActivateCinematicState()
+    {
+        Debug.Log("GameManagerSM : ActivateCinematicState()");
+        // Set the desired state to the cinematic state
+        DesiredState = m_possibleStates[0];
+    }
+
+    public void ActivateGameplayState()
+    {
+        Debug.Log("GameManagerSM : ActivateGameplayState()");
+        // Set the desired state to the gameplay state
+        DesiredState = m_possibleStates[1];
     }
 }

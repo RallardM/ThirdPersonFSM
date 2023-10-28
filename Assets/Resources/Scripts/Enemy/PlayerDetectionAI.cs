@@ -23,7 +23,7 @@ public class PlayerDetectionAI : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Detects : "+ other.name);
+        //Debug.Log("Detects : "+ other.name);
         // Early return if not layer 6 (Player)
         if (other.gameObject.layer != 6)
         {

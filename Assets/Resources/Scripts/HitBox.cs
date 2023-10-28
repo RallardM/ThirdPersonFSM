@@ -97,6 +97,11 @@ public class HitBox : MonoBehaviour
         //Debug.Log("Global Velocity : " + globalVelocity);
         //Debug.Log("G Velocity : " + otherHitBox.m_globalVelocity);
         //m_impulseSource.GenerateImpulse(otherHitBox.m_globalVelocity);
+        if (m_cameraShake == null)
+        {
+            return;
+        }
+
         m_cameraShake.ShakeCamera(otherHitBox.m_globalVelocity.magnitude);
     }
 }

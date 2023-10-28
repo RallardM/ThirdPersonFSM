@@ -18,14 +18,6 @@ public class FreeState : CharacterState
 
     public override void OnFixedUpdate()
     {
-        if (GameManagerSM.GetInstance().CanPlayerMove == false)
-        {
-            m_stateMachine.RB.velocity = Vector3.zero;
-            m_stateMachine.UpdateAnimatorMovements(Vector3.zero);
-            Debug.Log("Player cannot move");
-            return;
-        }
-
         Vector3 newDirection = Vector3.zero;
 
         // Calculate the camera's forward and right vectors projected on the horizontal plane

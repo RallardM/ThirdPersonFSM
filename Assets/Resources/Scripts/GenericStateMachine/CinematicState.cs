@@ -1,3 +1,4 @@
+using Cinemachine;
 using UnityEngine;
 
 public class CinematicState : IState
@@ -11,26 +12,35 @@ public class CinematicState : IState
 
     public bool CanEnter(IState currentState)
     {
-        return Input.GetKeyDown(KeyCode.G);
+        //Debug.Log("CanEnter CinematicState " + (GameManagerSM.GetInstance().DesiredState == this));
+        return Input.GetKeyDown(KeyCode.G) || GameManagerSM.GetInstance().DesiredState == this;
     }
 
     public bool CanExit()
     {
-        return Input.GetKeyDown(KeyCode.G);
+        //Debug.Log("CanExit CinematicState " + Input.GetKeyDown(KeyCode.G));
+        return Input.GetKeyDown(KeyCode.G) || GameManagerSM.GetInstance().DesiredState != this;
     }
 
     public void OnEnter()
     {
         Debug.Log("On Enter CinematicState");
-        GameManagerSM.GetInstance().CanPlayerMove = false;
-        m_camera.enabled = true;
+
+        CinemachineBrain brain = CinemachineCore.Instance.GetActiveBrain(0);
+        if (brain != null)
+        {
+            brain.ActiveVirtualCamera?.VirtualCameraGameObject.SetActive(false);
+        }
+
+        m_camera.gameObject.SetActive(true);
+        GameManagerSM.GetInstance().DesiredState = null;
+        GameManagerSM.GetInstance().CharacterControllerStateMachine.OnGameManagerStateChange(true);
     }
 
     public void OnExit()
     {
         Debug.Log("On Exit CinematicState");
-        GameManagerSM.GetInstance().CanPlayerMove = true;
-        m_camera.enabled = false;
+        //m_camera.enabled = false;
     }
 
     public void OnFixedUpdate()
@@ -39,7 +49,7 @@ public class CinematicState : IState
 
     public void OnStart()
     {
-        Debug.Log("CinematicState OnStart()"); // TODO: Remove after debugging
+        //Debug.Log("CinematicState OnStart()"); // TODO: Remove after debugging
     }
 
     public void OnUpdate()

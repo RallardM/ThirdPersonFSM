@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor.PackageManager;
 using UnityEngine;
@@ -37,6 +38,7 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
     public bool IsKeyPressed { get; private set; }
     public bool OnHitStimuliReceived { get; set; } = false;
     public bool OnStunStimuliReceived { get; set; } = false;
+    public bool InNonGameplayState { get; internal set; }
 
     protected override void Awake()
     {
@@ -72,6 +74,7 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
     protected override void CreatePossibleStates()
     {
         m_possibleStates = new List<CharacterState>();
+        m_possibleStates.Add(new NonGameplayState());
         m_possibleStates.Add(new FreeState());
         m_possibleStates.Add(new JumpState());
         m_possibleStates.Add(new GettingHitState());
@@ -310,5 +313,10 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
     {
         Debug.Log(gameObject.name + "GameManagerSM : OnEnableAttack() : HitBox is enabled : " + isEnable);
         m_hitBox.SetActive(isEnable);
+    }
+
+    internal void OnGameManagerStateChange(bool isStateChanging)
+    {
+        InNonGameplayState = isStateChanging;
     }
 }
