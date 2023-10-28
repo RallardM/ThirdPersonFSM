@@ -1929,10 +1929,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_audioController: {fileID: 3872937218445984313}
+  m_cameraShake: {fileID: 0}
   m_canHit: 1
   m_canReceiveHit: 0
   m_agentType: 0
   m_affectedAgentTypes: 01000000
+  m_globalVelocity: {x: 0, y: 0, z: 0}
 --- !u!54 &407748668656254224
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11982,10 +11984,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_audioController: {fileID: 3872937218445984313}
+  m_cameraShake: {fileID: 0}
   m_canHit: 0
   m_canReceiveHit: 1
   m_agentType: 0
   m_affectedAgentTypes: 01000000
+  m_globalVelocity: {x: 0, y: 0, z: 0}
 --- !u!1 &8078460925832646539
 GameObject:
   m_ObjectHideFlags: 0
@@ -12162,7 +12166,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1a05f340fa0799458a81d0d709a6dcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_audioSource: {fileID: 3496357989227222953}
+  m_feetAudioSource: {fileID: 0}
+  m_handAudioSource: {fileID: 0}
+  m_mouthAudioSource: {fileID: 0}
   m_jumpAudioClip: {fileID: 8300000, guid: fcbaf164018fc614a9729400cf40f9de, type: 3}
   m_landAudioClip: {fileID: 8300000, guid: 623ad07c146cedd4db6b902fd1612618, type: 3}
   m_footstepAudioClips:
