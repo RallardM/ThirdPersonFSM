@@ -1,17 +1,26 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Timeline;
+using UnityEngine.Playables;
+using Cinemachine;
 
 public class GameManagerSM : BaseStateMachine<IState>
 {
-    [field: SerializeField]
+    [field:SerializeField]
     public CharacterControllerStateMachine CharacterControllerStateMachine { get; private set; }
 
-    [SerializeField]
-    protected Camera m_gameplayCamera;
+    [field: SerializeField]
+    public PlayableDirector IntroTimeline { get; set; }
+
+    [field: SerializeField]
+    public GameObject IntroDollyTracks { get; set; }
+
+    [field: SerializeField]
+    public GameObject GameplayVirtualCamera { get; set; }
 
     [SerializeField]
-    protected Camera m_cinematicCamera;
+    protected Camera m_mainCamera;
 
     [SerializeField]
     private AudioSource m_musicTrack;
@@ -51,6 +60,21 @@ public class GameManagerSM : BaseStateMachine<IState>
     {
         base.Update();
 
+        GameplayInputs();
+
+        // If no cinemachine virtual camera is active, activate the gameplay virtual camera
+        CinemachineBrain brain = CinemachineCore.Instance.GetActiveBrain(0);
+        if (brain != null)
+        {
+            if (brain.ActiveVirtualCamera == null)
+            {
+                GameplayVirtualCamera.SetActive(true);
+            }
+        }
+    }
+
+    private void GameplayInputs()
+    {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             Application.Quit();
@@ -64,7 +88,7 @@ public class GameManagerSM : BaseStateMachine<IState>
         else if (Input.GetKeyDown(KeyCode.P))
         {
             // Cheat code to pause the music
-            if(m_musicTrack.isPlaying)
+            if (m_musicTrack.isPlaying)
             {
                 m_musicTrack.Pause();
             }
@@ -73,14 +97,25 @@ public class GameManagerSM : BaseStateMachine<IState>
                 m_musicTrack.Play();
             }
         }
+        else if (Input.GetKeyDown(KeyCode.G))
+        {
+            // Cancel intro cinematic timeline
+            if (IntroTimeline != null)
+            {
+                IntroTimeline.Stop();
+                IntroDollyTracks.SetActive(false);
+                GameplayVirtualCamera.SetActive(true);
+                CharacterControllerStateMachine.OnGameManagerStateChange(false);
+            }
+        }
     }
 
     protected override void CreatePossibleStates()
     {
         Debug.Log("GameManagerSM : CreatePossibleStates()");
         m_possibleStates = new List<IState>();
-        m_possibleStates.Add(new CinematicState(m_cinematicCamera));
-        m_possibleStates.Add(new GameplayState(m_gameplayCamera));
+        m_possibleStates.Add(new CinematicState(m_mainCamera));
+        m_possibleStates.Add(new GameplayState(m_mainCamera));
         m_possibleStates.Add(new SceneTransitionState());
     }
 

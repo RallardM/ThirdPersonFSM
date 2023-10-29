@@ -13,19 +13,25 @@ public class GameplayState : IState
     public bool CanEnter(IState currentState)
     {
         Debug.Log("CanEnter GameplayState " + (GameManagerSM.GetInstance().DesiredState == this));
-        return Input.GetKeyDown(KeyCode.G) || GameManagerSM.GetInstance().DesiredState == this;
+        return GameManagerSM.GetInstance().DesiredState == this;
     }
 
     public bool CanExit()
     {
-        return Input.GetKeyDown(KeyCode.G) || GameManagerSM.GetInstance().DesiredState != this;
+        return GameManagerSM.GetInstance().DesiredState != this;
     }
 
     public void OnEnter()
     {
         Debug.Log("On Enter GameplayState");
         //m_camera.enabled = true;
-        CinemachineCore.Instance.GetActiveBrain(0)?.ActiveVirtualCamera.VirtualCameraGameObject.SetActive(false);
+        CinemachineBrain brain = CinemachineCore.Instance.GetActiveBrain(0);
+
+        if (brain != null)
+        {
+            brain.ActiveVirtualCamera?.VirtualCameraGameObject.SetActive(false);
+        }
+
         m_camera.gameObject.SetActive(true); 
         GameManagerSM.GetInstance().DesiredState = null;
         GameManagerSM.GetInstance().CharacterControllerStateMachine.OnGameManagerStateChange(false);

@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
-using UnityEditor.PackageManager;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>, IDamageable
 {
@@ -15,6 +14,9 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>,
 
     [field: SerializeField]
     public CharacterAudioController AudioController { get; private set; }
+
+    [field: SerializeField]
+    public PlayableDirector EmoteTimeline { get; set; }
 
     [field: SerializeField]
     public float AccelerationValue { get; private set; }

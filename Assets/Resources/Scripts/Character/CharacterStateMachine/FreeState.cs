@@ -54,6 +54,11 @@ public class FreeState : CharacterState
             newDirection += cameraRight * m_stateMachine.AccelerationValue;
             rightInput = 1;
         }
+        else if (Input.GetKeyDown(KeyCode.E))
+        {
+            // Cheat code for Emote
+            m_stateMachine.EmoteTimeline.Play();
+        }
 
         /*
          *  Par exemple, si vous allez à un angle nord-nord-ouest (3/4 du déplacement 	

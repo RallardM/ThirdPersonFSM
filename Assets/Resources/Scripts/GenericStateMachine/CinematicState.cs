@@ -13,13 +13,13 @@ public class CinematicState : IState
     public bool CanEnter(IState currentState)
     {
         //Debug.Log("CanEnter CinematicState " + (GameManagerSM.GetInstance().DesiredState == this));
-        return Input.GetKeyDown(KeyCode.G) || GameManagerSM.GetInstance().DesiredState == this;
+        return GameManagerSM.GetInstance().DesiredState == this;
     }
 
     public bool CanExit()
     {
-        //Debug.Log("CanExit CinematicState " + Input.GetKeyDown(KeyCode.G));
-        return Input.GetKeyDown(KeyCode.G) || GameManagerSM.GetInstance().DesiredState != this;
+        //Debug.Log("CanExit CinematicState " + GameManagerSM.GetInstance().DesiredState != this);
+        return GameManagerSM.GetInstance().DesiredState != this;
     }
 
     public void OnEnter()
