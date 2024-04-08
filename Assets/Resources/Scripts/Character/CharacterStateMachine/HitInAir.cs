@@ -1,3 +1,42 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:2c2e7556f6a6de282d59b1ebf7ea6fff4cc1e412df20933bacb4b09bb788be99
-size 842
+using UnityEngine;
+
+public class HitInAir : CharacterState
+{
+    public override void OnEnter()
+    {
+        Debug.Log("Enter State: HitInAir state");
+        m_stateMachine.UpdateAnimation(this);
+    }
+
+    public override void OnExit()
+    {
+        Debug.Log("Exit State: HitInAir state");
+    }
+
+    public override void OnFixedUpdate()
+    {
+
+    }
+
+    public override void OnUpdate()
+    {
+
+    }
+
+    public override bool CanEnter(IState currentState)
+    {
+        return (m_stateMachine.Health < m_stateMachine.PreviousHealth)
+            && (currentState is FallingState || currentState is JumpState);
+    }
+
+    public override bool CanExit()
+    {
+        if (m_stateMachine.IsInContactWithFloor())
+        {
+            Debug.Log("Can exit: hit in air State");
+            return true;
+        }
+
+        return false;
+    }
+}

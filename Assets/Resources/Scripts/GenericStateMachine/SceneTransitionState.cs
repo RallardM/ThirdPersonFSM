@@ -1,3 +1,40 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:d1af420654075df1859ad50e68eea527a35a25de51f3485adc777307e67cf6c6
-size 559
+using UnityEngine;
+
+public class SceneTransitionState : IState
+{
+    public SceneTransitionState()
+    {
+    }
+
+    public bool CanEnter(IState currentState)
+    {
+        return false;
+    }
+
+    public bool CanExit()
+    {
+        return false;
+    }
+
+    public void OnEnter()
+    {
+        Debug.Log("On Enter SceneTransitionState");
+    }
+
+    public void OnExit()
+    {
+        Debug.Log("On Exit SceneTransitionState");
+    }
+
+    public void OnFixedUpdate()
+    {
+    }
+
+    public void OnStart()
+    {
+    }
+
+    public void OnUpdate()
+    {
+    }
+}

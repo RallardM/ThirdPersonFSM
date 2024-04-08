@@ -1,3 +1,52 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:7766212666a673509288ab64f9047949cc75631d432ea4011e022cf34cfe23b2
-size 1175
+// Source : https://www.youtube.com/watch?v=luSVUPU6bK0
+using UnityEngine;
+using Cinemachine;
+
+public class CameraShake : MonoBehaviour
+{
+    private CinemachineVirtualCamera m_virtualCamera;
+    private float m_shakeIntensity = 6.0f;
+    private float m_shakeTime = 0.2f;
+    private float m_timer;
+    private CinemachineBasicMultiChannelPerlin m_noise;
+
+    private void Awake()
+    {
+        m_virtualCamera = GetComponent<CinemachineVirtualCamera>();
+        m_noise = m_virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+    }
+
+    private void Start()
+    {
+        StopShake();
+    }
+
+    public void ShakeCamera(float shakeIntensity)
+    {
+        m_noise.m_AmplitudeGain = shakeIntensity;
+        m_timer = m_shakeTime;
+    }
+
+    void StopShake()
+    {
+        m_noise.m_AmplitudeGain = 0.0f;
+        m_timer = 0.0f;
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            ShakeCamera(m_shakeIntensity);
+        }
+
+        if (m_timer > 0.0f)
+        {
+            m_timer -= Time.deltaTime;
+            if (m_timer <= 0.0f)
+            {
+                StopShake();
+            }
+        }
+    }
+}

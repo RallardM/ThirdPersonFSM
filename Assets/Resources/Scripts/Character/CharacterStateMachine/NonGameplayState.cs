@@ -1,3 +1,34 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:447a81682e4d1bfbe6fcdd7e00251d8bc14cd719c4963ce178f90928ac1321df
-size 590
+using UnityEngine;
+
+public class NonGameplayState : CharacterState
+{
+    public override void OnEnter()
+    {
+        Debug.Log("Enter State: NonGameplayState");
+    }
+
+    public override void OnExit()
+    {
+        Debug.Log("Exit state: NonGameplayState");
+    }
+
+    public override void OnFixedUpdate()
+    {
+
+    }
+
+    public override void OnUpdate()
+    {
+
+    }
+
+    public override bool CanEnter(IState currentState)
+    {
+        return m_stateMachine.InNonGameplayState;
+    }
+
+    public override bool CanExit()
+    {
+        return !m_stateMachine.InNonGameplayState;
+    }
+}

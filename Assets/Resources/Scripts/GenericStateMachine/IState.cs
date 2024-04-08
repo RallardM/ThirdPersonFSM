@@ -1,3 +1,11 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:b2be300c4dc273272cafbd1f6f760a339344d23023b589ddccfddd7dec3e3404
-size 243
+
+public interface IState
+{
+    public void OnStart();
+    public void OnEnter();
+    public void OnUpdate();
+    public void OnFixedUpdate();
+    public void OnExit();
+    public bool CanEnter(IState currentState);
+    public bool CanExit();
+}

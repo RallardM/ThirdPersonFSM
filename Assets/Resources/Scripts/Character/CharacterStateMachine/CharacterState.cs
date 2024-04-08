@@ -1,3 +1,50 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:cf744d33458dd40ee4031cb0cb62578777945166b6119992e7a4827f7887b11a
-size 981
+using UnityEngine;
+
+public abstract class CharacterState : IState
+{
+    protected CharacterControllerStateMachine m_stateMachine;
+
+    public void OnStart()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void OnStart(CharacterControllerStateMachine stateMachineRef)
+    {
+        //TODO: Refactor in progress
+        //Do not forget to call and send the state machine
+        //To characterStates
+        m_stateMachine = stateMachineRef;
+    }
+
+    public virtual void OnEnter()
+    {
+    }
+
+    public virtual void OnExit()
+    {
+    }
+
+    public virtual void OnFixedUpdate()
+    {
+    }
+
+    public virtual void OnUpdate()
+    {
+    }
+
+    public virtual bool CanEnter(IState currentState)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual bool CanExit()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void ActivateHitBox()
+    {
+        Debug.Log("Hit box activated");
+    }
+}

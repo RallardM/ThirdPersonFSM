@@ -1,3 +1,16 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f45fc483b97e161fdd01fe34311faf462fa237bed54942608f762a29689f1c21
-size 394
+https://github.com/RallardM/ThirdPersonTP
+
+Contrôles:
+	Freestate gameplaystate
+		AWSD		  - Mouvements
+		Espace		  - Jump
+		Clique gauche - Attaque
+		Clique droit  - Bullet time 
+		E			  - Emote
+	cinematique
+		G 			- Cancel intro / ou switch gameplaystate si pas en intro
+	Any state
+		M 			- Next scene
+		N 			- Reset scene
+		X 			- Explosion (ne marchera peut-être pas dans la next scene)
+		

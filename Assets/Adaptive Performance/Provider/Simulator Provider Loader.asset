@@ -1,3 +1,14 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:7c59226aa87c930d8b8f30024961f5e3544c74a926860c107e3c3ec4608bdfa8
-size 414
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 921854900f2214d7ab9b1e95d17dbb2b, type: 3}
+  m_Name: Simulator Provider Loader
+  m_EditorClassIdentifier: 

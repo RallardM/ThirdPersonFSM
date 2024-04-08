@@ -1,3 +1,65 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:1575442cf537d53060d2ef4d1b907801fe17c1435f1b3d0b95fb489aad0b164e
-size 1310
+using UnityEngine;
+
+public class PlayerDetectionAI : MonoBehaviour
+{
+    [SerializeField]
+    private Animator m_enemyAnimator;
+
+    [SerializeField]
+    private Transform m_playerTransform;
+
+    private bool m_isAttacking = false;
+
+    private void Update()
+    {
+        if (m_isAttacking == false)
+        {
+            return;
+        }
+
+        transform.LookAt(m_playerTransform.position);
+
+        if (m_enemyAnimator == null)
+        {
+            return;
+        }
+
+        m_enemyAnimator.SetTrigger("Attack");
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        //Debug.Log("Detects : "+ other.name);
+        // Early return if not layer 6 (Player)
+        if (other.gameObject.layer != 6)
+        {
+            //Debug.Log("Not player");
+            return;
+        }
+
+        Debug.Log("Is player! Attack!");
+        m_isAttacking = true;
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer != 6)
+        {
+            //Debug.Log("Not player");
+            return;
+        }
+
+        m_isAttacking = false;
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.layer != 6)
+        {
+            Debug.Log("Not player");
+            return;
+        }
+
+        m_isAttacking = false;
+    }
+}

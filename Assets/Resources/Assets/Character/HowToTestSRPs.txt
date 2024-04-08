@@ -1,3 +1,8 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:f358724ae1bb1a5b3da200c27a5dd2507067ce529a08950799f3d70a21655035
-size 295
+To test SRP(HD and URP), you have to do the following steps.
+
+1. After importing this product into your SRP project ( HD or URP ), 
+delete the following folders ( Materials, Prefabs, Scenes, Shaders, Textures ).
+
+2. After that, unzip your target SRP file ( HD or URP ).
+
+3. You are free to test.

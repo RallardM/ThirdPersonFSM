@@ -1,3 +1,27 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:6cbfb377a925940b3e0d9601f1b58d9b24e07cbb450bebdfa16f926fc2242a9d
-size 621
+using UnityEngine;
+
+public class DamageSource : MonoBehaviour
+{
+    [SerializeField]
+    private EDamageType eDamageType = EDamageType.Count;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("On trigger enter damage source");
+        var charController = other.GetComponent<CharacterControllerStateMachine>();
+        if (charController == null)
+        {
+            return;
+        }
+
+        charController.ReceiveDamage(eDamageType);
+        Debug.Log(other.name + " receives damage of type: " + eDamageType.ToString());
+    }
+}
+
+public enum EDamageType
+{
+    Normal,
+    Stunning,
+    Count
+}

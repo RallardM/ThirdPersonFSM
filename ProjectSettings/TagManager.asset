@@ -1,3 +1,47 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:569116d21eea1954cade0ff74893d8c1a5cb7f3890c8206ec90fed7883267e0c
-size 514
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - CinemachineTarget
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - MainCharacter
+  - Floor
+  - StaticObject
+  - Camera
+  - DynamicObject
+  - Particles
+  - Enemy
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: HitFX
+    uniqueID: 256985927
+    locked: 0

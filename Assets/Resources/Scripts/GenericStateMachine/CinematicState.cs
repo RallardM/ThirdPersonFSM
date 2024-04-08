@@ -1,3 +1,58 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:71dd58bfbe9b99e88a8fa8bf7de71ef315c97f98a3d614273b9da911933da3a6
-size 1438
+using Cinemachine;
+using UnityEngine;
+
+public class CinematicState : IState
+{
+    protected Camera m_camera;
+
+    public CinematicState(Camera camera)
+    {
+        m_camera = camera;
+    }
+
+    public bool CanEnter(IState currentState)
+    {
+        //Debug.Log("CanEnter CinematicState " + (GameManagerSM.GetInstance().DesiredState == this));
+        return GameManagerSM.GetInstance().DesiredState == this;
+    }
+
+    public bool CanExit()
+    {
+        //Debug.Log("CanExit CinematicState " + GameManagerSM.GetInstance().DesiredState != this);
+        return GameManagerSM.GetInstance().DesiredState != this;
+    }
+
+    public void OnEnter()
+    {
+        Debug.Log("On Enter CinematicState");
+
+        CinemachineBrain brain = CinemachineCore.Instance.GetActiveBrain(0);
+        if (brain != null)
+        {
+            brain.ActiveVirtualCamera?.VirtualCameraGameObject.SetActive(false);
+        }
+
+        m_camera.gameObject.SetActive(true);
+        GameManagerSM.GetInstance().DesiredState = null;
+        GameManagerSM.GetInstance().CharacterControllerStateMachine.OnGameManagerStateChange(true);
+    }
+
+    public void OnExit()
+    {
+        Debug.Log("On Exit CinematicState");
+        //m_camera.enabled = false;
+    }
+
+    public void OnFixedUpdate()
+    {
+    }
+
+    public void OnStart()
+    {
+        //Debug.Log("CinematicState OnStart()"); // TODO: Remove after debugging
+    }
+
+    public void OnUpdate()
+    {
+    }
+}
