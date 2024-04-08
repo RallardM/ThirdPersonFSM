@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{9167A746-8FD2-39A7-B289-DC81E61596DD}</ProjectGuid>
+    <ProjectGuid>{56C98AA2-31C4-FF75-B08C-3DBCAEAC4F9A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Unity.RenderPipelines.Universal.Editor</AssemblyName>
@@ -1030,31 +1030,31 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Unity.RenderPipelines.Universal.Runtime.csproj">
-      <Project>{93E22290-42E9-129D-2915-24383C8B22FB}</Project>
+      <Project>{59D2AEA8-DDD3-6A96-5D33-EF87F8DDD88A}</Project>
       <Name>Unity.RenderPipelines.Universal.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.RenderPipelines.Core.Runtime.csproj">
-      <Project>{8451B86F-0380-C59E-817F-0E98A7A3F793}</Project>
+      <Project>{96A36A32-A69A-3EFF-67EB-B527F2758B01}</Project>
       <Name>Unity.RenderPipelines.Core.Runtime</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.RenderPipelines.Core.Editor.csproj">
-      <Project>{830129F1-95FE-7A0C-B371-5EE87FBD5F96}</Project>
+      <Project>{3A72D5CA-C030-6C75-EAAB-C01C51688CB5}</Project>
       <Name>Unity.RenderPipelines.Core.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.ShaderGraph.Editor.csproj">
-      <Project>{2079B467-7B1F-7528-FD7E-61ECF0AFE47F}</Project>
+      <Project>{ED9AE89E-E970-5D4D-5D0F-33C737ABD8B6}</Project>
       <Name>Unity.ShaderGraph.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="Unity.VisualEffectGraph.Editor.csproj">
-      <Project>{7B124AC0-621D-8954-2EFC-4446C3878093}</Project>
+      <Project>{D697A048-DD98-84B6-C1D0-448424BC2891}</Project>
       <Name>Unity.VisualEffectGraph.Editor</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEditor.UI.csproj">
-      <Project>{4E45900A-4B3C-5719-608B-F8D3720E23A8}</Project>
+      <Project>{BBD2B1F0-5CB2-C672-0792-33E30F4BF113}</Project>
       <Name>UnityEditor.UI</Name>
     </ProjectReference>
     <ProjectReference Include="UnityEngine.UI.csproj">
-      <Project>{D88885BE-C4FD-2A5B-BB3F-7F13A4DB9C6D}</Project>
+      <Project>{7A5ED318-7AB5-9A45-7E91-3753554CE044}</Project>
       <Name>UnityEngine.UI</Name>
     </ProjectReference>
   </ItemGroup>
